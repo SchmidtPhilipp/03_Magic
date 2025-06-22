@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mtg-dev:
+    build: .
+    container_name: mtg-optimizer-dev
+    ports:
+      - "5000:5000"
+    volumes:
+      # Mount the entire project directory for live development
+      - .:/app
+      # Exclude certain directories from mounting
+      - /app/__pycache__
+      - /app/.pytest_cache
+      - /app/logs
+    environment:
+      - PYTHONPATH=/app
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+    working_dir: /app
+    # Start with bash for interactive development
+    command: bash
+    stdin_open: true
+    tty: true
+
+  # Optional: Separate service for running tests
+  mtg-test:
+    build: .
+    container_name: mtg-optimizer-test
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONPATH=/app
+    working_dir: /app
+    command: python -m pytest tests/ -v
+    profiles:
+      - test 

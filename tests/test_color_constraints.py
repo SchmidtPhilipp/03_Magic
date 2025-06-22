@@ -26,18 +26,18 @@ class TestColorConstraints(unittest.TestCase):
         self.test_collection = pd.DataFrame(
             {
                 "Card Name": [
-        # Red cards
-        "Lightning Bolt",
-        "Fireball",
+                    # Red cards
+                    "Lightning Bolt",
+                    "Fireball",
                     "Red Elemental",
                     "Mountain Goat",
-        # Blue cards
-        "Counterspell",
+                    # Blue cards
+                    "Counterspell",
                     "Blue Elemental",
                     "Island Fish",
                     "Water Elemental",
-        # Green cards
-        "Giant Growth",
+                    # Green cards
+                    "Giant Growth",
                     "Green Elemental",
                     "Forest Elf",
                     "Nature Elemental",
@@ -106,12 +106,12 @@ class TestColorConstraints(unittest.TestCase):
             "Green Elemental": {"colors": {"G"}, "cmc": 3, "type": "Creature"},
             "Forest Elf": {"colors": {"G"}, "cmc": 2, "type": "Creature"},
             "Nature Elemental": {"colors": {"G"}, "cmc": 4, "type": "Creature"},
-        # White cards
+            # White cards
             "Healing Salve": {"colors": {"W"}, "cmc": 1, "type": "Instant"},
             "White Elemental": {"colors": {"W"}, "cmc": 3, "type": "Creature"},
             "Plains Knight": {"colors": {"W"}, "cmc": 2, "type": "Creature"},
             "Light Elemental": {"colors": {"W"}, "cmc": 4, "type": "Creature"},
-        # Black cards
+            # Black cards
             "Dark Ritual": {"colors": {"B"}, "cmc": 1, "type": "Instant"},
             "Black Elemental": {"colors": {"B"}, "cmc": 3, "type": "Creature"},
             "Swamp Demon": {"colors": {"B"}, "cmc": 2, "type": "Creature"},
@@ -121,7 +121,7 @@ class TestColorConstraints(unittest.TestCase):
             "Green White Spell": {"colors": {"G", "W"}, "cmc": 2, "type": "Sorcery"},
             "Black Red Spell": {"colors": {"B", "R"}, "cmc": 3, "type": "Instant"},
             "Blue Green Spell": {"colors": {"U", "G"}, "cmc": 2, "type": "Sorcery"},
-        # Colorless cards
+            # Colorless cards
             "Artifact Card": {"colors": set(), "cmc": 2, "type": "Artifact"},
         }
 
@@ -304,9 +304,9 @@ class TestColorConstraints(unittest.TestCase):
         eligible_cards = optimizer.prepare_eligible_cards(self.test_collection, 5)
 
         # Analyze color distribution
-    color_counts = {}
+        color_counts = {}
         for card in eligible_cards:
-        colors = card.get("colors", set())
+            colors = card.get("colors", set())
             for color in colors:
                 color_counts[color] = color_counts.get(color, 0) + 1
 
@@ -405,7 +405,7 @@ class TestColorConstraints(unittest.TestCase):
             }
         )
         mock_read_csv.return_value = mock_ratings_df
-    builder = EnhancedDeckBuilder()
+        builder = EnhancedDeckBuilder()
         optimizer = AdvancedDeckOptimizer()
         for num_colors in [1, 2, 3, 4, 5]:
             for algo in ["greedy", "genetic", "annealing"]:
@@ -465,7 +465,7 @@ class TestColorConstraints(unittest.TestCase):
             card_name, {}
         )
         builder = EnhancedDeckBuilder()
-    optimizer = AdvancedDeckOptimizer()
+        optimizer = AdvancedDeckOptimizer()
         num_colors = 3
         deck_size = 20
         eligible = optimizer.prepare_eligible_cards(self.test_collection, num_colors)

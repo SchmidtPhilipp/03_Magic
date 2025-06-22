@@ -74,4 +74,18 @@
   - Optimization of 17Lands data integration
 
 
+- Optimierung
+  - Bitte stell sicher das die Optimierungsalgortithmen immer auch die Kostenfunktion verwenden. 
+  - Also Kostenfunktion nennst du im moment evaluation. Ich möchte aber das optimierungskriterium quasi ändern. 
 
+- Deck Analysis
+  - Seperiere die Deck Analysis von der Deck Visualization. Mach einen eigenen "Block" dafür. 
+
+- Soppen der Optimierung
+  - Mach eine option zum stoppen der optimierung. Also ein knopf der rot ist und statt dem Start Optimization Knopf auftaucht. 
+
+- Logging
+  - Bitte verwende pythons logging für die Console. 
+  - Bitte seperiere in User relevante outputs und in developer relevante outputs und mach zwei modi. 
+  - Im debug modus sollen alle daten auf dem optimization output ausgegeben werden Im User modus nur die User relevanten. 
+  - Füg aber immer alle daten in ein logfile ein. - Das kommt dann in den jeweiligen ordner in dem wir die derzeitgen files ablegen. 

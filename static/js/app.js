@@ -404,28 +404,41 @@ function handleOptimizationResult(result) {
 function updateResultsPanel(result) {
     const resultsContent = document.getElementById('resultsContent');
 
-    resultsContent.innerHTML = `
+    // Get evaluation method info
+    const evaluationMethod = document.getElementById('evaluationMethod').value;
+    const is17Lands = evaluationMethod === '17lands';
+
+    const resultsHtml = `
         <div class="results-item">
-            <div class="label">Algorithm:</div>
-            <div class="value">${result.algorithm}</div>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="label">Score:</span>
+                <span class="value">${(result.score * 100).toFixed(1)}%</span>
+                ${is17Lands ? '<span class="badge bg-success ms-2"><i class="fas fa-chart-line"></i> 17Lands</span>' : '<span class="badge bg-info ms-2"><i class="fas fa-hand-paper"></i> Manual</span>'}
+            </div>
         </div>
         <div class="results-item">
-            <div class="label">Evaluation Method:</div>
-            <div class="value">${result.evaluation_method || 'manual'}</div>
+            <span class="label">Algorithm:</span>
+            <span class="value">${result.algorithm}</span>
         </div>
         <div class="results-item">
-            <div class="label">Score:</div>
-            <div class="value">${result.score.toFixed(4)}</div>
+            <span class="label">Colors:</span>
+            <span class="value">${result.target_colors.join(', ')}</span>
         </div>
         <div class="results-item">
-            <div class="label">Colors:</div>
-            <div class="value">${result.target_colors.join(', ')}</div>
+            <span class="label">Cards:</span>
+            <span class="value">${result.deck.length}</span>
         </div>
         <div class="results-item">
-            <div class="label">Deck Size:</div>
-            <div class="value">${result.deck.length} cards</div>
+            <span class="label">Evaluation Method:</span>
+            <span class="value">${is17Lands ? '17Lands Data-Based' : 'Manual + Synergy'}</span>
         </div>
+        ${is17Lands ? '<div class="results-item"><span class="label">17Lands Metrics:</span><span class="value">GIH Winrate + IWD</span></div>' : ''}
     `;
+
+    resultsContent.innerHTML = resultsHtml;
+
+    // Show download section
+    document.getElementById('downloadSection').style.display = 'block';
 }
 
 function updateDeckVisualization(deck) {

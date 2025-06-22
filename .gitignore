@@ -24,12 +24,14 @@ wheels/
 venv/
 env/
 ENV/
+logs/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+.pytest_cache/
 
 # OS
 .DS_Store

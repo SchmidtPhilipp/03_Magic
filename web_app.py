@@ -333,6 +333,7 @@ def get_deck_info():
         return jsonify({"error": "No deck available"}), 400
 
     deck = current_result["deck"]
+    evaluation_method = current_result.get("evaluation_method", "manual")
 
     # Analyze deck
     color_counts = {}
@@ -370,6 +371,17 @@ def get_deck_info():
     if colorless_count > 0:
         color_counts["Colorless"] = colorless_count
 
+    # Get evaluation method details
+    evaluation_info = {
+        "method": evaluation_method,
+        "description": (
+            "Manual evaluation + synergy values from local dictionary."
+            if evaluation_method == "manual"
+            else "Data-based evaluation from 17Lands – combines GIH Winrate and IWD."
+        ),
+        "is_17lands": evaluation_method == "17lands",
+    }
+
     return jsonify(
         convert_sets_to_lists(
             {
@@ -377,6 +389,7 @@ def get_deck_info():
                 "score": current_result["score"],
                 "colors": current_result["target_colors"],
                 "algorithm": current_result["algorithm"],
+                "evaluation": evaluation_info,
                 "analysis": {
                     "color_counts": color_counts,
                     "mana_curve": mana_curve,
