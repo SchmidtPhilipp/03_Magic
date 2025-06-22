@@ -48,3 +48,6 @@ data/cache/
 *.txt
 !requirements.txt
 !README.md
+
+# Static files
+static/card_cache/

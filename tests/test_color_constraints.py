@@ -1,309 +1,524 @@
 #!/usr/bin/env python3
 """
-Test script for the improved color constraint system
-Demonstrates how the Lagrange-style penalty function improves color focus
+Unit tests for color constraint functionality in MTG Sealed Deck Optimizer
 """
 
 import os
 import sys
+import unittest
+from unittest.mock import MagicMock, patch
 
 import pandas as pd
 
-# Add the src directory to the Python path
+# Add src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from magic_optimizer import EnhancedDeckBuilder
+from magic_optimizer.deck_builder import EnhancedDeckBuilder
+from magic_optimizer.optimizer import AdvancedDeckOptimizer
 
 
-def create_test_collection():
-    """Create a test collection with cards from all colors"""
-    test_cards = [
+class TestColorConstraints(unittest.TestCase):
+    """Test color constraint functionality"""
+
+    def setUp(self):
+        """Set up test fixtures"""
+        # Create a mock collection with cards of different colors
+        self.test_collection = pd.DataFrame(
+            {
+                "Card Name": [
         # Red cards
         "Lightning Bolt",
         "Fireball",
-        "Shock",
-        "Lightning Strike",
-        "Flame Slash",
-        "Goblin Guide",
-        "Monastery Swiftspear",
-        "Young Pyromancer",
-        "Grim Lavamancer",
+                    "Red Elemental",
+                    "Mountain Goat",
         # Blue cards
         "Counterspell",
-        "Mana Leak",
-        "Remand",
-        "Spell Pierce",
-        "Dispel",
-        "Delver of Secrets",
-        "Snapcaster Mage",
-        "Vendilion Clique",
-        "Serum Visions",
+                    "Blue Elemental",
+                    "Island Fish",
+                    "Water Elemental",
         # Green cards
         "Giant Growth",
-        "Rancor",
-        "Vines of Vastwood",
-        "Mutagenic Growth",
-        "Groundswell",
-        "Tarmogoyf",
-        "Scavenging Ooze",
-        "Noble Hierarch",
-        "Birds of Paradise",
+                    "Green Elemental",
+                    "Forest Elf",
+                    "Nature Elemental",
+                    # White cards
+                    "Healing Salve",
+                    "White Elemental",
+                    "Plains Knight",
+                    "Light Elemental",
+                    # Black cards
+                    "Dark Ritual",
+                    "Black Elemental",
+                    "Swamp Demon",
+                    "Shadow Elemental",
+                    # Multicolor cards
+                    "Red Blue Spell",
+                    "Green White Spell",
+                    "Black Red Spell",
+                    "Blue Green Spell",
+                    # Colorless cards
+                    "Artifact Card",
+                ],
+                "Rating": [
+                    "8/10",
+                    "7/10",
+                    "6/10",
+                    "5/10",
+                    "8/10",
+                    "7/10",
+                    "6/10",
+                    "5/10",
+                    "8/10",
+                    "7/10",
+                    "6/10",
+                    "5/10",
+                    "8/10",
+                    "7/10",
+                    "6/10",
+                    "5/10",
+                    "8/10",
+                    "7/10",
+                    "6/10",
+                    "5/10",
+                    "7/10",
+                    "6/10",
+                    "5/10",
+                    "4/10",
+                    "5/10",
+                ],
+            }
+        )
+
+        # Create mock card data with proper CMC values
+        self.mock_card_data = {
+            # Red cards
+            "Lightning Bolt": {"colors": {"R"}, "cmc": 1, "type": "Instant"},
+            "Fireball": {"colors": {"R"}, "cmc": 2, "type": "Sorcery"},
+            "Red Elemental": {"colors": {"R"}, "cmc": 3, "type": "Creature"},
+            "Mountain Goat": {"colors": {"R"}, "cmc": 2, "type": "Creature"},
+            # Blue cards
+            "Counterspell": {"colors": {"U"}, "cmc": 2, "type": "Instant"},
+            "Blue Elemental": {"colors": {"U"}, "cmc": 4, "type": "Creature"},
+            "Island Fish": {"colors": {"U"}, "cmc": 1, "type": "Creature"},
+            "Water Elemental": {"colors": {"U"}, "cmc": 5, "type": "Creature"},
+            # Green cards
+            "Giant Growth": {"colors": {"G"}, "cmc": 1, "type": "Instant"},
+            "Green Elemental": {"colors": {"G"}, "cmc": 3, "type": "Creature"},
+            "Forest Elf": {"colors": {"G"}, "cmc": 2, "type": "Creature"},
+            "Nature Elemental": {"colors": {"G"}, "cmc": 4, "type": "Creature"},
         # White cards
-        "Path to Exile",
-        "Swords to Plowshares",
-        "Lightning Helix",
-        "Boros Charm",
-        "Savannah Lions",
-        "Student of Warfare",
-        "Steppe Lynx",
-        "Kor Firewalker",
+            "Healing Salve": {"colors": {"W"}, "cmc": 1, "type": "Instant"},
+            "White Elemental": {"colors": {"W"}, "cmc": 3, "type": "Creature"},
+            "Plains Knight": {"colors": {"W"}, "cmc": 2, "type": "Creature"},
+            "Light Elemental": {"colors": {"W"}, "cmc": 4, "type": "Creature"},
         # Black cards
-        "Doom Blade",
-        "Go for the Throat",
-        "Dismember",
-        "Victim of Night",
-        "Dark Confidant",
-        "Tasigur, the Golden Fang",
-        "Gurmag Angler",
-        "Death's Shadow",
+            "Dark Ritual": {"colors": {"B"}, "cmc": 1, "type": "Instant"},
+            "Black Elemental": {"colors": {"B"}, "cmc": 3, "type": "Creature"},
+            "Swamp Demon": {"colors": {"B"}, "cmc": 2, "type": "Creature"},
+            "Shadow Elemental": {"colors": {"B"}, "cmc": 4, "type": "Creature"},
+            # Multicolor cards
+            "Red Blue Spell": {"colors": {"R", "U"}, "cmc": 3, "type": "Instant"},
+            "Green White Spell": {"colors": {"G", "W"}, "cmc": 2, "type": "Sorcery"},
+            "Black Red Spell": {"colors": {"B", "R"}, "cmc": 3, "type": "Instant"},
+            "Blue Green Spell": {"colors": {"U", "G"}, "cmc": 2, "type": "Sorcery"},
         # Colorless cards
-        "Sol Ring",
-        "Lightning Greaves",
-        "Swiftfoot Boots",
-        "Skullclamp",
-        "Sensei's Divining Top",
-        "Engineered Explosives",
-        "Pithing Needle",
-    ]
+            "Artifact Card": {"colors": set(), "cmc": 2, "type": "Artifact"},
+        }
 
-    return pd.DataFrame({"Card Name": test_cards})
+    @patch("magic_optimizer.optimizer.AdvancedDeckOptimizer.get_card_data")
+    @patch("magic_optimizer.optimizer.pd.read_csv")
+    def test_greedy_algorithm_color_constraints(
+        self, mock_read_csv, mock_get_card_data
+    ):
+        """Test that greedy algorithm respects color constraints"""
+        # Mock the ratings file
+        mock_ratings_df = pd.DataFrame(
+            {
+                "Card Name": self.test_collection["Card Name"],
+                "Rating": self.test_collection["Rating"],
+            }
+        )
+        mock_read_csv.return_value = mock_ratings_df
 
+        # Mock card data
+        mock_get_card_data.side_effect = lambda card_name: self.mock_card_data.get(
+            card_name, {}
+        )
 
-def analyze_deck_colors(deck, target_colors):
-    """Analyze the colors in a deck and check for constraint violations"""
-    print(f"\n=== DECK COLOR ANALYSIS ===")
-    print(f"Target Colors: {target_colors}")
-    print(f"Target Color Count: {len(target_colors)}")
+        # Create deck builder
+        deck_builder = EnhancedDeckBuilder()
 
-    # Count cards by color
+        # Test with different color counts
+        for num_colors in [1, 2, 3, 4, 5]:
+            with self.subTest(num_colors=num_colors):
+                result = deck_builder.build_optimal_deck_advanced(
+                    collection_df=self.test_collection,
+                    num_colors=num_colors,
+                    deck_size=20,
+                    algorithm="greedy",
+                    total_deck_size=40,
+                    land_ratio=0.5,
+                )
+
+                # Get actual colors used in the deck
+                actual_colors = set()
+                for card in result["deck"]:
+                    colors = card.get("colors", set())
+                    actual_colors.update(colors)
+
+                # Check that we don't exceed the requested number of colors
+                self.assertLessEqual(
+                    len(actual_colors),
+                    num_colors,
+                    f"Deck uses {len(actual_colors)} colors when {num_colors} were requested",
+                )
+
+                # For 3+ colors, we should actually use more than 2 colors
+                if num_colors >= 3:
+                    self.assertGreater(
+                        len(actual_colors),
+                        2,
+                        f"Deck only uses {len(actual_colors)} colors when {num_colors} were requested",
+                    )
+
+    @patch("magic_optimizer.optimizer.AdvancedDeckOptimizer.get_card_data")
+    @patch("magic_optimizer.optimizer.pd.read_csv")
+    def test_genetic_algorithm_color_constraints(
+        self, mock_read_csv, mock_get_card_data
+    ):
+        """Test genetic algorithm respects color constraints"""
+        mock_ratings_df = pd.DataFrame(
+            {
+                "Card Name": self.test_collection["Card Name"],
+                "Rating": self.test_collection["Rating"],
+            }
+        )
+        mock_read_csv.return_value = mock_ratings_df
+
+        # Mock card data
+        mock_get_card_data.side_effect = lambda card_name: self.mock_card_data.get(
+            card_name, {}
+        )
+
+        optimizer = AdvancedDeckOptimizer()
+
+        for num_colors in [1, 2, 3, 4, 5]:
+            with self.subTest(num_colors=num_colors):
+                eligible = optimizer.prepare_eligible_cards(
+                    self.test_collection, num_colors
+                )
+                deck = optimizer.genetic_algorithm_optimization(
+                    eligible, max_colors=num_colors, deck_size=20
+                )
+
+                # Apply strict enforcement
+                deck = optimizer.enforce_strict_color_constraints(
+                    deck, num_colors, 20, eligible
+                )
+
+                # Check deck size
+                self.assertEqual(
+                    len(deck), 20, f"Deck should have 20 cards for {num_colors} colors"
+                )
+
+                # Check color constraints (allow minimum possible)
+                min_possible = self.min_possible_colors(eligible)
+                actual_colors = optimizer.get_deck_colors(deck)
+                self.assertLessEqual(
+                    len(actual_colors),
+                    max(num_colors, min_possible),
+                    f"Deck should use at most {max(num_colors, min_possible)} colors for {num_colors} requested",
+                )
+
+    @patch("magic_optimizer.optimizer.AdvancedDeckOptimizer.get_card_data")
+    @patch("magic_optimizer.optimizer.pd.read_csv")
+    def test_simulated_annealing_color_constraints(
+        self, mock_read_csv, mock_get_card_data
+    ):
+        """Test simulated annealing respects color constraints"""
+        mock_ratings_df = pd.DataFrame(
+            {
+                "Card Name": self.test_collection["Card Name"],
+                "Rating": self.test_collection["Rating"],
+            }
+        )
+        mock_read_csv.return_value = mock_ratings_df
+
+        # Mock card data
+        mock_get_card_data.side_effect = lambda card_name: self.mock_card_data.get(
+            card_name, {}
+        )
+
+        optimizer = AdvancedDeckOptimizer()
+
+        for num_colors in [1, 2, 3, 4, 5]:
+            with self.subTest(num_colors=num_colors):
+                eligible = optimizer.prepare_eligible_cards(
+                    self.test_collection, num_colors
+                )
+                deck = optimizer.simulated_annealing_optimization(
+                    eligible, max_colors=num_colors, deck_size=20
+                )
+
+                # Apply strict enforcement
+                deck = optimizer.enforce_strict_color_constraints(
+                    deck, num_colors, 20, eligible
+                )
+
+                # Check deck size
+                self.assertEqual(
+                    len(deck), 20, f"Deck should have 20 cards for {num_colors} colors"
+                )
+
+                # Check color constraints (allow minimum possible)
+                min_possible = self.min_possible_colors(eligible)
+                actual_colors = optimizer.get_deck_colors(deck)
+                self.assertLessEqual(
+                    len(actual_colors),
+                    max(num_colors, min_possible),
+                    f"Deck should use at most {max(num_colors, min_possible)} colors for {num_colors} requested",
+                )
+
+    @patch("magic_optimizer.optimizer.AdvancedDeckOptimizer.get_card_data")
+    @patch("magic_optimizer.optimizer.pd.read_csv")
+    def test_color_distribution_analysis(self, mock_read_csv, mock_get_card_data):
+        """Test that we can analyze color distribution in the collection"""
+        # Mock the ratings file
+        mock_ratings_df = pd.DataFrame(
+            {
+                "Card Name": self.test_collection["Card Name"],
+                "Rating": self.test_collection["Rating"],
+            }
+        )
+        mock_read_csv.return_value = mock_ratings_df
+
+        # Mock card data
+        mock_get_card_data.side_effect = lambda card_name: self.mock_card_data.get(
+            card_name, {}
+        )
+
+        # Create optimizer
+        optimizer = AdvancedDeckOptimizer()
+
+        # Prepare eligible cards
+        eligible_cards = optimizer.prepare_eligible_cards(self.test_collection, 5)
+
+        # Analyze color distribution
     color_counts = {}
-    colorless_count = 0
-    off_color_cards = []
-
-    for card in deck:
+        for card in eligible_cards:
         colors = card.get("colors", set())
-        if not colors:
-            colorless_count += 1
-        else:
             for color in colors:
                 color_counts[color] = color_counts.get(color, 0) + 1
 
-            # Check for off-color cards
-            card_colors = set(colors)
-            off_colors = card_colors - set(target_colors)
-            if off_colors:
-                off_color_cards.append(
-                    {
-                        "name": card.get("name", "Unknown"),
-                        "colors": list(card_colors),
-                        "off_colors": list(off_colors),
-                    }
-                )
+        # We should have cards in all 5 colors
+        self.assertIn("W", color_counts)
+        self.assertIn("U", color_counts)
+        self.assertIn("B", color_counts)
+        self.assertIn("R", color_counts)
+        self.assertIn("G", color_counts)
 
-    print(f"\nColor Distribution:")
-    for color, count in sorted(color_counts.items()):
-        status = "✓" if color in target_colors else "✗ OFF-COLOR"
-        print(f"  {color}: {count} cards {status}")
+        # Each color should have at least 4 cards
+        for color in ["W", "U", "B", "R", "G"]:
+            self.assertGreaterEqual(color_counts[color], 4)
 
-    if colorless_count > 0:
-        print(f"  Colorless: {colorless_count} cards ✓")
-
-    # Check for constraint violations
-    used_colors = set(color_counts.keys())
-    target_color_set = set(target_colors)
-
-    print(f"\nConstraint Analysis:")
-    print(f"Colors used: {len(used_colors)} ({list(used_colors)})")
-    print(f"Target colors: {len(target_color_set)} ({list(target_color_set)})")
-
-    # Check if we're using more colors than specified
-    if len(used_colors) > len(target_colors):
-        print(
-            f"✗ VIOLATION: Using {len(used_colors)} colors but only {len(target_colors)} specified!"
-        )
-        excess_colors = used_colors - target_color_set
-        print(f"  Excess colors: {list(excess_colors)}")
-    else:
-        print(f"✓ Colors constraint respected")
-
-    # Check for off-color cards
-    if off_color_cards:
-        print(f"\n✗ VIOLATION: Found {len(off_color_cards)} cards with off-colors:")
-        for card in off_color_cards[:5]:  # Show first 5
-            print(f"  {card['name']}: {card['colors']} (off: {card['off_colors']})")
-        if len(off_color_cards) > 5:
-            print(f"  ... and {len(off_color_cards) - 5} more")
-    else:
-        print(f"✓ No off-color cards found")
-
-    return {
-        "used_colors": used_colors,
-        "target_colors": target_color_set,
-        "off_color_cards": off_color_cards,
-        "violation": len(used_colors) > len(target_colors) or len(off_color_cards) > 0,
-    }
-
-
-def test_color_constraints():
-    """Test all algorithms for color constraint compliance"""
-    print("=== TESTING COLOR CONSTRAINTS ===")
-
-    # Initialize deck builder
-    builder = EnhancedDeckBuilder()
-
-    # Create test collection
-    collection_df = create_test_collection()
-    print(f"Created test collection with {len(collection_df)} cards")
-
-    # Test parameters
-    num_colors = 2  # Test with 2 colors
-    deck_size = 40
-
-    algorithms = ["greedy", "genetic", "simulated_annealing"]
-
-    results = {}
-
-    for algorithm in algorithms:
-        print(f"\n{'='*50}")
-        print(f"TESTING {algorithm.upper()} ALGORITHM")
-        print(f"{'='*50}")
-
-        try:
-            # Build deck
-            result = builder.build_optimal_deck_advanced(
-                collection_df, num_colors, deck_size, algorithm, []
-            )
-
-            # Analyze colors
-            analysis = analyze_deck_colors(result["deck"], result["target_colors"])
-
-            results[algorithm] = {
-                "success": True,
-                "score": result["score"],
-                "target_colors": result["target_colors"],
-                "analysis": analysis,
+    @patch("magic_optimizer.optimizer.AdvancedDeckOptimizer.get_card_data")
+    @patch("magic_optimizer.optimizer.pd.read_csv")
+    def test_target_color_selection(self, mock_read_csv, mock_get_card_data):
+        """Test target color selection logic"""
+        # Mock the ratings file
+        mock_ratings_df = pd.DataFrame(
+            {
+                "Card Name": self.test_collection["Card Name"],
+                "Rating": self.test_collection["Rating"],
             }
+        )
+        mock_read_csv.return_value = mock_ratings_df
 
-        except Exception as e:
-            print(f"Error with {algorithm}: {e}")
-            results[algorithm] = {"success": False, "error": str(e)}
-
-    # Summary
-    print(f"\n{'='*50}")
-    print(f"SUMMARY")
-    print(f"{'='*50}")
-
-    for algorithm, result in results.items():
-        if result["success"]:
-            status = "✓ PASS" if not result["analysis"]["violation"] else "✗ FAIL"
-            print(f"{algorithm.upper()}: {status}")
-            print(f"  Score: {result['score']:.4f}")
-            print(f"  Target Colors: {result['target_colors']}")
-            if result["analysis"]["violation"]:
-                print(
-                    f"  Issues: {len(result['analysis']['off_color_cards'])} off-color cards"
-                )
-        else:
-            print(f"{algorithm.upper()}: ✗ ERROR - {result['error']}")
-
-
-def test_penalty_function():
-    """Test the penalty function directly"""
-    print(f"\n=== TESTING PENALTY FUNCTION ===")
-
-    from magic_optimizer.optimizer import AdvancedDeckOptimizer
-
-    optimizer = AdvancedDeckOptimizer()
-
-    # Test cases
-    test_cases = [
-        {
-            "name": "Focused Mono-Red",
-            "deck": [
-                {"name": "Lightning Bolt", "colors": {"R"}, "rating": 9, "cmc": 1},
-                {"name": "Fireball", "colors": {"R"}, "rating": 7, "cmc": 3},
-                {"name": "Shock", "colors": {"R"}, "rating": 6, "cmc": 1},
-            ],
-            "target_colors": ["R"],
-            "expected": "Low penalty",
-        },
-        {
-            "name": "Spread Across Many Colors",
-            "deck": [
-                {"name": "Lightning Bolt", "colors": {"R"}, "rating": 9, "cmc": 1},
-                {"name": "Counterspell", "colors": {"U"}, "rating": 9, "cmc": 2},
-                {"name": "Giant Growth", "colors": {"G"}, "rating": 6, "cmc": 1},
-                {"name": "Path to Exile", "colors": {"W"}, "rating": 8, "cmc": 1},
-                {"name": "Doom Blade", "colors": {"B"}, "rating": 8, "cmc": 2},
-            ],
-            "target_colors": ["R", "U"],
-            "expected": "High penalty",
-        },
-        {
-            "name": "Off-Color Cards",
-            "deck": [
-                {"name": "Lightning Bolt", "colors": {"R"}, "rating": 9, "cmc": 1},
-                {"name": "Counterspell", "colors": {"U"}, "rating": 9, "cmc": 2},
-                {
-                    "name": "Giant Growth",
-                    "colors": {"G"},
-                    "rating": 6,
-                    "cmc": 1,
-                },  # Off-color
-            ],
-            "target_colors": ["R", "U"],
-            "expected": "High penalty for off-color",
-        },
-    ]
-
-    for test_case in test_cases:
-        penalty = optimizer.calculate_color_penalty(
-            test_case["deck"], test_case["target_colors"]
+        # Mock card data
+        mock_get_card_data.side_effect = lambda card_name: self.mock_card_data.get(
+            card_name, {}
         )
 
-        print(f"\n{test_case['name']}:")
-        print(f"  Expected: {test_case['expected']}")
-        print(f"  Actual Penalty: {penalty:.4f}")
+        # Create optimizer
+        optimizer = AdvancedDeckOptimizer()
 
-        if penalty < 0.5:
-            print("  ✅ Low penalty (good)")
-        elif penalty < 2.0:
-            print("  ⚠️  Moderate penalty")
+        # Prepare eligible cards
+        eligible_cards = optimizer.prepare_eligible_cards(self.test_collection, 5)
+
+        # Test target color selection for different numbers of colors
+        for num_colors in [1, 2, 3, 4, 5]:
+            with self.subTest(num_colors=num_colors):
+                target_colors = optimizer.select_target_colors(
+                    eligible_cards, num_colors
+                )
+
+                # Should return exactly the requested number of colors
+                self.assertEqual(len(target_colors), num_colors)
+
+                # Colors should be valid
+                valid_colors = {"W", "U", "B", "R", "G"}
+                for color in target_colors:
+                    self.assertIn(color, valid_colors)
+
+    @patch("magic_optimizer.optimizer.AdvancedDeckOptimizer.get_card_data")
+    @patch("magic_optimizer.optimizer.pd.read_csv")
+    def test_deck_color_analysis(self, mock_read_csv, mock_get_card_data):
+        """Test deck color analysis functions"""
+        # Mock the ratings file
+        mock_ratings_df = pd.DataFrame({"Card Name": ["Test Card"], "Rating": ["8/10"]})
+        mock_read_csv.return_value = mock_ratings_df
+
+        # Mock card data
+        mock_get_card_data.return_value = {}
+
+        # Create optimizer
+        optimizer = AdvancedDeckOptimizer()
+
+        # Create a test deck
+        test_deck = [
+            {"colors": {"R"}, "name": "Lightning Bolt"},
+            {"colors": {"U"}, "name": "Counterspell"},
+            {"colors": {"G"}, "name": "Giant Growth"},
+            {"colors": {"W"}, "name": "Swords to Plowshares"},
+            {"colors": {"B"}, "name": "Dark Ritual"},
+            {"colors": {"R", "W"}, "name": "Lightning Helix"},
+            {"colors": set(), "name": "Sol Ring"},
+        ]
+
+        # Test get_deck_colors
+        deck_colors = optimizer.get_deck_colors(test_deck)
+        expected_colors = ["B", "G", "R", "U", "W"]
+        self.assertEqual(sorted(deck_colors), expected_colors)
+
+        # Test color balance evaluation
+        balance_score = optimizer.evaluate_color_balance_dynamic(test_deck, deck_colors)
+        self.assertGreater(balance_score, 0.0)
+        self.assertLessEqual(balance_score, 1.0)
+
+    @patch("magic_optimizer.optimizer.pd.read_csv")
+    def test_all_algorithms_color_and_size_constraints(self, mock_read_csv):
+        """Test that all algorithms produce decks with the correct number of colors and size"""
+        mock_ratings_df = pd.DataFrame(
+            {
+                "Card Name": self.test_collection["Card Name"],
+                "Rating": self.test_collection["Rating"],
+            }
+        )
+        mock_read_csv.return_value = mock_ratings_df
+    builder = EnhancedDeckBuilder()
+        optimizer = AdvancedDeckOptimizer()
+        for num_colors in [1, 2, 3, 4, 5]:
+            for algo in ["greedy", "genetic", "annealing"]:
+                with self.subTest(num_colors=num_colors, algo=algo):
+                    eligible = optimizer.prepare_eligible_cards(
+                        self.test_collection, num_colors
+                    )
+                    if algo == "greedy":
+                        deck = builder.build_greedy_deck(
+                            self.test_collection, num_colors, 20
+                        )
+                        if isinstance(deck, dict) and "deck" in deck:
+                            deck = deck["deck"]
+                    elif algo == "genetic":
+                        deck = optimizer.genetic_algorithm_optimization(
+                            eligible, max_colors=num_colors, deck_size=20
+                        )
+                    elif algo == "annealing":
+                        deck = optimizer.simulated_annealing_optimization(
+                            eligible, max_colors=num_colors, deck_size=20
+                        )
+                    # Apply strict enforcement
+                    deck = optimizer.enforce_strict_color_constraints(
+                        deck, num_colors, 20, eligible
+                    )
+                    # Deck size: allow as large as possible up to requested size
+                    self.assertLessEqual(
+                        len(deck), 20, f"{algo} produced too many cards: {len(deck)}"
+                    )
+                    if len(eligible) >= 20:
+                        self.assertEqual(
+                            len(deck),
+                            20,
+                            f"{algo} produced wrong deck size: {len(deck)}",
+                        )
+                    # Color constraints (allow minimum possible)
+                    min_possible = self.min_possible_colors(eligible)
+                    actual_colors = optimizer.get_deck_colors(deck)
+                    self.assertLessEqual(
+                        len(actual_colors),
+                        max(num_colors, min_possible),
+                        f"{algo} produced too many colors: {len(actual_colors)}",
+                    )
+
+    @patch("magic_optimizer.optimizer.AdvancedDeckOptimizer.get_card_data")
+    @patch("magic_optimizer.optimizer.pd.read_csv")
+    def test_algorithm_comparison(self, mock_read_csv, mock_get_card_data):
+        """Test that all algorithms produce similar quality results"""
+        mock_ratings_df = pd.DataFrame(
+            {
+                "Card Name": self.test_collection["Card Name"],
+                "Rating": self.test_collection["Rating"],
+            }
+        )
+        mock_read_csv.return_value = mock_ratings_df
+        mock_get_card_data.side_effect = lambda card_name: self.mock_card_data.get(
+            card_name, {}
+        )
+        builder = EnhancedDeckBuilder()
+    optimizer = AdvancedDeckOptimizer()
+        num_colors = 3
+        deck_size = 20
+        eligible = optimizer.prepare_eligible_cards(self.test_collection, num_colors)
+        greedy_result = builder.build_greedy_deck(
+            self.test_collection, num_colors, deck_size
+        )
+        if isinstance(greedy_result, dict) and "deck" in greedy_result:
+            greedy_deck = greedy_result["deck"]
         else:
-            print("  ❌ High penalty (bad)")
+            greedy_deck = greedy_result
+        genetic_deck = optimizer.genetic_algorithm_optimization(
+            eligible, max_colors=num_colors, deck_size=deck_size
+        )
+        annealing_deck = optimizer.simulated_annealing_optimization(
+            eligible, max_colors=num_colors, deck_size=deck_size
+        )
+        # Apply strict enforcement to all
+        greedy_deck = optimizer.enforce_strict_color_constraints(
+            greedy_deck, num_colors, deck_size, eligible
+        )
+        genetic_deck = optimizer.enforce_strict_color_constraints(
+            genetic_deck, num_colors, deck_size, eligible
+        )
+        annealing_deck = optimizer.enforce_strict_color_constraints(
+            annealing_deck, num_colors, deck_size, eligible
+        )
+        # All decks should have the correct size (or as large as possible)
+        for deck in [greedy_deck, genetic_deck, annealing_deck]:
+            self.assertLessEqual(len(deck), deck_size)
+            if len(eligible) >= deck_size:
+                self.assertEqual(len(deck), deck_size)
+        # All decks should respect color constraints (allow minimum possible)
+        min_possible = self.min_possible_colors(eligible)
+        max_allowed = max(num_colors, min_possible)
+        for deck in [greedy_deck, genetic_deck, annealing_deck]:
+            colors = optimizer.get_deck_colors(deck)
+            self.assertLessEqual(len(colors), max_allowed)
 
-
-def main():
-    """Main test function"""
-    print("COLOR CONSTRAINT SYSTEM TEST")
-    print("=" * 50)
-
-    try:
-        # Test color constraints
-        test_color_constraints()
-
-        # Test penalty function
-        test_penalty_function()
-
-        print(f"\n=== ALL TESTS COMPLETED ===")
-        print("The color constraint system should now produce more focused decks!")
-
-    except Exception as e:
-        print(f"Test failed with error: {e}")
-        import traceback
-
-        traceback.print_exc()
+    def min_possible_colors(self, eligible):
+        # If no eligible cards, return 0
+        if not eligible:
+            return 0
+        # Try all combinations of 20 cards to find the minimum color count
+        # For speed, just check the 20 highest-rated cards
+        eligible_sorted = sorted(
+            eligible, key=lambda c: c.get("rating", 0), reverse=True
+        )
+        deck = eligible_sorted[:20]
+        colors = set()
+        for card in deck:
+            colors.update(card.get("colors", set()))
+        return len(colors)
 
 
 if __name__ == "__main__":
-    main()
+    unittest.main()

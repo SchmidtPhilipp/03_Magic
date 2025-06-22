@@ -142,6 +142,22 @@ class EnhancedDeckBuilder:
             collection_df, num_colors
         )
 
+        # If only one color is requested, filter eligible cards to strictly mono-color (or colorless)
+        if num_colors == 1:
+            # Find the most common color in the eligible pool
+            color_counts = {}
+            for card in eligible_cards:
+                for color in card.get("colors", set()):
+                    color_counts[color] = color_counts.get(color, 0) + 1
+            if color_counts:
+                main_color = max(color_counts, key=color_counts.get)
+                eligible_cards = [
+                    card
+                    for card in eligible_cards
+                    if (card.get("colors", set()) == {main_color})
+                    or (not card.get("colors"))
+                ]
+
         # Exclude all lands from eligible cards (basic and nonbasic)
         eligible_spells = [
             card for card in eligible_cards if card.get("type") != "Land"
@@ -181,14 +197,12 @@ class EnhancedDeckBuilder:
             if len(temp_colors) > num_colors:
                 continue
 
-            # NEW: Check if card colors are compatible with current deck
-            if card_colors:  # If card has colors (not colorless)
-                if deck_colors:  # If deck already has colors
-                    # Card must have at least one color that's already in the deck
-                    # AND no colors that aren't in the deck
-                    if not (card_colors & deck_colors) or (card_colors - deck_colors):
-                        continue  # Skip incompatible card
-                # If deck is empty, any card is fine (will establish deck colors)
+            # FIXED: Allow cards that expand the color pool up to the limit
+            # Only restrict if we're already at the color limit
+            if len(deck_colors) >= num_colors and card_colors:
+                # If we're at the limit, only allow cards that use existing colors
+                if not (card_colors & deck_colors):
+                    continue  # Skip cards that don't use existing colors
 
             deck.append(card)
 
@@ -208,12 +222,10 @@ class EnhancedDeckBuilder:
             card_colors = card.get("colors", set())
 
             # Apply same color compatibility check
-            if card_colors:  # If card has colors
-                if deck_colors:  # If deck already has colors
-                    # Card must have at least one color that's already in the deck
-                    # AND no colors that aren't in the deck
-                    if not (card_colors & deck_colors) or (card_colors - deck_colors):
-                        continue  # Skip incompatible card
+            if len(deck_colors) >= num_colors and card_colors:
+                # If we're at the limit, only allow cards that use existing colors
+                if not (card_colors & deck_colors):
+                    continue  # Skip cards that don't use existing colors
 
             deck.append(card)
             # Update color counts

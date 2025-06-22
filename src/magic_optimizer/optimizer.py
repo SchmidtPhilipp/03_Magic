@@ -329,17 +329,59 @@ class AdvancedDeckOptimizer:
         if num_colors_used <= max_colors:
             return 0.0  # No penalty if within limit
 
-        # Penalty increases with the number of excess colors
+        # EXTREMELY STRONG PENALTY: Make it much more severe
         excess_colors = num_colors_used - max_colors
-        penalty = lambda_penalty * excess_colors * 2.0  # Doubled base penalty
 
-        # Additional penalty for very high color counts (exponential)
-        if excess_colors > 1:
-            penalty += (
-                lambda_penalty * (excess_colors**2) * 3.0
-            )  # Stronger exponential penalty
+        # Base penalty is much higher now
+        penalty = lambda_penalty * excess_colors * 50.0  # 50x stronger base penalty
+
+        # Exponential penalty for excess colors
+        penalty += lambda_penalty * (3.0**excess_colors) * 10.0
+
+        # Additional penalty for each excess color
+        penalty += lambda_penalty * excess_colors * excess_colors * 20.0
+
+        # Extra penalty for very restrictive limits (1-2 colors)
+        if max_colors <= 2:
+            penalty *= 5.0  # 5x multiplier for very restrictive limits
 
         return penalty
+
+    def enforce_strict_color_constraints(
+        self, deck, max_colors, deck_size, eligible_cards
+    ):
+        """
+        Enforce that the deck contains only the N most common colors and is filled to deck_size.
+        If not enough cards of allowed colors, fill with any eligible cards.
+        """
+        from collections import Counter
+
+        color_counts = Counter()
+        for card in deck:
+            color_counts.update(card.get("colors", set()))
+        most_common = [c for c, _ in color_counts.most_common(max_colors)]
+        allowed_colors = set(most_common)
+        filtered_deck = [
+            card for card in deck if card.get("colors", set()) & allowed_colors
+        ]
+        already_in = set(card["name"] for card in filtered_deck)
+        refill_pool = [
+            card
+            for card in eligible_cards
+            if card.get("colors", set()) & allowed_colors
+            and card["name"] not in already_in
+        ]
+        refill_pool.sort(key=lambda c: c.get("rating", 0), reverse=True)
+        filtered_deck += refill_pool[: deck_size - len(filtered_deck)]
+        # If still too small, fill with any eligible cards not already in deck
+        if len(filtered_deck) < deck_size:
+            already_in = set(card["name"] for card in filtered_deck)
+            any_pool = [
+                card for card in eligible_cards if card["name"] not in already_in
+            ]
+            any_pool.sort(key=lambda c: c.get("rating", 0), reverse=True)
+            filtered_deck += any_pool[: deck_size - len(filtered_deck)]
+        return filtered_deck[:deck_size]
 
     def genetic_algorithm_optimization(
         self,
@@ -361,7 +403,7 @@ class AdvancedDeckOptimizer:
         # Initialize population
         population = []
         for _ in range(population_size):
-            deck = self.create_random_deck(eligible_cards, deck_size)
+            deck = self.create_random_deck(eligible_cards, deck_size, max_colors)
             population.append(deck)
 
         best_deck = population[0]  # Initialize with first deck
@@ -402,7 +444,7 @@ class AdvancedDeckOptimizer:
             for i in range(population_size):
                 if random.random() < mutation_rate:
                     new_population[i] = self.mutate_deck(
-                        new_population[i], eligible_cards, deck_size
+                        new_population[i], eligible_cards, deck_size, max_colors
                     )
 
             population = new_population
@@ -418,11 +460,10 @@ class AdvancedDeckOptimizer:
         actual_colors = self.get_deck_colors(best_deck)
         print(f"Final deck colors: {actual_colors}")
 
-        # Ensure we return a valid deck
-        if best_deck is None or len(best_deck) == 0:
-            print("Warning: No valid deck found, returning random deck")
-            best_deck = self.create_random_deck(eligible_cards, deck_size)
-
+        # POST-PROCESSING: Enforce strict color constraints
+        best_deck = self.enforce_strict_color_constraints(
+            best_deck, max_colors, deck_size, eligible_cards
+        )
         return best_deck
 
     def simulated_annealing_optimization(
@@ -442,7 +483,7 @@ class AdvancedDeckOptimizer:
         print(f"Max Colors: {max_colors}, Lambda Penalty: {lambda_penalty}")
 
         # Start with random deck
-        current_deck = self.create_random_deck(eligible_cards, deck_size)
+        current_deck = self.create_random_deck(eligible_cards, deck_size, max_colors)
         current_score = self.calculate_deck_score(
             current_deck, [], deck_size, max_colors, lambda_penalty
         )
@@ -455,7 +496,7 @@ class AdvancedDeckOptimizer:
         for iteration in range(iterations):
             # Generate neighbor (small change to current deck)
             neighbor_deck = self.generate_neighbor_deck(
-                current_deck, eligible_cards, deck_size
+                current_deck, eligible_cards, deck_size, max_colors
             )
             neighbor_score = self.calculate_deck_score(
                 neighbor_deck, [], deck_size, max_colors, lambda_penalty
@@ -483,14 +524,100 @@ class AdvancedDeckOptimizer:
         print(f"Simulated Annealing completed. Best score: {best_score:.4f}")
         actual_colors = self.get_deck_colors(best_deck)
         print(f"Final deck colors: {actual_colors}")
+
+        # POST-PROCESSING: Enforce strict color constraints
+        best_deck = self.enforce_strict_color_constraints(
+            best_deck, max_colors, deck_size, eligible_cards
+        )
         return best_deck
 
     def create_random_deck(
-        self, eligible_cards: List[Dict], deck_size: int
+        self, eligible_cards: List[Dict], deck_size: int, max_colors: int = None
     ) -> List[Dict]:
-        """Create a random deck from eligible cards"""
+        """Create a random deck from eligible cards with optional color constraint"""
         if len(eligible_cards) < deck_size:
             return eligible_cards.copy()
+
+        # If max_colors is specified, ensure the deck respects the color limit
+        if max_colors is not None:
+            # For very restrictive limits, use a more targeted approach
+            if max_colors <= 2:
+                # Try to find a dominant color first
+                color_counts = {}
+                for card in eligible_cards:
+                    colors = card.get("colors", set())
+                    for color in colors:
+                        color_counts[color] = color_counts.get(color, 0) + 1
+
+                # Find the color with the most cards
+                if color_counts:
+                    dominant_color = max(
+                        color_counts.keys(), key=lambda c: color_counts[c]
+                    )
+
+                    # Create deck with dominant color + colorless + maybe one other color
+                    dominant_cards = [
+                        card
+                        for card in eligible_cards
+                        if card.get("colors", set()) == {dominant_color}
+                    ]
+                    colorless_cards = [
+                        card for card in eligible_cards if not card.get("colors", set())
+                    ]
+
+                    deck = []
+                    # Add dominant color cards first
+                    if dominant_cards:
+                        num_dominant = min(deck_size // 2, len(dominant_cards))
+                        deck.extend(random.sample(dominant_cards, num_dominant))
+
+                    # Add colorless cards
+                    if colorless_cards and len(deck) < deck_size:
+                        num_colorless = min(deck_size - len(deck), len(colorless_cards))
+                        deck.extend(random.sample(colorless_cards, num_colorless))
+
+                    # Fill remaining slots with any valid cards
+                    remaining_cards = [
+                        card for card in eligible_cards if card not in deck
+                    ]
+                    if remaining_cards and len(deck) < deck_size:
+                        remaining_needed = deck_size - len(deck)
+                        deck.extend(
+                            random.sample(
+                                remaining_cards,
+                                min(remaining_needed, len(remaining_cards)),
+                            )
+                        )
+
+                    return deck[:deck_size]
+
+            # For less restrictive limits, use the original approach
+            attempts = 0
+            max_attempts = 200  # Increased attempts
+
+            while attempts < max_attempts:
+                deck = random.sample(eligible_cards, deck_size)
+                actual_colors = self.get_deck_colors(deck)
+
+                if len(actual_colors) <= max_colors:
+                    return deck
+
+                attempts += 1
+
+            # If we can't find a valid deck, return the best attempt
+            best_deck = random.sample(eligible_cards, deck_size)
+            best_colors = len(self.get_deck_colors(best_deck))
+
+            for _ in range(100):  # Try more times
+                deck = random.sample(eligible_cards, deck_size)
+                colors = len(self.get_deck_colors(deck))
+                if colors < best_colors:
+                    best_deck = deck
+                    best_colors = colors
+                    if best_colors <= max_colors:
+                        break
+
+            return best_deck
 
         return random.sample(eligible_cards, deck_size)
 
@@ -522,9 +649,13 @@ class AdvancedDeckOptimizer:
         return child1[:deck_size], child2[:deck_size]
 
     def mutate_deck(
-        self, deck: List[Dict], eligible_cards: List[Dict], deck_size: int
+        self,
+        deck: List[Dict],
+        eligible_cards: List[Dict],
+        deck_size: int,
+        max_colors: int = None,
     ) -> List[Dict]:
-        """Mutate a deck by replacing some cards"""
+        """Mutate a deck by replacing some cards with optional color constraint"""
         mutated_deck = deck.copy()
 
         # Replace 1-3 random cards
@@ -539,33 +670,67 @@ class AdvancedDeckOptimizer:
                 available_cards = [
                     card for card in eligible_cards if card not in mutated_deck
                 ]
-                if available_cards:
-                    mutated_deck.append(random.choice(available_cards))
 
-        return mutated_deck[:deck_size]
+                if available_cards:
+                    # If max_colors is specified, try to find a card that maintains the color limit
+                    if max_colors is not None:
+                        valid_cards = []
+                        for card in available_cards:
+                            temp_deck = mutated_deck + [card]
+                            if len(self.get_deck_colors(temp_deck)) <= max_colors:
+                                valid_cards.append(card)
+
+                        if valid_cards:
+                            mutated_deck.append(random.choice(valid_cards))
+                        else:
+                            # If no valid cards, add the best available one
+                            mutated_deck.append(random.choice(available_cards))
+                    else:
+                        mutated_deck.append(random.choice(available_cards))
+
+        return mutated_deck
 
     def generate_neighbor_deck(
-        self, deck: List[Dict], eligible_cards: List[Dict], deck_size: int
+        self,
+        deck: List[Dict],
+        eligible_cards: List[Dict],
+        deck_size: int,
+        max_colors: int = None,
     ) -> List[Dict]:
-        """Generate a neighbor deck for simulated annealing"""
+        """Generate a neighbor deck by making small changes with optional color constraint"""
         neighbor = deck.copy()
 
-        # Randomly replace 1-2 cards
+        # Make 1-2 small changes
         num_changes = random.randint(1, 2)
         for _ in range(num_changes):
             if len(neighbor) > 0:
-                # Remove random card
+                # Remove a random card
                 removed_card = random.choice(neighbor)
                 neighbor.remove(removed_card)
 
-                # Add random card from eligible cards
+                # Add a random card from eligible cards
                 available_cards = [
                     card for card in eligible_cards if card not in neighbor
                 ]
-                if available_cards:
-                    neighbor.append(random.choice(available_cards))
 
-        return neighbor[:deck_size]
+                if available_cards:
+                    # If max_colors is specified, try to find a card that maintains the color limit
+                    if max_colors is not None:
+                        valid_cards = []
+                        for card in available_cards:
+                            temp_deck = neighbor + [card]
+                            if len(self.get_deck_colors(temp_deck)) <= max_colors:
+                                valid_cards.append(card)
+
+                        if valid_cards:
+                            neighbor.append(random.choice(valid_cards))
+                        else:
+                            # If no valid cards, add the best available one
+                            neighbor.append(random.choice(available_cards))
+                    else:
+                        neighbor.append(random.choice(available_cards))
+
+        return neighbor
 
     def optimize_deck(
         self,
@@ -791,3 +956,35 @@ class AdvancedDeckOptimizer:
             elif "Planeswalker" in type_line:
                 return "Planeswalker"
         return "Unknown"
+
+    def enforce_color_constraints(
+        self,
+        deck: List[Dict],
+        max_colors: int,
+        deck_size: int,
+        eligible_cards: List[Dict],
+    ) -> List[Dict]:
+        """Enforce color constraints by filtering the deck"""
+        filtered_deck = []
+        actual_colors = self.get_deck_colors(deck)
+
+        for card in deck:
+            colors = card.get("colors", set())
+            if not colors:  # Colorless cards are always allowed
+                filtered_deck.append(card)
+            else:
+                # Only include cards that have at least one target color
+                # AND don't have any off-target colors
+                card_colors = set(colors)
+                if card_colors.issubset(set(actual_colors)):
+                    filtered_deck.append(card)
+
+        # Ensure the deck size is maintained
+        while len(filtered_deck) < deck_size:
+            remaining_cards = [
+                card for card in eligible_cards if card not in filtered_deck
+            ]
+            if remaining_cards:
+                filtered_deck.append(remaining_cards[0])
+
+        return filtered_deck
