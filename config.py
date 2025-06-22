@@ -8,7 +8,7 @@ Centralizes all configurable elements for easy customization
 # APPLICATION METADATA
 # =============================================================================
 APP_NAME = "MTG Sealed Deck Optimizer"
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.1.0"
 APP_YEAR = "2025"
 APP_DESCRIPTION = "Advanced Magic: The Gathering sealed deck optimization tool"
 
