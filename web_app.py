@@ -330,6 +330,7 @@ def get_deck_info():
 
     # Analyze deck
     color_counts = {}
+    colorless_count = 0
     mana_curve = {i: 0 for i in range(8)}
     card_types = {}
     ratings = []
@@ -337,8 +338,11 @@ def get_deck_info():
     for card in deck:
         # Color counts
         colors = card.get("colors", set())
-        for color in colors:
-            color_counts[color] = color_counts.get(color, 0) + 1
+        if not colors:
+            colorless_count += 1
+        else:
+            for color in colors:
+                color_counts[color] = color_counts.get(color, 0) + 1
 
         # Mana curve
         cmc = card.get("cmc", 0)
@@ -355,6 +359,10 @@ def get_deck_info():
         rating = card.get("rating", 0)
         if rating > 0:
             ratings.append(rating)
+
+    # Add colorless count to color_counts if there are colorless cards
+    if colorless_count > 0:
+        color_counts["Colorless"] = colorless_count
 
     return jsonify(
         convert_sets_to_lists(
