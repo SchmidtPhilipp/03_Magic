@@ -44,6 +44,7 @@ data/cache/
 # Large files
 *.json
 *.html
+!templates/*.html
 *.txt
 !requirements.txt
 !README.md
