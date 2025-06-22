@@ -39,3 +39,44 @@
 - ✓ Complete system integration tests
 - ✓ Algorithm-specific test suites
 - ✓ Color constraint enforcement validation
+
+### Advanced Evaluation System ✓
+- ✓ **[Core] Define evaluation interface**
+  - Function: `evaluate_deck(decklist: list[str], method: str) -> float`
+  - Enables different evaluation methods based on selection
+  - Implemented in `src/magic_optimizer/evaluator.py`
+
+- ✓ **[UI] Prepare top-down selection menu**
+  - Dropdown selection for evaluation method
+  - Selection influences which evaluation function is used
+  - Dynamic descriptions based on selection
+  - Integrated in `templates/index.html` and `static/js/app.js`
+
+- ✓ **[Option 1] Automated evaluation via 17Lands data**
+  - Load `card_ratings.csv`
+  - Use: `game_in_hand_win_rate` + `improvement_when_drawn`
+  - Description in menu: "Data-based evaluation from 17Lands – combines GIH Winrate and IWD."
+  - Implemented in `evaluate_deck_17lands()` method
+
+- ✓ **[Option 2] Previous manual evaluation and synergy function**
+  - Uses local ratings and synergy bonuses
+  - Description in menu: "Manual evaluation + synergy values from local dictionary."
+  - Function: `evaluate_deck_manual(decklist: list[str])`
+  - Enhanced synergy detection with specific card pairs
+
+### Integration & Testing
+- ✓ Complete integration in Optimizer, Deck Builder and Web App
+- ✓ New route `/evaluation_methods` for available methods
+- ✓ Comprehensive unit tests in `tests/test_evaluation_methods.py` (9 tests)
+- ✓ All tests successfully completed
+- ✓ Version 1.2.0 created and tagged
+
+### Performance & Synergy Enhancements ✓
+- ✓ Performance optimization of evaluation functions
+  - Caching for synergy calculations implemented
+  - Parallel processing for large decks
+  - Optimization of 17Lands data integration (parallelized)
+- ✓ Enhanced synergy detection
+  - More synergy patterns and tribal synergies implemented
+  - Dynamic synergy evaluation based on deck context
+  - Comprehensive tests for synergy and performance

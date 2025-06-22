@@ -156,7 +156,7 @@ class TestEvaluationMethods(unittest.TestCase):
         # Check manual method
         manual_method = next(m for m in methods if m["value"] == "manual")
         self.assertEqual(manual_method["label"], "Manual + Synergy")
-        self.assertIn("Synergiewerte", manual_method["description"])
+        self.assertIn("synergy values", manual_method["description"])
 
     def test_optimizer_integration(self):
         """Test integration with AdvancedDeckOptimizer"""

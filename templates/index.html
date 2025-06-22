@@ -81,14 +81,14 @@
 
                         <!-- Evaluation Method Settings -->
                         <div class="mb-3">
-                            <label for="evaluationMethod" class="form-label">Bewertungsmethode</label>
-                            <select class="form-select" id="evaluationMethod">
-                                <option value="manual">Manuelle Bewertung + Synergie</option>
-                                <option value="17lands">17Lands Datenbasierte Bewertung</option>
+                            <label for="evaluationMethod" class="form-label">Evaluation Method</label>
+                            <select id="evaluationMethod" name="evaluationMethod" class="form-select">
+                                <option value="manual">Manual Evaluation + Synergy</option>
+                                <option value="17lands">17Lands Data-Based Evaluation</option>
                             </select>
-                            <small class="form-text text-muted" id="evaluationDescription">
-                                Manuelle Bewertung + Synergiewerte aus lokalem Dictionary.
-                            </small>
+                            <div id="evaluationDescription" class="form-text">
+                                Manual evaluation + synergy values from local dictionary.
+                            </div>
                         </div>
 
                         <!-- Lambda Penalty (only for genetic/simulated annealing) -->

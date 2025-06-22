@@ -411,11 +411,35 @@ class AdvancedDeckOptimizer:
         print(f"Max Colors: {max_colors}, Lambda Penalty: {lambda_penalty}")
         print(f"Evaluation Method: {evaluation_method}")
 
+        # Validate input
+        if not eligible_cards or len(eligible_cards) < deck_size:
+            print(
+                f"Error: Not enough eligible cards ({len(eligible_cards)}) for deck size {deck_size}"
+            )
+            return []
+
         # Initialize population
         population = []
         for _ in range(population_size):
             deck = self.create_random_deck(eligible_cards, deck_size, max_colors)
-            population.append(deck)
+            if deck and len(deck) > 0:  # Ensure deck is valid
+                population.append(deck)
+            else:
+                # Create a fallback deck if random creation fails
+                fallback_deck = (
+                    eligible_cards[:deck_size]
+                    if len(eligible_cards) >= deck_size
+                    else eligible_cards
+                )
+                population.append(fallback_deck)
+
+        if not population:
+            print("Error: Failed to create initial population")
+            return (
+                eligible_cards[:deck_size]
+                if len(eligible_cards) >= deck_size
+                else eligible_cards
+            )
 
         best_deck = None
         best_score = 0.0
@@ -423,59 +447,122 @@ class AdvancedDeckOptimizer:
         for generation in range(generations):
             # Evaluate fitness
             fitness_scores = []
-            for deck in population:
-                score = self.calculate_deck_score(
-                    deck, [], deck_size, max_colors, lambda_penalty, evaluation_method
-                )
-                fitness_scores.append(score)
+            valid_population = []
 
-                if score > best_score:
-                    best_score = score
-                    best_deck = deepcopy(deck)
+            for deck in population:
+                if deck and len(deck) > 0:  # Ensure deck is valid
+                    try:
+                        score = self.calculate_deck_score(
+                            deck,
+                            [],
+                            deck_size,
+                            max_colors,
+                            lambda_penalty,
+                            evaluation_method,
+                        )
+                        fitness_scores.append(score)
+                        valid_population.append(deck)
+
+                        if score > best_score:
+                            best_score = score
+                            best_deck = deepcopy(deck)
+                    except Exception as e:
+                        print(f"Error evaluating deck: {e}")
+                        fitness_scores.append(0.0)
+                        valid_population.append(deck)
+                else:
+                    fitness_scores.append(0.0)
+                    valid_population.append(deck)
+
+            if not valid_population or not fitness_scores:
+                print("Error: No valid population members")
+                return (
+                    eligible_cards[:deck_size]
+                    if len(eligible_cards) >= deck_size
+                    else eligible_cards
+                )
 
             # Selection (tournament selection)
             new_population = []
             for _ in range(population_size):
                 # Tournament selection
-                tournament_size = 3
-                tournament = random.sample(list(enumerate(population)), tournament_size)
-                winner_idx = max(tournament, key=lambda x: fitness_scores[x[0]])[0]
-                new_population.append(deepcopy(population[winner_idx]))
+                tournament_size = min(3, len(valid_population))
+                if tournament_size > 0:
+                    tournament = random.sample(
+                        list(enumerate(valid_population)), tournament_size
+                    )
+                    winner_idx = max(tournament, key=lambda x: fitness_scores[x[0]])[0]
+                    new_population.append(deepcopy(valid_population[winner_idx]))
+                else:
+                    # Fallback: create a new random deck
+                    fallback_deck = (
+                        eligible_cards[:deck_size]
+                        if len(eligible_cards) >= deck_size
+                        else eligible_cards
+                    )
+                    new_population.append(fallback_deck)
 
             # Crossover
             for i in range(0, population_size - 1, 2):
-                if random.random() < 0.8:  # 80% crossover rate
+                if random.random() < 0.8 and i + 1 < len(
+                    new_population
+                ):  # 80% crossover rate
                     parent1 = new_population[i]
                     parent2 = new_population[i + 1]
-                    child1, child2 = self.crossover_decks(parent1, parent2, deck_size)
-                    new_population[i] = child1
-                    new_population[i + 1] = child2
+                    if parent1 and parent2 and len(parent1) > 0 and len(parent2) > 0:
+                        try:
+                            child1, child2 = self.crossover_decks(
+                                parent1, parent2, deck_size
+                            )
+                            new_population[i] = child1
+                            new_population[i + 1] = child2
+                        except Exception as e:
+                            print(f"Error in crossover: {e}")
 
             # Mutation
             for i in range(population_size):
-                if random.random() < mutation_rate:
-                    new_population[i] = self.mutate_deck(
-                        new_population[i], eligible_cards, deck_size, max_colors
-                    )
+                if random.random() < mutation_rate and i < len(new_population):
+                    deck = new_population[i]
+                    if deck and len(deck) > 0:
+                        try:
+                            new_population[i] = self.mutate_deck(
+                                deck, eligible_cards, deck_size, max_colors
+                            )
+                        except Exception as e:
+                            print(f"Error in mutation: {e}")
 
             population = new_population
 
             if generation % 10 == 0:
-                avg_fitness = sum(fitness_scores) / len(fitness_scores)
-                actual_colors = self.get_deck_colors(best_deck)
-                print(
-                    f"Generation {generation}: Best Score = {best_score:.4f}, Avg Score = {avg_fitness:.4f}, Colors = {actual_colors}"
+                avg_fitness = (
+                    sum(fitness_scores) / len(fitness_scores) if fitness_scores else 0.0
                 )
+                if best_deck:
+                    actual_colors = self.get_deck_colors(best_deck)
+                    print(
+                        f"Generation {generation}: Best Score = {best_score:.4f}, Avg Score = {avg_fitness:.4f}, Colors = {actual_colors}"
+                    )
+                else:
+                    print(f"Generation {generation}: No valid best deck found")
 
         print(f"Genetic Algorithm completed. Best score: {best_score:.4f}")
-        actual_colors = self.get_deck_colors(best_deck)
-        print(f"Final deck colors: {actual_colors}")
 
-        # POST-PROCESSING: Enforce strict color constraints
-        best_deck = self.enforce_strict_color_constraints(
-            best_deck, max_colors, deck_size, eligible_cards
-        )
-        return best_deck
+        if best_deck:
+            actual_colors = self.get_deck_colors(best_deck)
+            print(f"Final deck colors: {actual_colors}")
+
+            # POST-PROCESSING: Enforce strict color constraints
+            best_deck = self.enforce_strict_color_constraints(
+                best_deck, max_colors, deck_size, eligible_cards
+            )
+            return best_deck
+        else:
+            print("Error: No valid deck found during optimization")
+            return (
+                eligible_cards[:deck_size]
+                if len(eligible_cards) >= deck_size
+                else eligible_cards
+            )
 
     def simulated_annealing_optimization(
         self,
@@ -553,6 +640,10 @@ class AdvancedDeckOptimizer:
         self, eligible_cards: List[Dict], deck_size: int, max_colors: int = None
     ) -> List[Dict]:
         """Create a random deck from eligible cards with optional color constraint"""
+        # Validate input
+        if not eligible_cards:
+            return []
+
         if len(eligible_cards) < deck_size:
             return eligible_cards.copy()
 
@@ -637,6 +728,7 @@ class AdvancedDeckOptimizer:
 
             return best_deck
 
+        # Default case: no color constraint
         return random.sample(eligible_cards, deck_size)
 
     def crossover_decks(

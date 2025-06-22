@@ -43,76 +43,37 @@
 - ✓ Color constraint enforcement validation
 
 ### Advanced Evaluation System ✓
-- ✓ **[Kern] Bewertungs-Interface definieren**
-  - Funktion: `evaluate_deck(decklist: list[str], method: str) -> float`
-  - Ermöglicht verschiedene Bewertungsmethoden abhängig von der Auswahl
+- ✓ **[Core] Define evaluation interface**
+  - Function: `evaluate_deck(decklist: list[str], method: str) -> float`
+  - Enables different evaluation methods based on selection
 
-- ✓ **[UI] Top-Down-Auswahlmenü vorbereiten**
-  - Dropdown-Auswahl für Bewertungsmethode
-  - Auswahl beeinflusst welche Bewertungsfunktion verwendet wird
+- ✓ **[UI] Prepare top-down selection menu**
+  - Dropdown selection for evaluation method
+  - Selection influences which evaluation function is used
 
-- ✓ **[Option 1] Automatisierte Bewertung über 17Lands-Daten**
-  - Lade `card_ratings.csv`
-  - Verwende: `game_in_hand_win_rate` + `improvement_when_drawn`
-  - Beschreibung im Menü: „Datenbasierte Bewertung aus 17Lands – kombiniert GIH Winrate und IWD."
+- ✓ **[Option 1] Automated evaluation via 17Lands data**
+  - Load `card_ratings.csv`
+  - Use: `game_in_hand_win_rate` + `improvement_when_drawn`
+  - Description in menu: "Data-based evaluation from 17Lands – combines GIH Winrate and IWD."
 
-- ✓ **[Option 2] Bisherige manuelle Bewertungs- und Synergiefunktion**
-  - Nutzt lokale Ratings und Synergieboni
-  - Beschreibung im Menü: „Manuelle Bewertung + Synergiewerte aus lokalem Dictionary."
-  - Funktion: `evaluate_deck_manual(decklist: list[str])`
+- ✓ **[Option 2] Previous manual evaluation and synergy function**
+  - Uses local ratings and synergy bonuses
+  - Description in menu: "Manual evaluation + synergy values from local dictionary."
+  - Function: `evaluate_deck_manual(decklist: list[str])`
 
 ## Current Tasks
 
-- [ ] **Performance-Optimierung der Bewertungsfunktionen**
-  - Caching für Synergie-Berechnungen implementieren
-  - Parallele Verarbeitung für große Decks
-  - Optimierung der 17Lands-Datenintegration
+- [ ] **Performance optimization of evaluation functions**
+  - Implement caching for synergy calculations
+  - Parallel processing for large decks
+  - Optimization of 17Lands data integration
 
-- [ ] **Erweiterte Synergie-Erkennung**
-  - Mehr Synergie-Patterns hinzufügen
-  - Dynamische Synergie-Bewertung basierend auf Deck-Kontext
-  - Tribal-Synergien implementieren
+- [ ] **Enhanced synergy detection**
+  - Add more synergy patterns
+  - Dynamic synergy evaluation based on deck context
+  - Implement tribal synergies
 
-## Future Tasks
-
-### Performance & Optimization
-- Implement advanced caching strategies for card data
-- Add parallel processing for large collections
-- Optimize memory usage for large deck optimizations
-- Add GPU acceleration for genetic algorithm
-- Implement incremental optimization for real-time updates
-
-### Algorithm Enhancements
-- Add machine learning-based card evaluation
-- Implement neural network for deck scoring
-- Add reinforcement learning for optimization
-- Create ensemble methods combining multiple algorithms
-- Add support for different format-specific strategies
-
-### Data Integration
-- Real-time 17Lands data integration
-- MTG Arena data import
-- Scryfall API rate limiting improvements
-- Add support for multiple rating sources
-- Implement card price integration
-
-### User Experience
-- Add deck comparison tools
-- Implement deck sharing functionality
-- Add export to popular deck building sites
-- Create mobile-responsive design
-- Add dark mode theme
-
-### Advanced Features
-- Multi-player draft simulation
-- Tournament bracket generation
-- Sideboard optimization
-- Meta-game analysis
-- Card recommendation engine
-
-### Testing & Quality Assurance
-- Add performance benchmarks
-- Implement automated testing pipeline
-- Add integration tests for web interface
-- Create stress tests for large collections
-- Add regression testing for algorithm changes
+- Erweitere die Bewertung mittels der 17Lands Api so das die daten dort in einer cache zwischengespeichert werden und von dort wiederverwendet werden. 
+- Weiters teste die Cache. 
+- Überprüfe ob auch wirklich die Bewertung von 17 Lands für die Optimierung herangezogen wird wenn diese option gewählt wird. 
+- Ergänze die Bewertung in der Rechten oberen Ecke falls diese von 17 Lands stammt statt der Manuellen Bewertung. 

@@ -147,9 +147,9 @@ function handleEvaluationMethodChange() {
     const description = document.getElementById('evaluationDescription');
 
     if (method === '17lands') {
-        description.textContent = 'Datenbasierte Bewertung aus 17Lands – kombiniert GIH Winrate und IWD.';
-    } else {
-        description.textContent = 'Manuelle Bewertung + Synergiewerte aus lokalem Dictionary.';
+        description.textContent = 'Data-based evaluation from 17Lands – combines GIH Winrate and IWD.';
+    } else if (method === 'manual') {
+        description.textContent = 'Manual evaluation + synergy values from local dictionary.';
     }
 }
 
