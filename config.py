@@ -195,12 +195,6 @@ EXPORT_FORMATS = {
         "icon": "fas fa-download",
         "button_class": "btn-outline-primary",
     },
-    "html": {
-        "name": "HTML (Text Only)",
-        "description": "HTML file with decklist (no images)",
-        "icon": "fas fa-file-code",
-        "button_class": "btn-outline-secondary",
-    },
     "html_artwork": {
         "name": "HTML with Artwork",
         "description": "HTML page with card images (opens in new tab)",

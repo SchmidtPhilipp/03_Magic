@@ -541,9 +541,19 @@ def serve_cached_image(filename):
 @app.route("/export_html_with_artwork", methods=["POST"])
 def export_html_with_artwork():
     """Render a new page with the decklist and card images (artwork)"""
-    data = request.get_json()
-    deck = data.get("deck", [])
-    deck_name = data.get("deck_name", "Deck Export")
+    if request.content_type and "application/json" in request.content_type:
+        data = request.get_json()
+        deck = data.get("deck", [])
+        deck_name = data.get("deck_name", "Deck Export")
+    else:
+        # Handle form data from fallback
+        try:
+            deck = json.loads(request.form.get("deck", "[]"))
+            deck_name = request.form.get("deck_name", "Deck Export")
+        except (json.JSONDecodeError, KeyError):
+            deck = []
+            deck_name = "Deck Export"
+
     # Each card should have at least 'name' and 'quantity'
     return render_template(
         "deck_export_artwork.html",

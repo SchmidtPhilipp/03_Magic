@@ -63,17 +63,15 @@
 
 ## Current Tasks
 
-- [ ] **Performance optimization of evaluation functions**
-  - Implement caching for synergy calculations
-  - Parallel processing for large decks
-  - Optimization of 17Lands data integration
-
-- [ ] **Enhanced synergy detection**
-  - Add more synergy patterns
-  - Dynamic synergy evaluation based on deck context
-  - Implement tribal synergies
 
 - Erweitere die Bewertung mittels der 17Lands Api so das die daten dort in einer cache zwischengespeichert werden und von dort wiederverwendet werden. 
 - Weiters teste die Cache. 
 - Überprüfe ob auch wirklich die Bewertung von 17 Lands für die Optimierung herangezogen wird wenn diese option gewählt wird. 
 - Ergänze die Bewertung in der Rechten oberen Ecke falls diese von 17 Lands stammt statt der Manuellen Bewertung. 
+
+- [ ] **Performance optimization of evaluation functions**
+  - Implement caching for synergy calculations
+  - Optimization of 17Lands data integration
+
+
+

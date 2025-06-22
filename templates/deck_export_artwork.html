@@ -7,15 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/static/css/style.css">
     <style>
+        /* Screen styles */
         body {
             background: #222;
             color: #eee;
             font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
         }
 
         .deck-container {
-            max-width: 900px;
-            margin: 2rem auto;
+            max-width: 1200px;
+            margin: 0 auto;
             background: #292929;
             border-radius: 12px;
             padding: 2rem;
@@ -25,45 +28,198 @@
         h1 {
             text-align: center;
             margin-bottom: 2rem;
+            font-size: 2.5rem;
+            color: #fff;
+        }
+
+        .deck-info {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #333;
+            border-radius: 8px;
         }
 
         .card-list {
             display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .card-row {
+            display: flex;
+            gap: 10px;
             justify-content: center;
         }
 
         .card-entry {
+            flex: 1;
+            max-width: 200px;
             background: #181818;
             border-radius: 8px;
-            padding: 1rem;
-            width: 200px;
-            box-shadow: 0 1px 8px #0006;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: transform 0.2s;
             text-align: center;
+            padding: 0.5rem;
+        }
+
+        .card-entry:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .card-entry img {
-            width: 180px;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 6px;
-            margin-bottom: 0.5rem;
-            background: #333;
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            display: block;
         }
 
         .card-name {
+            margin-top: 0.5rem;
             font-weight: bold;
-            font-size: 1.1rem;
-            margin-bottom: 0.2rem;
+            font-size: 0.9rem;
+            color: #fff;
         }
 
         .card-qty {
+            margin-top: 0.25rem;
+            font-size: 0.8rem;
             color: #aaa;
-            font-size: 0.95rem;
-            margin-bottom: 0.5rem;
         }
 
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 1000;
+        }
+
+        .print-button:hover {
+            background: #0056b3;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            * {
+                margin: 0 !important;
+                padding: 0 !important;
+                box-sizing: border-box !important;
+            }
+
+            body {
+                background: white !important;
+                font-size: 12px !important;
+                padding-top: 20px !important;
+            }
+
+            .header,
+            .print-button {
+                display: none !important;
+            }
+
+            .deck-container {
+                background: white !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                padding: 0 !important;
+                max-width: none !important;
+            }
+
+            h1,
+            .deck-info {
+                display: none !important;
+            }
+
+            .card-list {
+                display: block !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .card-row {
+                display: flex !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                gap: 0 !important;
+                justify-content: center !important;
+                align-items: center !important;
+            }
+
+            .card-entry {
+                flex: 1 !important;
+                width: 33.333% !important;
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+                font-size: 0 !important;
+                line-height: 0 !important;
+                background: none !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+            }
+
+            /* Force page break every 3 rows (9 cards) */
+            .card-row:nth-child(3n) {
+                page-break-after: always !important;
+            }
+
+            .card-image {
+                width: 100% !important;
+                height: auto !important;
+                max-width: 2.5in !important;
+                max-height: 3.5in !important;
+                object-fit: contain !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                display: block !important;
+                float: none !important;
+                vertical-align: top !important;
+                line-height: 0 !important;
+            }
+
+            .card-entry img {
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
+                outline: none !important;
+                display: block !important;
+                float: none !important;
+                vertical-align: top !important;
+                line-height: 0 !important;
+            }
+
+            .card-name,
+            .card-qty {
+                display: none !important;
+            }
+
+            /* Force page size */
+            @page {
+                size: A4;
+                margin: 0;
+            }
+        }
+
+        /* Mobile responsive */
         @media (max-width: 600px) {
             .card-entry {
                 width: 120px;
@@ -74,22 +230,134 @@
                 width: 100px;
                 height: 140px;
             }
+
+            .card-list {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
         }
     </style>
 </head>
 
 <body>
+    <button class="print-button" onclick="window.print()">
+        <i class="fas fa-print"></i> Print Deck
+    </button>
+
     <div class="deck-container">
         <h1>{{ deck_name }}</h1>
+
+        <div class="deck-info">
+            <strong>Total Cards:</strong> {{ deck|length }} |
+            <strong>Generated:</strong> <span id="generated-date"></span>
+        </div>
+
         <div class="card-list">
-            {% for card in deck %}
-            <div class="card-entry">
-                <img src="/static/card_cache/{{ card.name.replace(' ', '_').replace(',', '').replace(':', '').replace("'", "") }}.jpg" alt="{{ card.name }}">
-                    <div class="card-name">{{ card.name }}</div>
-                    <div class="card-qty">x{{ card.quantity if card.quantity else 1 }}</div>
-                </div>
+            {% for i in range(0, deck|length, 3) %}
+            <div class="card-row">
+                {% for j in range(3) %}
+                {% if i + j < deck|length %} <div class="card-entry">
+                    <img src="/static/card_cache/{{ deck[i + j].name.replace(' ', '_').replace(',', '').replace(':', '').replace("'", "") }}.jpg" 
+                             alt="{{ deck[i + j].name }}"
+                             onerror="this.src=' https://via.placeholder.com/180x250/333/666?text=Card'">
+                    <div class="card-name">{{ deck[i + j].name }}</div>
+                    <div class="card-qty">x{{ deck[i + j].quantity if deck[i + j].quantity else 1 }}</div>
+            </div>
+            {% endif %}
             {% endfor %}
         </div>
+        {% endfor %}
     </div>
+    </div>
+
+    <script>
+        // Add date formatting
+        document.addEventListener('DOMContentLoaded', function () {
+            const now = new Date();
+            const dateStr = now.toISOString().slice(0, 19).replace('T', ' ');
+            const dateElement = document.getElementById('generated-date');
+            if (dateElement) {
+                dateElement.textContent = dateStr;
+            }
+        });
+
+        // Auto-detect paper size and adjust cards per page
+        function detectPaperSize() {
+            // Get the actual page dimensions in CSS units
+            const pageWidth = window.innerWidth;
+            const pageHeight = window.innerHeight;
+
+            // Convert to inches (assuming 96 DPI for screen)
+            const widthInches = pageWidth / 96;
+            const heightInches = pageHeight / 96;
+
+            console.log(`Detected page size: ${widthInches.toFixed(2)}" x ${heightInches.toFixed(2)}"`);
+
+            // Determine paper size and optimal layout
+            let cardsPerRow, cardsPerColumn, cardsPerPage;
+
+            if (widthInches >= 8.0 && widthInches <= 8.5 && heightInches >= 11.0 && heightInches <= 11.7) {
+                // A4 or Letter size - 3x3 layout for real MTG card size
+                cardsPerRow = 3;
+                cardsPerColumn = 3;
+                cardsPerPage = 9;
+                console.log('Detected A4/Letter size - 3x3 layout (9 cards per page)');
+            } else if (widthInches >= 8.0 && widthInches <= 8.5 && heightInches >= 13.0 && heightInches <= 14.0) {
+                // Legal size - 3x4 layout
+                cardsPerRow = 3;
+                cardsPerColumn = 4;
+                cardsPerPage = 12;
+                console.log('Detected Legal size - 3x4 layout (12 cards per page)');
+            } else if (widthInches >= 11.0 && widthInches <= 11.7 && heightInches >= 8.0 && heightInches <= 8.5) {
+                // A4/Letter landscape - 4x2 layout
+                cardsPerRow = 4;
+                cardsPerColumn = 2;
+                cardsPerPage = 8;
+                console.log('Detected A4/Letter landscape - 4x2 layout (8 cards per page)');
+            } else {
+                // Default fallback - 3x3 layout
+                cardsPerRow = 3;
+                cardsPerColumn = 3;
+                cardsPerPage = 9;
+                console.log('Using default layout - 3x3 layout (9 cards per page)');
+            }
+
+            return { cardsPerRow, cardsPerColumn, cardsPerPage };
+        }
+
+        // Apply optimal layout based on detected paper size
+        function applyOptimalLayout() {
+            const { cardsPerRow, cardsPerColumn, cardsPerPage } = detectPaperSize();
+
+            // Update CSS grid for screen display
+            const cardList = document.querySelector('.card-list');
+            if (cardList) {
+                cardList.style.gridTemplateColumns = `repeat(${cardsPerRow}, 1fr)`;
+            }
+
+            // Store values for print CSS
+            document.documentElement.style.setProperty('--cards-per-row', cardsPerRow);
+            document.documentElement.style.setProperty('--cards-per-column', cardsPerColumn);
+            document.documentElement.style.setProperty('--cards-per-page', cardsPerPage);
+
+            console.log(`Applied layout: ${cardsPerRow}x${cardsPerColumn} = ${cardsPerPage} cards per page`);
+        }
+
+        // Run on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            applyOptimalLayout();
+
+            // Also run when window is resized
+            window.addEventListener('resize', applyOptimalLayout);
+        });
+
+        // Simple print function override
+        const originalPrint = window.print;
+        window.print = function () {
+            // Just call the original print function
+            // The CSS should handle all the layout and page breaks
+            originalPrint.call(window);
+        };
+    </script>
 </body>
-</html> 
+
+</html>

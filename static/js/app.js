@@ -501,9 +501,33 @@ function exportHtmlWithArtwork(deck, deckName) {
     })
         .then(response => response.text())
         .then(html => {
-            const newWindow = window.open();
-            newWindow.document.write(html);
-            newWindow.document.close();
+            const newWindow = window.open('', '_blank');
+            if (newWindow) {
+                newWindow.document.write(html);
+                newWindow.document.close();
+            } else {
+                // Fallback: create a temporary form to submit the data
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/export_html_with_artwork';
+                form.target = '_blank';
+
+                const deckInput = document.createElement('input');
+                deckInput.type = 'hidden';
+                deckInput.name = 'deck';
+                deckInput.value = JSON.stringify(deck);
+
+                const nameInput = document.createElement('input');
+                nameInput.type = 'hidden';
+                nameInput.name = 'deck_name';
+                nameInput.value = deckName;
+
+                form.appendChild(deckInput);
+                form.appendChild(nameInput);
+                document.body.appendChild(form);
+                form.submit();
+                document.body.removeChild(form);
+            }
         })
         .catch(error => {
             alert('Error exporting HTML with artwork: ' + error);
