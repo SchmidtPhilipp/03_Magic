@@ -8,6 +8,7 @@ from typing import Dict, List, Set, Tuple
 import numpy as np
 import pandas as pd
 
+from .evaluator import DeckEvaluator
 from .validator import CardValidator
 
 
@@ -16,6 +17,9 @@ class AdvancedDeckOptimizer:
         """Initialize advanced deck optimizer with card ratings"""
         self.ratings_df = pd.read_csv(ratings_file)
         self.validator = CardValidator()
+
+        # Initialize the new deck evaluator
+        self.evaluator = DeckEvaluator(ratings_file)
 
         # Convert ratings to numeric for easier comparison
         self.ratings_df["Rating_Value"] = (
@@ -56,12 +60,13 @@ class AdvancedDeckOptimizer:
         deck_size: int = 40,
         max_colors: int = 2,
         lambda_penalty: float = 0.5,
+        evaluation_method: str = "manual",
     ) -> float:
         """
         Calculate comprehensive deck score based on multiple factors
 
         Scoring components:
-        1. Rating Score (35% weight)
+        1. Rating Score (35% weight) - now uses new evaluator
         2. Mana Curve Score (20% weight)
         3. Color Balance Score (15% weight) - now uses actual colors in deck
         4. Synergy Score (10% weight)
@@ -69,15 +74,19 @@ class AdvancedDeckOptimizer:
         6. Dynamic Color Constraint Penalty
 
         NEW: Dynamic Color Constraint: Penalizes decks with too many colors
+        NEW: Evaluation Method Selection: Choose between 17Lands and manual evaluation
         """
 
         if not deck:
             return 0.0
 
-        # 1. Rating Score (35% weight)
-        ratings = [card.get("rating", 0) for card in deck]
-        avg_rating = sum(ratings) / len(ratings) if ratings else 0
-        rating_score = (avg_rating / 10.0) * 0.35  # Normalize to 0-1, then weight
+        # Extract card names for the new evaluator
+        card_names = [card.get("name", "") for card in deck]
+
+        # 1. Rating Score (35% weight) - now uses new evaluator
+        rating_score = (
+            self.evaluator.evaluate_deck(card_names, evaluation_method) * 0.35
+        )
 
         # 2. Mana Curve Score (20% weight)
         mana_curve = self.calculate_mana_curve(deck)
@@ -392,6 +401,7 @@ class AdvancedDeckOptimizer:
         generations: int = 100,
         mutation_rate: float = 0.1,
         lambda_penalty: float = 0.5,
+        evaluation_method: str = "manual",
     ) -> List[Dict]:
         """
         Use genetic algorithm to find optimal deck with dynamic color constraints
@@ -399,6 +409,7 @@ class AdvancedDeckOptimizer:
         print(f"Running Genetic Algorithm Optimization...")
         print(f"Population: {population_size}, Generations: {generations}")
         print(f"Max Colors: {max_colors}, Lambda Penalty: {lambda_penalty}")
+        print(f"Evaluation Method: {evaluation_method}")
 
         # Initialize population
         population = []
@@ -406,7 +417,7 @@ class AdvancedDeckOptimizer:
             deck = self.create_random_deck(eligible_cards, deck_size, max_colors)
             population.append(deck)
 
-        best_deck = population[0]  # Initialize with first deck
+        best_deck = None
         best_score = 0.0
 
         for generation in range(generations):
@@ -414,7 +425,7 @@ class AdvancedDeckOptimizer:
             fitness_scores = []
             for deck in population:
                 score = self.calculate_deck_score(
-                    deck, [], deck_size, max_colors, lambda_penalty
+                    deck, [], deck_size, max_colors, lambda_penalty, evaluation_method
                 )
                 fitness_scores.append(score)
 
@@ -474,6 +485,7 @@ class AdvancedDeckOptimizer:
         iterations: int = 1000,
         initial_temp: float = 100.0,
         lambda_penalty: float = 0.5,
+        evaluation_method: str = "manual",
     ) -> List[Dict]:
         """
         Use simulated annealing to find optimal deck with dynamic color constraints
@@ -481,11 +493,12 @@ class AdvancedDeckOptimizer:
         print(f"Running Simulated Annealing Optimization...")
         print(f"Iterations: {iterations}, Initial Temperature: {initial_temp}")
         print(f"Max Colors: {max_colors}, Lambda Penalty: {lambda_penalty}")
+        print(f"Evaluation Method: {evaluation_method}")
 
         # Start with random deck
         current_deck = self.create_random_deck(eligible_cards, deck_size, max_colors)
         current_score = self.calculate_deck_score(
-            current_deck, [], deck_size, max_colors, lambda_penalty
+            current_deck, [], deck_size, max_colors, lambda_penalty, evaluation_method
         )
 
         best_deck = deepcopy(current_deck)
@@ -499,7 +512,12 @@ class AdvancedDeckOptimizer:
                 current_deck, eligible_cards, deck_size, max_colors
             )
             neighbor_score = self.calculate_deck_score(
-                neighbor_deck, [], deck_size, max_colors, lambda_penalty
+                neighbor_deck,
+                [],
+                deck_size,
+                max_colors,
+                lambda_penalty,
+                evaluation_method,
             )
 
             # Calculate acceptance probability
@@ -739,12 +757,14 @@ class AdvancedDeckOptimizer:
         deck_size: int = 40,
         algorithm: str = "genetic",
         lambda_penalty: float = 0.5,
+        evaluation_method: str = "manual",
     ) -> Dict:
         """
         Main optimization function with dynamic color constraints
         """
         print(f"Starting deck optimization with {algorithm} algorithm...")
         print(f"Max Colors: {num_colors}, Lambda Penalty: {lambda_penalty}")
+        print(f"Evaluation Method: {evaluation_method}")
 
         # Prepare eligible cards (no color filtering)
         eligible_cards = self.prepare_eligible_cards(collection_df, num_colors)
@@ -760,11 +780,19 @@ class AdvancedDeckOptimizer:
         # Run optimization with all eligible cards (no color filtering)
         if algorithm == "genetic":
             optimal_deck = self.genetic_algorithm_optimization(
-                eligible_cards, num_colors, deck_size, lambda_penalty=lambda_penalty
+                eligible_cards,
+                num_colors,
+                deck_size,
+                lambda_penalty=lambda_penalty,
+                evaluation_method=evaluation_method,
             )
         elif algorithm == "simulated_annealing":
             optimal_deck = self.simulated_annealing_optimization(
-                eligible_cards, num_colors, deck_size, lambda_penalty=lambda_penalty
+                eligible_cards,
+                num_colors,
+                deck_size,
+                lambda_penalty=lambda_penalty,
+                evaluation_method=evaluation_method,
             )
         else:
             raise ValueError(f"Unknown algorithm: {algorithm}")
@@ -774,7 +802,7 @@ class AdvancedDeckOptimizer:
 
         # Calculate final score
         final_score = self.calculate_deck_score(
-            optimal_deck, [], deck_size, num_colors, lambda_penalty
+            optimal_deck, [], deck_size, num_colors, lambda_penalty, evaluation_method
         )
 
         return {
@@ -782,6 +810,7 @@ class AdvancedDeckOptimizer:
             "score": final_score,
             "target_colors": actual_colors,  # Now contains the actual colors used
             "algorithm": algorithm,
+            "evaluation_method": evaluation_method,
         }
 
     def prepare_eligible_cards(
@@ -988,3 +1017,12 @@ class AdvancedDeckOptimizer:
                 filtered_deck.append(remaining_cards[0])
 
         return filtered_deck
+
+    def get_evaluation_methods(self) -> List[Dict[str, str]]:
+        """Get available evaluation methods for UI"""
+        return self.evaluator.get_evaluation_methods()
+
+    def get_deck_analysis(self, deck: List[Dict], method: str = "manual") -> Dict:
+        """Get detailed deck analysis using new evaluator"""
+        card_names = [card.get("name", "") for card in deck]
+        return self.evaluator.get_deck_analysis(card_names, method)

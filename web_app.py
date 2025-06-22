@@ -93,6 +93,7 @@ def run_optimization(
     algorithm,
     lambda_penalty,
     export_formats,
+    evaluation_method,
 ):
     """Run optimization in a separate thread"""
     global current_result, optimization_running
@@ -121,6 +122,7 @@ def run_optimization(
         print(
             f"Target Colors: {num_colors}, Non-Land Cards: {num_nonlands}, Lambda Penalty: {lambda_penalty}"
         )
+        print(f"Evaluation Method: {evaluation_method}")
 
         result = deck_builder.build_optimal_deck_advanced(
             collection_df=collection_df,
@@ -131,6 +133,7 @@ def run_optimization(
             lambda_penalty=lambda_penalty,
             total_deck_size=total_deck_size,
             land_ratio=land_ratio,
+            evaluation_method=evaluation_method,
         )
 
         current_result = result
@@ -142,6 +145,7 @@ def run_optimization(
                     "score": result["score"],
                     "target_colors": result["target_colors"],
                     "algorithm": result["algorithm"],
+                    "evaluation_method": result.get("evaluation_method", "manual"),
                     "exported_files": result.get("exported_files", []),
                 },
             }
@@ -198,15 +202,13 @@ def upload_file():
             return (
                 jsonify(
                     {
-                        "error": config.VALIDATION_MESSAGES["invalid_csv"].format(
-                            error=str(e)
-                        )
+                        "error": f"Invalid CSV file: {str(e)}",
                     }
                 ),
                 400,
             )
 
-    return jsonify({"error": config.VALIDATION_MESSAGES["invalid_file_type"]}), 400
+    return jsonify({"error": "Invalid file format. Please upload a CSV file."}), 400
 
 
 @app.route("/optimize", methods=["POST"])
@@ -228,6 +230,7 @@ def optimize():
     algorithm = data.get("algorithm", "genetic")
     lambda_penalty = float(data.get("lambda_penalty", 0.5))
     export_formats = data.get("export_formats", [])
+    evaluation_method = data.get("evaluation_method", "manual")
 
     if not csv_file_path or not os.path.exists(csv_file_path):
         return jsonify({"error": "Invalid CSV file path"}), 400
@@ -246,6 +249,7 @@ def optimize():
             algorithm,
             lambda_penalty,
             export_formats,
+            evaluation_method,
         ),
     )
     thread.daemon = True
@@ -381,6 +385,17 @@ def get_deck_info():
             }
         )
     )
+
+
+@app.route("/evaluation_methods")
+def get_evaluation_methods():
+    """Get available evaluation methods for UI dropdown"""
+    try:
+        deck_builder = EnhancedDeckBuilder()
+        methods = deck_builder.optimizer.get_evaluation_methods()
+        return jsonify({"methods": methods})
+    except Exception as e:
+        return jsonify({"error": f"Failed to get evaluation methods: {str(e)}"}), 500
 
 
 @app.route("/load_default_csv")

@@ -46,6 +46,7 @@ class EnhancedDeckBuilder:
         lambda_penalty: float = 0.5,
         total_deck_size: int = None,
         land_ratio: float = None,
+        evaluation_method: str = "manual",
     ) -> Dict:
         """
         Build optimal deck using advanced optimization algorithms
@@ -59,6 +60,7 @@ class EnhancedDeckBuilder:
             lambda_penalty: Penalty multiplier for exceeding color limit
             total_deck_size: (optional) total deck size (lands + non-lands)
             land_ratio: (optional) ratio of lands in deck
+            evaluation_method: '17lands' or 'manual' evaluation method
         """
 
         # If total_deck_size and land_ratio are given, calculate non-land count
@@ -74,6 +76,7 @@ class EnhancedDeckBuilder:
         print(f"Max Colors: {num_colors}")
         print(f"Deck Size: {deck_size}")
         print(f"Lambda Penalty: {lambda_penalty}")
+        print(f"Evaluation Method: {evaluation_method}")
 
         start_time = time.time()
 
@@ -85,10 +88,11 @@ class EnhancedDeckBuilder:
                 deck_size=deck_size,
                 algorithm=algorithm,
                 lambda_penalty=lambda_penalty,
+                evaluation_method=evaluation_method,
             )
         elif algorithm == "greedy":
             result = self.build_greedy_deck(
-                collection_df, num_colors, deck_size, lambda_penalty
+                collection_df, num_colors, deck_size, lambda_penalty, evaluation_method
             )
         else:
             raise ValueError(f"Unknown algorithm: {algorithm}")
@@ -133,9 +137,11 @@ class EnhancedDeckBuilder:
         num_colors: int,
         deck_size: int,
         lambda_penalty: float = 0.5,
+        evaluation_method: str = "manual",
     ) -> Dict:
         """Build deck using greedy algorithm with dynamic color constraints"""
         print("Running Greedy Algorithm with Dynamic Color Constraints...")
+        print(f"Evaluation Method: {evaluation_method}")
 
         # Prepare eligible cards (no color filtering)
         eligible_cards = self.optimizer.prepare_eligible_cards(
@@ -177,7 +183,7 @@ class EnhancedDeckBuilder:
         # Build deck with greedy approach
         deck = []
         color_counts = {}
-        deck_colors = set()  # Track current deck colors
+        deck_colors = set()
 
         # Phase 1: Add cards with highest ratings while monitoring color count
         for card in eligible_spells:
@@ -238,7 +244,7 @@ class EnhancedDeckBuilder:
 
         # Calculate final score
         final_score = self.optimizer.calculate_deck_score(
-            deck, [], deck_size, num_colors, lambda_penalty
+            deck, [], deck_size, num_colors, lambda_penalty, evaluation_method
         )
 
         return {
@@ -246,6 +252,7 @@ class EnhancedDeckBuilder:
             "score": final_score,
             "target_colors": actual_colors,
             "algorithm": "greedy",
+            "evaluation_method": evaluation_method,
         }
 
     def analyze_deck(self, deck: List[Dict]):

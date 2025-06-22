@@ -19,6 +19,9 @@ function initializeEventListeners() {
     // Algorithm change: show/hide lambda
     document.getElementById('algorithm').addEventListener('change', handleAlgorithmChange);
 
+    // Evaluation method change: update description
+    document.getElementById('evaluationMethod').addEventListener('change', handleEvaluationMethodChange);
+
     // Lambda penalty slider
     document.getElementById('lambdaPenalty').addEventListener('input', updateLambdaDisplay);
 
@@ -139,6 +142,17 @@ function handleAlgorithmChange() {
     }
 }
 
+function handleEvaluationMethodChange() {
+    const method = document.getElementById('evaluationMethod').value;
+    const description = document.getElementById('evaluationDescription');
+
+    if (method === '17lands') {
+        description.textContent = 'Datenbasierte Bewertung aus 17Lands – kombiniert GIH Winrate und IWD.';
+    } else {
+        description.textContent = 'Manuelle Bewertung + Synergiewerte aus lokalem Dictionary.';
+    }
+}
+
 function setDefaultCsvForDebug() {
     // Use backend endpoint to load default CSV
     fetch('/load_default_csv')
@@ -217,7 +231,8 @@ function startOptimization() {
         lambda_penalty: parseFloat(document.getElementById('lambdaPenalty').value),
         num_colors: parseInt(document.getElementById('numColors').value),
         deck_size: parseInt(document.getElementById('deckSize').value),
-        land_ratio: parseInt(document.getElementById('landRatio').value)
+        land_ratio: parseInt(document.getElementById('landRatio').value),
+        evaluation_method: document.getElementById('evaluationMethod').value
     };
 
     // Disable button and show progress
@@ -335,6 +350,10 @@ function updateResultsPanel(result) {
         <div class="results-item">
             <div class="label">Algorithm:</div>
             <div class="value">${result.algorithm}</div>
+        </div>
+        <div class="results-item">
+            <div class="label">Evaluation Method:</div>
+            <div class="value">${result.evaluation_method || 'manual'}</div>
         </div>
         <div class="results-item">
             <div class="label">Score:</div>
