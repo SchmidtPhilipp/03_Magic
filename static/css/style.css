@@ -322,11 +322,15 @@ body {
     display: flex;
     flex-direction: column;
     pointer-events: none;
+    /* Hide grid lines */
+    opacity: 0;
 }
 
 .mana-curve-grid-line {
     flex: 1;
     border-bottom: 1px solid rgba(38, 208, 206, 0.1);
+    /* Hide individual grid lines */
+    opacity: 0;
 }
 
 /* Enhanced Mobile Responsive Design */
