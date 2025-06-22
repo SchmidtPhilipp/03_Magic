@@ -27,13 +27,18 @@ from werkzeug.utils import secure_filename
 # Add src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
+import config
 from magic_optimizer.deck_builder import EnhancedDeckBuilder
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "magic_optimizer_secret_key"
-app.config["UPLOAD_FOLDER"] = "uploads"
-app.config["CACHE_FOLDER"] = "static/card_cache"  # Folder for cached card images
-app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16MB max file size
+app.config["SECRET_KEY"] = config.APP_CONFIG["secret_key"]
+app.config["UPLOAD_FOLDER"] = config.PATHS["upload_folder"]
+app.config["CACHE_FOLDER"] = config.PATHS[
+    "cache_folder"
+]  # Folder for cached card images
+app.config["MAX_CONTENT_LENGTH"] = (
+    config.NUMBERS["max_file_size_mb"] * 1024 * 1024
+)  # Convert MB to bytes
 
 # Create upload and cache folders if they don't exist
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
@@ -56,14 +61,18 @@ class OutputCapture:
         with self.lock:
             timestamp = datetime.now().strftime("%H:%M:%S")
             self.buffer.append(f"[{timestamp}] {text}")
-            if len(self.buffer) > 1000:  # Keep last 1000 lines
+            if (
+                len(self.buffer) > config.NUMBERS["max_output_lines"]
+            ):  # Keep last 1000 lines
                 self.buffer.pop(0)
             output_queue.put(
                 {
                     "type": "output",
                     "timestamp": timestamp,
                     "text": text,
-                    "full_buffer": self.buffer[-50:],  # Send last 50 lines
+                    "full_buffer": self.buffer[
+                        -config.NUMBERS["output_buffer_size"] :
+                    ],  # Send last 50 lines
                 }
             )
 
@@ -155,18 +164,18 @@ def run_optimization(
 @app.route("/")
 def index():
     """Main page"""
-    return render_template("index.html")
+    return render_template("index.html", config=config)
 
 
 @app.route("/upload", methods=["POST"])
 def upload_file():
     """Handle file upload"""
     if "file" not in request.files:
-        return jsonify({"error": "No file provided"}), 400
+        return jsonify({"error": config.VALIDATION_MESSAGES["no_file"]}), 400
 
     file = request.files["file"]
     if file.filename == "":
-        return jsonify({"error": "No file selected"}), 400
+        return jsonify({"error": config.VALIDATION_MESSAGES["no_file_selected"]}), 400
 
     if file and file.filename.endswith(".csv"):
         filename = secure_filename(file.filename)
@@ -186,9 +195,18 @@ def upload_file():
                 }
             )
         except Exception as e:
-            return jsonify({"error": f"Invalid CSV file: {str(e)}"}), 400
+            return (
+                jsonify(
+                    {
+                        "error": config.VALIDATION_MESSAGES["invalid_csv"].format(
+                            error=str(e)
+                        )
+                    }
+                ),
+                400,
+            )
 
-    return jsonify({"error": "Invalid file type. Please upload a CSV file."}), 400
+    return jsonify({"error": config.VALIDATION_MESSAGES["invalid_file_type"]}), 400
 
 
 @app.route("/optimize", methods=["POST"])
@@ -197,7 +215,10 @@ def optimize():
     global optimization_running
 
     if optimization_running:
-        return jsonify({"error": "Optimization already running"}), 400
+        return (
+            jsonify({"error": config.VALIDATION_MESSAGES["optimization_running"]}),
+            400,
+        )
 
     data = request.json
     csv_file_path = data.get("csv_file_path")
@@ -358,8 +379,9 @@ def get_deck_info():
 def load_default_csv():
     """Load default CSV file for debugging"""
     try:
-        # Try FinalFantasy.csv first
+        # Try default CSV from config
         default_paths = [
+            config.PATHS["default_csv"],
             "static/FinalFantasy.csv",
             "data/collections/FinalFantasy.csv",
             "uploads/FinalFantasy.csv",
@@ -380,7 +402,6 @@ def load_default_csv():
                 # Load and validate the CSV
                 df = pd.read_csv(path)
                 card_count = len(df)
-
                 return jsonify(
                     {
                         "success": True,
@@ -390,7 +411,7 @@ def load_default_csv():
                     }
                 )
 
-        return jsonify({"error": "No default CSV file found"}), 404
+        return jsonify({"error": "Default CSV file not found"}), 404
 
     except Exception as e:
         return jsonify({"error": f"Error loading default CSV: {str(e)}"}), 500
@@ -398,59 +419,47 @@ def load_default_csv():
 
 @app.route("/cache_card_image/<card_name>")
 def cache_card_image(card_name):
-    """Download and cache a card image from Scryfall"""
+    """Cache a single card image"""
     try:
-        # Create a safe filename
-        safe_filename = (
-            secure_filename(card_name.replace(" ", "_").replace("/", "_")) + ".jpg"
-        )
-        cache_path = os.path.join(app.config["CACHE_FOLDER"], safe_filename)
-
         # Check if already cached
+        cache_filename = f"{card_name}.jpg"
+        cache_path = os.path.join(app.config["CACHE_FOLDER"], cache_filename)
+
         if os.path.exists(cache_path):
             return jsonify(
-                {
-                    "success": True,
-                    "cached": True,
-                    "path": f"/static/card_cache/{safe_filename}",
-                }
+                {"success": True, "cached": True, "filename": cache_filename}
             )
 
-        # Download from Scryfall
-        scryfall_url = (
-            f"https://api.scryfall.com/cards/named?fuzzy={card_name}&format=image"
+        # Fetch from Scryfall
+        response = requests.get(
+            f"{config.LINKS['scryfall_api']}?fuzzy={card_name}&format=image&version=normal",
+            timeout=10,
         )
-        response = requests.get(scryfall_url, timeout=10)
 
         if response.status_code == 200:
             # Save to cache
             with open(cache_path, "wb") as f:
                 f.write(response.content)
-
             return jsonify(
-                {
-                    "success": True,
-                    "cached": False,
-                    "path": f"/static/card_cache/{safe_filename}",
-                }
+                {"success": True, "cached": False, "filename": cache_filename}
             )
         else:
-            return jsonify({"success": False, "error": "Failed to download image"}), 404
+            return jsonify({"error": f"Failed to fetch image for {card_name}"}), 404
 
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"error": f"Error caching image: {str(e)}"}), 500
 
 
 @app.route("/cache_deck_images", methods=["POST"])
 def cache_deck_images():
-    """Cache images for all cards in a deck"""
+    """Cache images for all cards in the current deck"""
+    global current_result
+
+    if not current_result or "deck" not in current_result:
+        return jsonify({"error": "No deck available"}), 400
+
     try:
-        data = request.json
-        deck = data.get("deck", [])
-
-        if not deck:
-            return jsonify({"success": False, "error": "No deck provided"}), 400
-
+        deck = current_result["deck"]
         cached_images = []
         failed_images = []
 
@@ -458,56 +467,44 @@ def cache_deck_images():
             card_name = card.get("name", "")
             if card_name:
                 try:
-                    # Create a safe filename
-                    safe_filename = (
-                        secure_filename(card_name.replace(" ", "_").replace("/", "_"))
-                        + ".jpg"
-                    )
-                    cache_path = os.path.join(app.config["CACHE_FOLDER"], safe_filename)
-
                     # Check if already cached
-                    if os.path.exists(cache_path):
-                        cached_images.append(
-                            {
-                                "name": card_name,
-                                "path": f"/static/card_cache/{safe_filename}",
-                            }
+                    cache_filename = f"{card_name}.jpg"
+                    cache_path = os.path.join(
+                        app.config["CACHE_FOLDER"], cache_filename
+                    )
+
+                    if not os.path.exists(cache_path):
+                        # Fetch from Scryfall
+                        response = requests.get(
+                            f"{config.LINKS['scryfall_api']}?fuzzy={card_name}&format=image&version=normal",
+                            timeout=10,
                         )
-                        continue
 
-                    # Download from Scryfall
-                    scryfall_url = f"https://api.scryfall.com/cards/named?fuzzy={card_name}&format=image"
-                    response = requests.get(scryfall_url, timeout=10)
-
-                    if response.status_code == 200:
-                        # Save to cache
-                        with open(cache_path, "wb") as f:
-                            f.write(response.content)
-
-                        cached_images.append(
-                            {
-                                "name": card_name,
-                                "path": f"/static/card_cache/{safe_filename}",
-                            }
-                        )
+                        if response.status_code == 200:
+                            # Save to cache
+                            with open(cache_path, "wb") as f:
+                                f.write(response.content)
+                            cached_images.append(card_name)
+                        else:
+                            failed_images.append(card_name)
                     else:
-                        failed_images.append(card_name)
+                        cached_images.append(card_name)
 
                 except Exception as e:
-                    failed_images.append(card_name)
+                    failed_images.append(f"{card_name} ({str(e)})")
 
         return jsonify(
             {
                 "success": True,
-                "cached_count": len(cached_images),
-                "failed_count": len(failed_images),
+                "cached": len(cached_images),
+                "failed": len(failed_images),
                 "cached_images": cached_images,
                 "failed_images": failed_images,
             }
         )
 
     except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+        return jsonify({"error": f"Error caching deck images: {str(e)}"}), 500
 
 
 @app.route("/static/card_cache/<filename>")
@@ -517,6 +514,9 @@ def serve_cached_image(filename):
 
 
 if __name__ == "__main__":
-    print("Starting Sealed Limited Optimizer Web App...")
-    print("Open http://localhost:5050 in your browser")
-    app.run(debug=True, host="0.0.0.0", port=5050)
+    app.run(
+        host=config.APP_CONFIG["host"],
+        port=config.APP_CONFIG["port"],
+        debug=config.APP_CONFIG["debug"],
+        threaded=config.APP_CONFIG["threaded"],
+    )

@@ -4,19 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sealed Limited Optimizer</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>{{ config.WEB_TEXTS.page_title }}</title>
+    <link href="{{ config.LINKS.bootstrap_css }}" rel="stylesheet">
+    <link href="{{ config.LINKS.fontawesome_css }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 
 <body>
     <!-- Modern Header -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary"
-        style="background: linear-gradient(90deg, #1a2980 0%, #26d0ce 100%);">
+    <nav class="navbar navbar-expand-lg navbar-dark {{ config.COLORS.header_bg }}"
+        style="background: linear-gradient(90deg, {{ config.COLORS.primary_gradient_start }} 0%, {{ config.COLORS.primary_gradient_end }} 100%);">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-hat-wizard"></i> MTG Sealed Deck Optimizer
+                <i class="{{ config.WEB_TEXTS.header_icon }}"></i> {{ config.WEB_TEXTS.header_title }}
             </a>
         </div>
     </nav>
@@ -25,13 +25,15 @@
             <!-- Left Panel: Settings -->
             <div class="col-md-4">
                 <div class="card mt-3 shadow-lg">
-                    <div class="card-header bg-primary text-white">
-                        <h5><i class="fas fa-cog"></i> Deck Settings</h5>
+                    <div
+                        class="card-header {{ config.COLORS.deck_settings_header }} {{ config.COLORS.card_header_text }}">
+                        <h5><i class="{{ config.WEB_TEXTS.deck_settings_icon }}"></i> {{
+                            config.WEB_TEXTS.deck_settings_title }}</h5>
                     </div>
                     <div class="card-body">
                         <!-- File Upload -->
                         <div class="mb-3">
-                            <label for="csvFile" class="form-label">Upload Collection CSV</label>
+                            <label for="csvFile" class="form-label">{{ config.WEB_TEXTS.upload_csv_label }}</label>
                             <input type="file" class="form-control" id="csvFile" accept=".csv">
                             <div id="fileStatus" class="mt-2"></div>
                         </div>
@@ -40,61 +42,77 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="numColors" class="form-label">Target Colors</label>
-                                    <input type="number" class="form-control" id="numColors" min="1" max="5" value="2">
+                                    <label for="numColors" class="form-label">{{ config.WEB_TEXTS.target_colors_label
+                                        }}</label>
+                                    <input type="number" class="form-control" id="numColors"
+                                        min="{{ config.NUMBERS.min_colors }}" max="{{ config.NUMBERS.max_colors }}"
+                                        value="{{ config.NUMBERS.default_num_colors }}">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="deckSize" class="form-label">Deck Size (total)</label>
-                                    <input type="number" class="form-control" id="deckSize" min="20" max="60"
-                                        value="40">
+                                    <label for="deckSize" class="form-label">{{ config.WEB_TEXTS.deck_size_label
+                                        }}</label>
+                                    <input type="number" class="form-control" id="deckSize"
+                                        min="{{ config.NUMBERS.min_deck_size }}"
+                                        max="{{ config.NUMBERS.max_deck_size }}"
+                                        value="{{ config.NUMBERS.default_deck_size }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="landRatio" class="form-label">Number of Lands: <span
-                                            id="landRatioValue">17</span></label>
-                                    <input type="range" class="form-range" id="landRatio" min="14" max="24" value="17">
+                                    <label for="landRatio" class="form-label">{{ config.WEB_TEXTS.land_ratio_label }}
+                                        <span id="landRatioValue">{{ config.NUMBERS.default_land_ratio }}</span></label>
+                                    <input type="range" class="form-range" id="landRatio"
+                                        min="{{ config.NUMBERS.min_land_ratio }}"
+                                        max="{{ config.NUMBERS.max_land_ratio }}"
+                                        value="{{ config.NUMBERS.default_land_ratio }}">
                                 </div>
                             </div>
                         </div>
 
                         <!-- Algorithm Settings -->
                         <div class="mb-3">
-                            <label for="algorithm" class="form-label">Algorithm</label>
+                            <label for="algorithm" class="form-label">{{ config.WEB_TEXTS.algorithm_label }}</label>
                             <select class="form-select" id="algorithm">
-                                <option value="greedy">Greedy</option>
-                                <option value="genetic">Genetic Algorithm</option>
-                                <option value="simulated_annealing">Simulated Annealing</option>
+                                {% for key, name in config.get_algorithm_options() %}
+                                <option value="{{ key }}">{{ name }}</option>
+                                {% endfor %}
                             </select>
                         </div>
 
                         <!-- Lambda Penalty (only for genetic/simulated annealing) -->
                         <div class="mb-3" id="lambdaContainer" style="display: none;">
-                            <label for="lambdaPenalty" class="form-label">Color Penalty Strength</label>
-                            <input type="range" class="form-range" id="lambdaPenalty" min="0.1" max="5.0" step="0.1"
-                                value="0.5">
+                            <label for="lambdaPenalty" class="form-label">{{ config.WEB_TEXTS.color_penalty_label
+                                }}</label>
+                            <input type="range" class="form-range" id="lambdaPenalty"
+                                min="{{ config.NUMBERS.min_lambda }}" max="{{ config.NUMBERS.max_lambda }}"
+                                step="{{ config.NUMBERS.lambda_step }}" value="{{ config.NUMBERS.default_lambda }}">
                             <div class="d-flex justify-content-between">
-                                <small>0.1 (Soft)</small>
-                                <small id="lambdaValue">0.5</small>
-                                <small>5.0 (Hard)</small>
+                                <small>{{ config.WEB_TEXTS.lambda_soft }}</small>
+                                <small id="lambdaValue">{{ config.NUMBERS.default_lambda }}</small>
+                                <small>{{ config.WEB_TEXTS.lambda_hard }}</small>
                             </div>
                         </div>
 
                         <!-- Optimize Button -->
-                        <button id="optimizeBtn" class="btn btn-gradient w-100 py-2 mt-2" disabled>
-                            <i class="fas fa-play"></i> Start Optimization
+                        <button id="optimizeBtn" class="btn {{ config.COLORS.optimize_button }} w-100 py-2 mt-2"
+                            disabled>
+                            <i class="{{ config.WEB_TEXTS.optimize_button_icon }}"></i> {{
+                            config.WEB_TEXTS.optimize_button_text }}
                         </button>
                     </div>
                 </div>
 
                 <!-- Current File Info -->
                 <div id="fileInfo" class="card mt-3 shadow-sm" style="display: none;">
-                    <div class="card-header bg-info text-white">
-                        <h6><i class="fas fa-file-csv"></i> Current File</h6>
+                    <div
+                        class="card-header {{ config.COLORS.current_file_header }} {{ config.COLORS.card_header_text }}">
+                        <h6><i class="{{ config.WEB_TEXTS.current_file_icon }}"></i> {{
+                            config.WEB_TEXTS.current_file_title }}</h6>
                     </div>
                     <div class="card-body">
-                        <p><strong>File:</strong> <span id="currentFileName"></span></p>
-                        <p><strong>Cards:</strong> <span id="currentCardCount"></span></p>
+                        <p><strong>{{ config.WEB_TEXTS.file_info_label }}</strong> <span id="currentFileName"></span>
+                        </p>
+                        <p><strong>{{ config.WEB_TEXTS.cards_label }}</strong> <span id="currentCardCount"></span></p>
                     </div>
                 </div>
             </div>
@@ -102,20 +120,23 @@
             <!-- Middle Panel: Terminal Output -->
             <div class="col-md-4">
                 <div class="card mt-3 shadow-lg">
-                    <div class="card-header bg-dark text-white d-flex align-items-center justify-content-between">
-                        <h5 class="mb-0"><i class="fas fa-terminal"></i> Optimization Output</h5>
+                    <div
+                        class="card-header {{ config.COLORS.optimization_header }} {{ config.COLORS.card_header_text }} d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0"><i class="{{ config.WEB_TEXTS.optimization_output_icon }}"></i> {{
+                            config.WEB_TEXTS.optimization_output_title }}</h5>
                         <div>
-                            <button id="copyOutput" class="btn btn-sm btn-outline-light me-2" title="Copy Output"><i
-                                    class="fas fa-copy"></i></button>
-                            <button id="clearOutput" class="btn btn-sm btn-outline-light" title="Clear Output">
+                            <button id="copyOutput" class="btn btn-sm {{ config.COLORS.copy_button }} me-2"
+                                title="{{ config.WEB_TEXTS.copy_output_tooltip }}"><i class="fas fa-copy"></i></button>
+                            <button id="clearOutput" class="btn btn-sm {{ config.COLORS.clear_button }}"
+                                title="{{ config.WEB_TEXTS.clear_output_tooltip }}">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </div>
                     <div class="card-body p-0">
                         <div id="terminalOutput" class="terminal-output">
-                            <div class="terminal-line">Welcome to Sealed Limited Optimizer!</div>
-                            <div class="terminal-line">Upload a CSV file and configure settings to start.</div>
+                            <div class="terminal-line">{{ config.WEB_TEXTS.welcome_title }}</div>
+                            <div class="terminal-line">{{ config.WEB_TEXTS.welcome_message }}</div>
                         </div>
                     </div>
                 </div>
@@ -124,8 +145,8 @@
                 <div id="progressContainer" class="card mt-3 shadow-sm" style="display: none;">
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-2">
-                            <span>Optimization Progress</span>
-                            <span id="progressStatus">Starting...</span>
+                            <span>{{ config.WEB_TEXTS.progress_label }}</span>
+                            <span id="progressStatus">{{ config.WEB_TEXTS.starting_status }}</span>
                         </div>
                         <div class="progress" style="height: 24px;">
                             <div id="progressBar"
@@ -139,32 +160,31 @@
             <!-- Right Panel: Results -->
             <div class="col-md-4">
                 <div class="card mt-3 shadow-lg">
-                    <div class="card-header bg-success text-white">
-                        <h5><i class="fas fa-chart-bar"></i> Results</h5>
+                    <div class="card-header {{ config.COLORS.results_header }} {{ config.COLORS.card_header_text }}">
+                        <h5><i class="{{ config.WEB_TEXTS.results_icon }}"></i> {{ config.WEB_TEXTS.results_title }}
+                        </h5>
                     </div>
                     <div class="card-body">
                         <div id="resultsContent">
-                            <p class="text-muted">Optimization results will appear here...</p>
+                            <p class="text-muted">{{ config.WEB_TEXTS.results_placeholder }}</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Download Section -->
                 <div id="downloadSection" class="card mt-3 shadow-sm" style="display: none;">
-                    <div class="card-header bg-warning text-dark">
-                        <h6><i class="fas fa-download"></i> Download Deck</h6>
+                    <div
+                        class="card-header {{ config.COLORS.download_header }} {{ config.COLORS.download_header_text }}">
+                        <h6><i class="{{ config.WEB_TEXTS.download_deck_icon }}"></i> {{
+                            config.WEB_TEXTS.download_deck_title }}</h6>
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
-                            <button class="btn btn-outline-primary rounded-pill" onclick="downloadDeck('arena')">
-                                <i class="fas fa-download"></i> MTG Arena Format
+                            {% for key, name, button_class, icon in config.get_export_format_options() %}
+                            <button class="btn {{ button_class }} rounded-pill" onclick="downloadDeck('{{ key }}')">
+                                <i class="{{ icon }}"></i> {{ name }}
                             </button>
-                            <button class="btn btn-outline-success rounded-pill" onclick="downloadDeck('html')">
-                                <i class="fas fa-download"></i> HTML with Artwork
-                            </button>
-                            <button class="btn btn-outline-info rounded-pill" onclick="downloadDeck('mtgo')">
-                                <i class="fas fa-download"></i> MTGO Format
-                            </button>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -175,18 +195,24 @@
         <div class="row mt-3">
             <div class="col-12">
                 <div class="card shadow-lg">
-                    <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
-                        <h5 class="mb-0"><i class="fas fa-cards-blank"></i> Deck Visualization</h5>
+                    <div
+                        class="card-header {{ config.COLORS.deck_visualization_header }} {{ config.COLORS.card_header_text }} d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0"><i class="{{ config.WEB_TEXTS.deck_visualization_icon }}"></i> {{
+                            config.WEB_TEXTS.deck_visualization_title }}</h5>
                         <div class="d-flex align-items-center">
-                            <label for="deckCardSize" class="form-label text-white me-2 mb-0">Size:</label>
-                            <input type="range" class="form-range me-2" id="deckCardSize" min="0.5" max="2.0" step="0.1"
-                                value="1.0" style="width: 100px;">
-                            <small class="text-white" id="deckCardSizeValue">Normal</small>
+                            <label for="deckCardSize" class="form-label text-white me-2 mb-0">{{
+                                config.WEB_TEXTS.card_size_label }}</label>
+                            <input type="range" class="form-range me-2" id="deckCardSize"
+                                min="{{ config.NUMBERS.min_card_size }}" max="{{ config.NUMBERS.max_card_size }}"
+                                step="{{ config.NUMBERS.card_size_step }}"
+                                value="{{ config.NUMBERS.default_card_size }}" style="width: 100px;">
+                            <small class="text-white" id="deckCardSizeValue">{{ config.WEB_TEXTS.card_size_normal
+                                }}</small>
                         </div>
                     </div>
                     <div class="card-body">
                         <div id="deckVisualization">
-                            <p class="text-muted">Deck cards will be displayed here after optimization...</p>
+                            <p class="text-muted">{{ config.WEB_TEXTS.deck_placeholder }}</p>
                         </div>
                     </div>
                 </div>
@@ -194,17 +220,18 @@
         </div>
     </div>
     <!-- Modern Footer -->
-    <footer class="footer mt-4 py-3 bg-gradient-primary text-center text-white"
-        style="background: linear-gradient(90deg, #1a2980 0%, #26d0ce 100%);">
+    <footer class="footer mt-4 py-3 {{ config.COLORS.footer_bg }} text-center {{ config.COLORS.footer_text }}"
+        style="background: linear-gradient(90deg, {{ config.COLORS.primary_gradient_start }} 0%, {{ config.COLORS.primary_gradient_end }} 100%);">
         <div class="container">
-            <span class="me-2"><i class="fas fa-hat-wizard"></i> MTG Sealed Deck Optimizer</span>
+            <span class="me-2"><i class="{{ config.WEB_TEXTS.footer_icon }}"></i> {{ config.WEB_TEXTS.footer_text
+                }}</span>
             <span class="me-2">|</span>
-            <a href="https://github.com/" class="text-white text-decoration-underline" target="_blank"><i
-                    class="fab fa-github"></i> GitHub</a>
-            <span class="ms-2">&copy; 2025</span>
+            <a href="{{ config.LINKS.github_repo }}" class="text-white text-decoration-underline" target="_blank"><i
+                    class="{{ config.WEB_TEXTS.github_icon }}"></i> {{ config.WEB_TEXTS.github_text }}</a>
+            <span class="ms-2">&copy; {{ config.APP_YEAR }}</span>
         </div>
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ config.LINKS.bootstrap_js }}"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 
