@@ -330,6 +330,10 @@ function updateProgressStatus(status) {
 function handleOptimizationResult(result) {
     addTerminalLine('Optimization completed!', 'success');
 
+    // Store deck and name globally for export
+    window.optimizedDeck = result.deck;
+    window.optimizedDeckName = result.deck_name || 'Optimized Deck';
+
     // Update results panel
     updateResultsPanel(result);
 
@@ -489,9 +493,35 @@ function updateDeckVisualization(deck) {
     });
 }
 
-function downloadDeck(format) {
-    window.open(`/download/${format}`, '_blank');
+function exportHtmlWithArtwork(deck, deckName) {
+    fetch('/export_html_with_artwork', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ deck: deck, deck_name: deckName })
+    })
+        .then(response => response.text())
+        .then(html => {
+            const newWindow = window.open();
+            newWindow.document.write(html);
+            newWindow.document.close();
+        })
+        .catch(error => {
+            alert('Error exporting HTML with artwork: ' + error);
+        });
 }
+
+// Patch downloadDeck to handle html_artwork
+const originalDownloadDeck = window.downloadDeck;
+window.downloadDeck = function (format) {
+    if (format === 'html_artwork') {
+        // Get the current deck and deck name from the results panel or state
+        const deck = window.optimizedDeck || [];
+        const deckName = window.optimizedDeckName || 'Optimized Deck';
+        exportHtmlWithArtwork(deck, deckName);
+        return;
+    }
+    originalDownloadDeck(format);
+};
 
 function addTerminalLine(text, type = '') {
     const terminal = document.getElementById('terminalOutput');

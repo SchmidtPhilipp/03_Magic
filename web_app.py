@@ -17,10 +17,12 @@ import requests
 from flask import (
     Flask,
     jsonify,
+    redirect,
     render_template,
     request,
     send_file,
     send_from_directory,
+    url_for,
 )
 from werkzeug.utils import secure_filename
 
@@ -534,6 +536,20 @@ def cache_deck_images():
 def serve_cached_image(filename):
     """Serve cached card images"""
     return send_from_directory(app.config["CACHE_FOLDER"], filename)
+
+
+@app.route("/export_html_with_artwork", methods=["POST"])
+def export_html_with_artwork():
+    """Render a new page with the decklist and card images (artwork)"""
+    data = request.get_json()
+    deck = data.get("deck", [])
+    deck_name = data.get("deck_name", "Deck Export")
+    # Each card should have at least 'name' and 'quantity'
+    return render_template(
+        "deck_export_artwork.html",
+        deck=deck,
+        deck_name=deck_name,
+    )
 
 
 if __name__ == "__main__":

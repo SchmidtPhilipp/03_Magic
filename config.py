@@ -196,9 +196,15 @@ EXPORT_FORMATS = {
         "button_class": "btn-outline-primary",
     },
     "html": {
+        "name": "HTML (Text Only)",
+        "description": "HTML file with decklist (no images)",
+        "icon": "fas fa-file-code",
+        "button_class": "btn-outline-secondary",
+    },
+    "html_artwork": {
         "name": "HTML with Artwork",
-        "description": "HTML file with card images",
-        "icon": "fas fa-download",
+        "description": "HTML page with card images (opens in new tab)",
+        "icon": "fas fa-image",
         "button_class": "btn-outline-success",
     },
     "mtgo": {
