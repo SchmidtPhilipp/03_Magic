@@ -194,18 +194,21 @@ EXPORT_FORMATS = {
         "description": "Format compatible with MTG Arena import",
         "icon": "fas fa-download",
         "button_class": "btn-outline-primary",
+        "mobile_name": "Arena",
     },
     "html_artwork": {
         "name": "HTML with Artwork",
         "description": "HTML page with card images (opens in new tab)",
         "icon": "fas fa-image",
         "button_class": "btn-outline-success",
+        "mobile_name": "HTML Art",
     },
     "mtgo": {
         "name": "MTGO Format",
         "description": "Format compatible with Magic Online",
         "icon": "fas fa-download",
         "button_class": "btn-outline-info",
+        "mobile_name": "MTGO",
     },
 }
 
@@ -252,6 +255,12 @@ def get_algorithm_options():
 def get_export_format_options():
     """Get export format options for HTML"""
     return [
-        (key, value["name"], value["button_class"], value["icon"])
+        (
+            key,
+            value["name"],
+            value["button_class"],
+            value["icon"],
+            value.get("mobile_name", key.upper()),
+        )
         for key, value in EXPORT_FORMATS.items()
     ]

@@ -619,19 +619,6 @@ function downloadDeck(format) {
 // Make downloadDeck globally available
 window.downloadDeck = downloadDeck;
 
-// Patch downloadDeck to handle html_artwork
-const originalDownloadDeck = window.downloadDeck;
-window.downloadDeck = function (format) {
-    if (format === 'html_artwork') {
-        // Get the current deck and deck name from the results panel or state
-        const deck = optimizedDeck || [];
-        const deckName = optimizedDeckName || 'Optimized Deck';
-        exportHtmlWithArtwork(deck, deckName);
-        return;
-    }
-    originalDownloadDeck(format);
-};
-
 function addTerminalLine(text, type = '') {
     const terminal = document.getElementById('terminalOutput');
     const line = document.createElement('div');

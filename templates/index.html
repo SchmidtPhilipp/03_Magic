@@ -209,11 +209,11 @@
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
-                            {% for key, name, button_class, icon in config.get_export_format_options() %}
+                            {% for key, name, button_class, icon, mobile_name in config.get_export_format_options() %}
                             <button class="btn {{ button_class }} rounded-pill" onclick="downloadDeck('{{ key }}')">
                                 <i class="{{ icon }}"></i>
                                 <span class="d-none d-sm-inline">{{ name }}</span>
-                                <span class="d-inline d-sm-none">{{ key|upper }}</span>
+                                <span class="d-inline d-sm-none">{{ mobile_name }}</span>
                             </button>
                             {% endfor %}
                         </div>
