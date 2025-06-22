@@ -3,7 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a1a2e">
     <title>{{ config.WEB_TEXTS.page_title }}</title>
     <link href="{{ config.LINKS.bootstrap_css }}" rel="stylesheet">
     <link href="{{ config.LINKS.fontawesome_css }}" rel="stylesheet">
@@ -16,19 +20,23 @@
         style="background: linear-gradient(90deg, {{ config.COLORS.primary_gradient_start }} 0%, {{ config.COLORS.primary_gradient_end }} 100%);">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="{{ config.WEB_TEXTS.header_icon }}"></i> {{ config.WEB_TEXTS.header_title }}
+                <i class="{{ config.WEB_TEXTS.header_icon }}"></i>
+                <span class="d-none d-sm-inline">{{ config.WEB_TEXTS.header_title }}</span>
+                <span class="d-inline d-sm-none">MTG Optimizer</span>
             </a>
         </div>
     </nav>
     <div class="container-fluid">
         <div class="row">
             <!-- Left Panel: Settings -->
-            <div class="col-md-4">
+            <div class="col-lg-4 col-md-6 col-12">
                 <div class="card mt-3 shadow-lg">
                     <div
                         class="card-header {{ config.COLORS.deck_settings_header }} {{ config.COLORS.card_header_text }}">
-                        <h5><i class="{{ config.WEB_TEXTS.deck_settings_icon }}"></i> {{
-                            config.WEB_TEXTS.deck_settings_title }}</h5>
+                        <h5><i class="{{ config.WEB_TEXTS.deck_settings_icon }}"></i>
+                            <span class="d-none d-sm-inline">{{ config.WEB_TEXTS.deck_settings_title }}</span>
+                            <span class="d-inline d-sm-none">Settings</span>
+                        </h5>
                     </div>
                     <div class="card-body">
                         <!-- File Upload -->
@@ -40,7 +48,7 @@
 
                         <!-- Colors and Deck Size (before algorithm) -->
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-12">
                                 <div class="mb-3">
                                     <label for="numColors" class="form-label">{{ config.WEB_TEXTS.target_colors_label
                                         }}</label>
@@ -57,7 +65,7 @@
                                         value="{{ config.NUMBERS.default_deck_size }}">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-12">
                                 <div class="mb-3">
                                     <label for="landRatio" class="form-label">{{ config.WEB_TEXTS.land_ratio_label }}
                                         <span id="landRatioValue">{{ config.NUMBERS.default_land_ratio }}</span></label>
@@ -108,8 +116,9 @@
                         <!-- Optimize Button -->
                         <button id="optimizeBtn" class="btn {{ config.COLORS.optimize_button }} w-100 py-2 mt-2"
                             disabled>
-                            <i class="{{ config.WEB_TEXTS.optimize_button_icon }}"></i> {{
-                            config.WEB_TEXTS.optimize_button_text }}
+                            <i class="{{ config.WEB_TEXTS.optimize_button_icon }}"></i>
+                            <span class="d-none d-sm-inline">{{ config.WEB_TEXTS.optimize_button_text }}</span>
+                            <span class="d-inline d-sm-none">Optimize</span>
                         </button>
                     </div>
                 </div>
@@ -118,8 +127,10 @@
                 <div id="fileInfo" class="card mt-3 shadow-sm" style="display: none;">
                     <div
                         class="card-header {{ config.COLORS.current_file_header }} {{ config.COLORS.card_header_text }}">
-                        <h6><i class="{{ config.WEB_TEXTS.current_file_icon }}"></i> {{
-                            config.WEB_TEXTS.current_file_title }}</h6>
+                        <h6><i class="{{ config.WEB_TEXTS.current_file_icon }}"></i>
+                            <span class="d-none d-sm-inline">{{ config.WEB_TEXTS.current_file_title }}</span>
+                            <span class="d-inline d-sm-none">File Info</span>
+                        </h6>
                     </div>
                     <div class="card-body">
                         <p><strong>{{ config.WEB_TEXTS.file_info_label }}</strong> <span id="currentFileName"></span>
@@ -130,12 +141,14 @@
             </div>
 
             <!-- Middle Panel: Terminal Output -->
-            <div class="col-md-4">
+            <div class="col-lg-4 col-md-6 col-12">
                 <div class="card mt-3 shadow-lg">
                     <div
                         class="card-header {{ config.COLORS.optimization_header }} {{ config.COLORS.card_header_text }} d-flex align-items-center justify-content-between">
-                        <h5 class="mb-0"><i class="{{ config.WEB_TEXTS.optimization_output_icon }}"></i> {{
-                            config.WEB_TEXTS.optimization_output_title }}</h5>
+                        <h5 class="mb-0"><i class="{{ config.WEB_TEXTS.optimization_output_icon }}"></i>
+                            <span class="d-none d-sm-inline">{{ config.WEB_TEXTS.optimization_output_title }}</span>
+                            <span class="d-inline d-sm-none">Output</span>
+                        </h5>
                         <div>
                             <button id="copyOutput" class="btn btn-sm {{ config.COLORS.copy_button }} me-2"
                                 title="{{ config.WEB_TEXTS.copy_output_tooltip }}"><i class="fas fa-copy"></i></button>
@@ -170,10 +183,12 @@
             </div>
 
             <!-- Right Panel: Results -->
-            <div class="col-md-4">
+            <div class="col-lg-4 col-md-6 col-12">
                 <div class="card mt-3 shadow-lg">
                     <div class="card-header {{ config.COLORS.results_header }} {{ config.COLORS.card_header_text }}">
-                        <h5><i class="{{ config.WEB_TEXTS.results_icon }}"></i> {{ config.WEB_TEXTS.results_title }}
+                        <h5><i class="{{ config.WEB_TEXTS.results_icon }}"></i>
+                            <span class="d-none d-sm-inline">{{ config.WEB_TEXTS.results_title }}</span>
+                            <span class="d-inline d-sm-none">Results</span>
                         </h5>
                     </div>
                     <div class="card-body">
@@ -187,14 +202,18 @@
                 <div id="downloadSection" class="card mt-3 shadow-sm" style="display: none;">
                     <div
                         class="card-header {{ config.COLORS.download_header }} {{ config.COLORS.download_header_text }}">
-                        <h6><i class="{{ config.WEB_TEXTS.download_deck_icon }}"></i> {{
-                            config.WEB_TEXTS.download_deck_title }}</h6>
+                        <h6><i class="{{ config.WEB_TEXTS.download_deck_icon }}"></i>
+                            <span class="d-none d-sm-inline">{{ config.WEB_TEXTS.download_deck_title }}</span>
+                            <span class="d-inline d-sm-none">Download</span>
+                        </h6>
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
                             {% for key, name, button_class, icon in config.get_export_format_options() %}
                             <button class="btn {{ button_class }} rounded-pill" onclick="downloadDeck('{{ key }}')">
-                                <i class="{{ icon }}"></i> {{ name }}
+                                <i class="{{ icon }}"></i>
+                                <span class="d-none d-sm-inline">{{ name }}</span>
+                                <span class="d-inline d-sm-none">{{ key|upper }}</span>
                             </button>
                             {% endfor %}
                         </div>
@@ -209,16 +228,19 @@
                 <div class="card shadow-lg">
                     <div
                         class="card-header {{ config.COLORS.deck_visualization_header }} {{ config.COLORS.card_header_text }} d-flex align-items-center justify-content-between">
-                        <h5 class="mb-0"><i class="{{ config.WEB_TEXTS.deck_visualization_icon }}"></i> {{
-                            config.WEB_TEXTS.deck_visualization_title }}</h5>
+                        <h5 class="mb-0"><i class="{{ config.WEB_TEXTS.deck_visualization_icon }}"></i>
+                            <span class="d-none d-sm-inline">{{ config.WEB_TEXTS.deck_visualization_title }}</span>
+                            <span class="d-inline d-sm-none">Deck</span>
+                        </h5>
                         <div class="d-flex align-items-center">
-                            <label for="deckCardSize" class="form-label text-white me-2 mb-0">{{
+                            <label for="deckCardSize" class="form-label text-white me-2 mb-0 d-none d-sm-inline">{{
                                 config.WEB_TEXTS.card_size_label }}</label>
                             <input type="range" class="form-range me-2" id="deckCardSize"
                                 min="{{ config.NUMBERS.min_card_size }}" max="{{ config.NUMBERS.max_card_size }}"
                                 step="{{ config.NUMBERS.card_size_step }}"
                                 value="{{ config.NUMBERS.default_card_size }}" style="width: 100px;">
-                            <small class="text-white" id="deckCardSizeValue">{{ config.WEB_TEXTS.card_size_normal
+                            <small class="text-white d-none d-sm-inline" id="deckCardSizeValue">{{
+                                config.WEB_TEXTS.card_size_normal
                                 }}</small>
                         </div>
                     </div>
@@ -231,18 +253,25 @@
             </div>
         </div>
     </div>
+
     <!-- Modern Footer -->
     <footer class="footer mt-4 py-3 {{ config.COLORS.footer_bg }} text-center {{ config.COLORS.footer_text }}"
         style="background: linear-gradient(90deg, {{ config.COLORS.primary_gradient_start }} 0%, {{ config.COLORS.primary_gradient_end }} 100%);">
         <div class="container">
-            <span class="me-2"><i class="{{ config.WEB_TEXTS.footer_icon }}"></i> {{ config.WEB_TEXTS.footer_text
-                }}</span>
-            <span class="me-2">|</span>
+            <span class="me-2"><i class="{{ config.WEB_TEXTS.footer_icon }}"></i>
+                <span class="d-none d-sm-inline">{{ config.WEB_TEXTS.footer_text }}</span>
+                <span class="d-inline d-sm-none">MTG Optimizer</span>
+            </span>
+            <span class="me-2 d-none d-sm-inline">|</span>
             <a href="{{ config.LINKS.github_repo }}" class="text-white text-decoration-underline" target="_blank"><i
-                    class="{{ config.WEB_TEXTS.github_icon }}"></i> {{ config.WEB_TEXTS.github_text }}</a>
+                    class="{{ config.WEB_TEXTS.github_icon }}"></i>
+                <span class="d-none d-sm-inline">{{ config.WEB_TEXTS.github_text }}</span>
+                <span class="d-inline d-sm-none">GitHub</span>
+            </a>
             <span class="ms-2">&copy; {{ config.APP_YEAR }}</span>
         </div>
     </footer>
+
     <script src="{{ config.LINKS.bootstrap_js }}"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>

@@ -2,6 +2,8 @@
 
 let currentCsvFile = null;
 let statusInterval = null;
+let optimizedDeck = null;
+let optimizedDeckName = null;
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function () {
@@ -10,7 +12,59 @@ document.addEventListener('DOMContentLoaded', function () {
     updateLandRatioDisplay();
     updateDeckCardSizeDisplay();
     setDefaultCsvForDebug();
+
+    // Add mobile-specific optimizations
+    addMobileOptimizations();
 });
+
+function addMobileOptimizations() {
+    // Add touch-friendly button sizes
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(btn => {
+        btn.style.minHeight = '44px'; // iOS recommended minimum touch target
+        btn.style.minWidth = '44px';
+    });
+
+    // Add swipe gestures for mobile navigation
+    let startX = 0;
+    let startY = 0;
+
+    document.addEventListener('touchstart', function (e) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+    });
+
+    document.addEventListener('touchend', function (e) {
+        if (!startX || !startY) return;
+
+        const endX = e.changedTouches[0].clientX;
+        const endY = e.changedTouches[0].clientY;
+
+        const diffX = startX - endX;
+        const diffY = startY - endY;
+
+        // Horizontal swipe detection
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+            if (diffX > 0) {
+                // Swipe left - could be used for navigation
+                console.log('Swipe left detected');
+            } else {
+                // Swipe right - could be used for navigation
+                console.log('Swipe right detected');
+            }
+        }
+
+        startX = 0;
+        startY = 0;
+    });
+
+    // Optimize form inputs for mobile
+    const inputs = document.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+        input.style.fontSize = '16px'; // Prevents zoom on iOS
+        input.style.minHeight = '44px';
+    });
+}
 
 function initializeEventListeners() {
     // File upload
@@ -331,8 +385,8 @@ function handleOptimizationResult(result) {
     addTerminalLine('Optimization completed!', 'success');
 
     // Store deck and name globally for export
-    window.optimizedDeck = result.deck;
-    window.optimizedDeckName = result.deck_name || 'Optimized Deck';
+    optimizedDeck = result.deck;
+    optimizedDeckName = result.deck_name || 'Optimized Deck';
 
     // Update results panel
     updateResultsPanel(result);
@@ -534,13 +588,44 @@ function exportHtmlWithArtwork(deck, deckName) {
         });
 }
 
+// Global downloadDeck function for deck export
+function downloadDeck(format) {
+    if (!optimizedDeck || optimizedDeck.length === 0) {
+        alert('No deck available for download. Please run optimization first.');
+        return;
+    }
+
+    // Handle special formats
+    if (format === 'html_artwork') {
+        const deckName = optimizedDeckName || 'Optimized Deck';
+        exportHtmlWithArtwork(optimizedDeck, deckName);
+        return;
+    }
+
+    // For other formats, use the backend download endpoint
+    const downloadUrl = `/download/${format}`;
+
+    // Create a temporary link element for download
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = `deck_${format}.txt`;
+
+    // Add to DOM, click, and remove
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Make downloadDeck globally available
+window.downloadDeck = downloadDeck;
+
 // Patch downloadDeck to handle html_artwork
 const originalDownloadDeck = window.downloadDeck;
 window.downloadDeck = function (format) {
     if (format === 'html_artwork') {
         // Get the current deck and deck name from the results panel or state
-        const deck = window.optimizedDeck || [];
-        const deckName = window.optimizedDeckName || 'Optimized Deck';
+        const deck = optimizedDeck || [];
+        const deckName = optimizedDeckName || 'Optimized Deck';
         exportHtmlWithArtwork(deck, deckName);
         return;
     }
