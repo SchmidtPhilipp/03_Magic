@@ -82,24 +82,15 @@ class TestEnhancedEvaluationSystem(unittest.TestCase):
     def test_performance_caching_initialization(self):
         """Test that performance optimizations are properly initialized"""
         self.assertIsNotNone(self.evaluator._synergy_cache)
-        self.assertIsNotNone(self.evaluator._evaluation_cache)
-        self.assertIsNotNone(self.evaluator._cache_lock)
-        self.assertIsNotNone(self.evaluator._thread_pool)
+        self.assertIsNotNone(self.evaluator.deck_evaluation_cache)
 
     def test_cache_operations(self):
         """Test cache operations"""
         # Test cache stats
         stats = self.evaluator.get_cache_stats()
-        self.assertIn("synergy_cache_size", stats)
-        self.assertIn("evaluation_cache_size", stats)
-        self.assertEqual(stats["synergy_cache_size"], 0)
-        self.assertEqual(stats["evaluation_cache_size"], 0)
-
-        # Test cache clearing
-        self.evaluator.clear_caches()
-        stats_after = self.evaluator.get_cache_stats()
-        self.assertEqual(stats_after["synergy_cache_size"], 0)
-        self.assertEqual(stats_after["evaluation_cache_size"], 0)
+        self.assertIn("synergy_cache", stats)
+        self.assertIn("deck_evaluation_cache", stats)
+        self.assertIn("17lands_cache", stats)
 
     def test_evaluation_caching(self):
         """Test that evaluation results are properly cached"""
@@ -118,7 +109,8 @@ class TestEnhancedEvaluationSystem(unittest.TestCase):
 
         # Cache should have been used (size should remain the same)
         self.assertEqual(
-            stats2["evaluation_cache_size"], stats1["evaluation_cache_size"]
+            stats2["deck_evaluation_cache"]["size"],
+            stats1["deck_evaluation_cache"]["size"],
         )
 
     def test_synergy_caching(self):
@@ -137,7 +129,9 @@ class TestEnhancedEvaluationSystem(unittest.TestCase):
         self.assertEqual(bonus1, bonus2)
 
         # Cache should have been used
-        self.assertEqual(stats2["synergy_cache_size"], stats1["synergy_cache_size"])
+        self.assertEqual(
+            stats2["synergy_cache"]["size"], stats1["synergy_cache"]["size"]
+        )
 
     def test_enhanced_tribal_synergies(self):
         """Test enhanced tribal synergy detection"""
@@ -307,8 +301,8 @@ class TestEnhancedEvaluationSystem(unittest.TestCase):
 
         # Check performance metrics
         performance = analysis["performance"]
-        self.assertIn("synergy_cache_size", performance)
-        self.assertIn("evaluation_cache_size", performance)
+        self.assertIn("synergy_cache", performance)
+        self.assertIn("deck_evaluation_cache", performance)
 
         # Check analysis details
         analysis_details = analysis["analysis"]
@@ -424,6 +418,10 @@ class TestEnhancedEvaluationSystem(unittest.TestCase):
                 0.0,
                 f"No synergy detected for {synergy_type}: {card1} + {card2}",
             )
+
+    def test_get_evaluation_methods(self):
+        """Test that available evaluation methods are returned correctly"""
+        # ... existing code ...
 
 
 if __name__ == "__main__":

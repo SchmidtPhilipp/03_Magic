@@ -4,6 +4,8 @@ Flask Web Application for Magic Deck Optimizer
 """
 
 import json
+import logging
+import logging.handlers
 import os
 import queue
 import sys
@@ -32,6 +34,55 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 import config
 from magic_optimizer.deck_builder import EnhancedDeckBuilder
 
+
+# Setup logging
+def setup_logging():
+    """Setup comprehensive logging system"""
+    # Create logs directory
+    os.makedirs("logs", exist_ok=True)
+
+    # Configure root logger
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.DEBUG)
+
+    # Clear existing handlers
+    for handler in root_logger.handlers[:]:
+        root_logger.removeHandler(handler)
+
+    # Console handler (INFO level for user-friendly output)
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    console_formatter = logging.Formatter("%(levelname)s: %(message)s")
+    console_handler.setFormatter(console_formatter)
+    root_logger.addHandler(console_handler)
+
+    # File handler (DEBUG level for all details)
+    file_handler = logging.handlers.RotatingFileHandler(
+        "logs/web_app.log", maxBytes=10 * 1024 * 1024, backupCount=5  # 10MB
+    )
+    file_handler.setLevel(logging.DEBUG)
+    file_formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    file_handler.setFormatter(file_formatter)
+    root_logger.addHandler(file_handler)
+
+    # Create specific loggers
+    user_logger = logging.getLogger("user")
+    user_logger.setLevel(logging.INFO)
+
+    optimization_logger = logging.getLogger("optimization")
+    optimization_logger.setLevel(logging.DEBUG)
+
+    api_logger = logging.getLogger("api")
+    api_logger.setLevel(logging.DEBUG)
+
+    return user_logger, optimization_logger, api_logger
+
+
+# Initialize logging
+user_logger, optimization_logger, api_logger = setup_logging()
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = config.APP_CONFIG["secret_key"]
 app.config["UPLOAD_FOLDER"] = config.PATHS["upload_folder"]
@@ -46,10 +97,14 @@ app.config["MAX_CONTENT_LENGTH"] = (
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 os.makedirs(app.config["CACHE_FOLDER"], exist_ok=True)
 
+user_logger.info("Logging system initialized")
+user_logger.info(f"Log files: logs/")
+
 # Global variables for communication between threads
 output_queue = queue.Queue()
 current_result = None
 optimization_running = False
+optimization_thread = None  # Add thread reference for stopping
 
 
 class OutputCapture:
@@ -91,7 +146,7 @@ def run_optimization(
     csv_file_path,
     num_colors,
     total_deck_size,
-    land_ratio,
+    num_lands,
     algorithm,
     lambda_penalty,
     export_formats,
@@ -109,11 +164,15 @@ def run_optimization(
         collection_df = pd.read_csv(csv_file_path)
         print(f"Loaded {len(collection_df)} cards from collection")
 
-        # Calculate land/non-land split
-        num_lands = round(total_deck_size * land_ratio)
+        # Check if optimization was stopped
+        if not optimization_running:
+            print("Optimization stopped by user")
+            return
+
+        # Calculate non-land split
         num_nonlands = total_deck_size - num_lands
         print(
-            f"Deck size: {total_deck_size}, Land ratio: {land_ratio}, Lands: {num_lands}, Non-lands: {num_nonlands}"
+            f"Deck size: {total_deck_size}, Lands: {num_lands}, Non-lands: {num_nonlands}"
         )
 
         # Initialize deck builder
@@ -126,6 +185,11 @@ def run_optimization(
         )
         print(f"Evaluation Method: {evaluation_method}")
 
+        # Check if optimization was stopped
+        if not optimization_running:
+            print("Optimization stopped by user")
+            return
+
         result = deck_builder.build_optimal_deck_advanced(
             collection_df=collection_df,
             num_colors=num_colors,
@@ -134,9 +198,14 @@ def run_optimization(
             export_formats=export_formats,
             lambda_penalty=lambda_penalty,
             total_deck_size=total_deck_size,
-            land_ratio=land_ratio,
+            num_lands=num_lands,
             evaluation_method=evaluation_method,
         )
+
+        # Check if optimization was stopped
+        if not optimization_running:
+            print("Optimization stopped by user")
+            return
 
         current_result = result
         output_queue.put(
@@ -215,49 +284,36 @@ def upload_file():
 
 @app.route("/optimize", methods=["POST"])
 def optimize():
-    """Start optimization"""
-    global optimization_running
+    """Start optimization process"""
+    global optimization_running, optimization_thread
 
     if optimization_running:
-        return (
-            jsonify({"error": config.VALIDATION_MESSAGES["optimization_running"]}),
-            400,
+        return jsonify({"error": "Optimization already running"}), 400
+
+    try:
+        data = request.get_json()
+
+        # Start optimization in separate thread
+        optimization_thread = threading.Thread(
+            target=run_optimization,
+            kwargs={
+                "csv_file_path": data["csv_file_path"],
+                "num_colors": data["num_colors"],
+                "total_deck_size": data["total_deck_size"],
+                "num_lands": data["num_lands"],
+                "algorithm": data["algorithm"],
+                "lambda_penalty": data["lambda_penalty"],
+                "export_formats": data.get("export_formats", ["arena", "mtgo"]),
+                "evaluation_method": data.get("evaluation_method", "manual"),
+            },
         )
+        optimization_thread.daemon = True
+        optimization_thread.start()
 
-    data = request.json
-    csv_file_path = data.get("csv_file_path")
-    num_colors = int(data.get("num_colors", 2))
-    total_deck_size = int(data.get("deck_size", 40))
-    land_count = int(data.get("land_ratio", 17))  # This is now the number of lands
-    algorithm = data.get("algorithm", "genetic")
-    lambda_penalty = float(data.get("lambda_penalty", 0.5))
-    export_formats = data.get("export_formats", [])
-    evaluation_method = data.get("evaluation_method", "manual")
+        return jsonify({"success": True})
 
-    if not csv_file_path or not os.path.exists(csv_file_path):
-        return jsonify({"error": "Invalid CSV file path"}), 400
-
-    # Calculate land ratio as decimal
-    land_ratio = land_count / total_deck_size
-
-    # Start optimization in background thread
-    thread = threading.Thread(
-        target=run_optimization,
-        args=(
-            csv_file_path,
-            num_colors,
-            total_deck_size,
-            land_ratio,
-            algorithm,
-            lambda_penalty,
-            export_formats,
-            evaluation_method,
-        ),
-    )
-    thread.daemon = True
-    thread.start()
-
-    return jsonify({"success": True, "message": "Optimization started"})
+    except Exception as e:
+        return jsonify({"error": f"Error starting optimization: {str(e)}"}), 500
 
 
 def convert_sets_to_lists(obj):
@@ -573,6 +629,33 @@ def export_html_with_artwork():
         deck=deck,
         deck_name=deck_name,
     )
+
+
+@app.route("/stop_optimization", methods=["POST"])
+def stop_optimization():
+    """Stop the current optimization process"""
+    global optimization_running, optimization_thread
+
+    try:
+        if optimization_running:
+            optimization_running = False
+            print("Optimization stop requested by user")
+
+            # Wait for thread to finish (with timeout)
+            if optimization_thread and optimization_thread.is_alive():
+                optimization_thread.join(timeout=5.0)
+
+            return jsonify({"success": True, "message": "Optimization stopped"})
+        else:
+            return jsonify({"success": False, "error": "No optimization running"})
+
+    except Exception as e:
+        return (
+            jsonify(
+                {"success": False, "error": f"Error stopping optimization: {str(e)}"}
+            ),
+            500,
+        )
 
 
 if __name__ == "__main__":

@@ -88,6 +88,9 @@ function initializeEventListeners() {
     // Optimize button
     document.getElementById('optimizeBtn').addEventListener('click', startOptimization);
 
+    // Stop button
+    document.getElementById('stopBtn').addEventListener('click', stopOptimization);
+
     // Clear output button
     document.getElementById('clearOutput').addEventListener('click', clearTerminalOutput);
 
@@ -274,44 +277,48 @@ function fallbackCopyTextToClipboard(text) {
 
 function startOptimization() {
     if (!currentCsvFile) {
-        alert('Please upload a CSV file first');
+        addTerminalLine('No CSV file uploaded. Please upload a file first.', 'error');
         return;
     }
 
-    // Get settings
-    const settings = {
-        csv_file_path: currentCsvFile,
-        algorithm: document.getElementById('algorithm').value,
-        lambda_penalty: parseFloat(document.getElementById('lambdaPenalty').value),
-        num_colors: parseInt(document.getElementById('numColors').value),
-        deck_size: parseInt(document.getElementById('deckSize').value),
-        land_ratio: parseInt(document.getElementById('landRatio').value),
-        evaluation_method: document.getElementById('evaluationMethod').value
-    };
+    // Get form values
+    const numColors = parseInt(document.getElementById('numColors').value);
+    const deckSize = parseInt(document.getElementById('deckSize').value);
+    const numLands = parseInt(document.getElementById('landRatio').value); // Now absolute number
+    const algorithm = document.getElementById('algorithm').value;
+    const lambdaPenalty = parseFloat(document.getElementById('lambdaPenalty').value);
+    const evaluationMethod = document.getElementById('evaluationMethod').value;
 
-    // Disable button and show progress
-    document.getElementById('optimizeBtn').disabled = true;
+    // Show progress and disable button
     document.getElementById('progressContainer').style.display = 'block';
-    document.getElementById('progressStatus').textContent = 'Starting optimization...';
+    document.getElementById('optimizeBtn').style.display = 'none';
+    document.getElementById('stopBtn').style.display = 'block';
 
     // Clear previous results
     clearResults();
     clearDeckVisualization();
 
-    addTerminalLine('Starting optimization...', 'info');
-
     // Start optimization
     fetch('/optimize', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify(settings)
+        body: JSON.stringify({
+            csv_file_path: currentCsvFile,
+            num_colors: numColors,
+            total_deck_size: deckSize,
+            num_lands: numLands, // send as absolute value
+            algorithm: algorithm,
+            lambda_penalty: lambdaPenalty,
+            export_formats: ['arena', 'mtgo', 'html_artwork'],
+            evaluation_method: evaluationMethod
+        })
     })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                addTerminalLine('Optimization started successfully', 'success');
+                addTerminalLine('Optimization started successfully!', 'success');
                 startStatusPolling();
             } else {
                 addTerminalLine(`Optimization failed: ${data.error}`, 'error');
@@ -319,7 +326,31 @@ function startOptimization() {
             }
         })
         .catch(error => {
-            addTerminalLine(`Request failed: ${error.message}`, 'error');
+            addTerminalLine(`Error starting optimization: ${error.message}`, 'error');
+            resetOptimizationState();
+        });
+}
+
+function stopOptimization() {
+    // Send stop request to backend
+    fetch('/stop_optimization', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                addTerminalLine('Optimization stopped by user.', 'warning');
+            } else {
+                addTerminalLine(`Failed to stop optimization: ${data.error}`, 'error');
+            }
+        })
+        .catch(error => {
+            addTerminalLine(`Error stopping optimization: ${error.message}`, 'error');
+        })
+        .finally(() => {
             resetOptimizationState();
         });
 }
@@ -382,60 +413,51 @@ function updateProgressStatus(status) {
 }
 
 function handleOptimizationResult(result) {
-    addTerminalLine('Optimization completed!', 'success');
-
-    // Store deck and name globally for export
-    optimizedDeck = result.deck;
-    optimizedDeckName = result.deck_name || 'Optimized Deck';
-
     // Update results panel
     updateResultsPanel(result);
 
     // Update deck visualization
     updateDeckVisualization(result.deck);
 
-    // Show download section
-    document.getElementById('downloadSection').style.display = 'block';
+    // Update deck analysis
+    updateDeckAnalysis(result.deck);
 
-    addTerminalLine(`Final score: ${result.score.toFixed(4)}`);
-    addTerminalLine(`Colors used: ${result.target_colors.join(', ')}`);
+    // Cache deck images
+    cacheDeckImages(result.deck);
+
+    // Store optimized deck
+    optimizedDeck = result.deck;
+    optimizedDeckName = `Optimized_${result.algorithm}_${new Date().toISOString().slice(0, 10)}`;
 }
 
 function updateResultsPanel(result) {
     const resultsContent = document.getElementById('resultsContent');
 
-    // Get evaluation method info
-    const evaluationMethod = document.getElementById('evaluationMethod').value;
-    const is17Lands = evaluationMethod === '17lands';
+    // Display evaluation method info
+    const evaluationInfo = document.getElementById('evaluationInfo');
+    const evaluationMethodDisplay = document.getElementById('evaluationMethodDisplay');
+    const evaluationMethodDescription = document.getElementById('evaluationMethodDescription');
 
-    const resultsHtml = `
-        <div class="results-item">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="label">Score:</span>
-                <span class="value">${(result.score * 100).toFixed(1)}%</span>
-                ${is17Lands ? '<span class="badge bg-success ms-2"><i class="fas fa-chart-line"></i> 17Lands</span>' : '<span class="badge bg-info ms-2"><i class="fas fa-hand-paper"></i> Manual</span>'}
-            </div>
+    if (result.evaluation_method) {
+        evaluationMethodDisplay.textContent = result.evaluation_method === '17lands' ?
+            '17Lands Data-Based Evaluation' : 'Manual Evaluation + Synergy';
+        evaluationMethodDescription.textContent = result.evaluation_method === '17lands' ?
+            'Uses real 17Lands data (GIH Winrate + IWD)' :
+            'Uses local ratings and synergy bonuses';
+        evaluationInfo.style.display = 'block';
+    } else {
+        evaluationInfo.style.display = 'none';
+    }
+
+    // Display results
+    resultsContent.innerHTML = `
+        <div class="mb-3">
+            <h6>Optimization Results</h6>
+            <p><strong>Score:</strong> ${(result.score * 100).toFixed(1)}%</p>
+            <p><strong>Algorithm:</strong> ${result.algorithm}</p>
+            <p><strong>Target Colors:</strong> ${result.target_colors}</p>
         </div>
-        <div class="results-item">
-            <span class="label">Algorithm:</span>
-            <span class="value">${result.algorithm}</span>
-        </div>
-        <div class="results-item">
-            <span class="label">Colors:</span>
-            <span class="value">${result.target_colors.join(', ')}</span>
-        </div>
-        <div class="results-item">
-            <span class="label">Cards:</span>
-            <span class="value">${result.deck.length}</span>
-        </div>
-        <div class="results-item">
-            <span class="label">Evaluation Method:</span>
-            <span class="value">${is17Lands ? '17Lands Data-Based' : 'Manual + Synergy'}</span>
-        </div>
-        ${is17Lands ? '<div class="results-item"><span class="label">17Lands Metrics:</span><span class="value">GIH Winrate + IWD</span></div>' : ''}
     `;
-
-    resultsContent.innerHTML = resultsHtml;
 
     // Show download section
     document.getElementById('downloadSection').style.display = 'block';
@@ -491,62 +513,6 @@ function updateDeckVisualization(deck) {
                 });
 
                 deckHtml += '</div>';
-
-                // Add analysis
-                deckHtml += `
-                <div class="mt-4">
-                    <h6>Deck Analysis</h6>
-                    <div class="row justify-content-center">
-                        <div class="col-md-10">
-                            <div class="mana-curve-container">
-                                <div class="mana-curve-title">Mana Curve</div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="color-distribution">
-                                            <h6>Color Distribution</h6>
-                                            ${Object.entries(data.analysis.color_counts).map(([color, count]) =>
-                    `<div class="color-item"><span class="color-indicator color-${color}"></span> ${color}: ${count} cards</div>`
-                ).join('')}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <div class="mana-curve">
-                                            <div class="mana-curve-grid">
-                                                <div class="mana-curve-grid-line"></div>
-                                                <div class="mana-curve-grid-line"></div>
-                                                <div class="mana-curve-grid-line"></div>
-                                                <div class="mana-curve-grid-line"></div>
-                                                <div class="mana-curve-grid-line"></div>
-                                            </div>
-                                            ${(() => {
-                        const manaCurve = data.analysis.mana_curve;
-                        const maxCount = Math.max(...Object.values(manaCurve));
-                        const cmcRange = ['0', '1', '2', '3', '4', '5+'];
-
-                        return cmcRange.map(cmc => {
-                            const count = manaCurve[cmc] || 0;
-                            const height = maxCount > 0 ? Math.max(20, (count / maxCount) * 80) : 20;
-                            return `<div class="mana-curve-bar" style="height: ${height}px" title="${count} cards at ${cmc} CMC">
-                                                        <div class="count">${count}</div>
-                                                    </div>`;
-                        }).join('');
-                    })()}
-                                        </div>
-                                        <div class="mana-curve-labels">
-                                            <div class="mana-curve-label">0</div>
-                                            <div class="mana-curve-label">1</div>
-                                            <div class="mana-curve-label">2</div>
-                                            <div class="mana-curve-label">3</div>
-                                            <div class="mana-curve-label">4</div>
-                                            <div class="mana-curve-label">5+</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
 
                 visualization.innerHTML = deckHtml;
 
@@ -655,9 +621,19 @@ function clearDeckVisualization() {
 }
 
 function resetOptimizationState() {
-    document.getElementById('optimizeBtn').disabled = false;
+    // Clear status polling
+    if (statusInterval) {
+        clearInterval(statusInterval);
+        statusInterval = null;
+    }
+
+    // Reset UI
     document.getElementById('progressContainer').style.display = 'none';
+    document.getElementById('optimizeBtn').style.display = 'block';
+    document.getElementById('stopBtn').style.display = 'none';
+    document.getElementById('optimizeBtn').disabled = false;
     document.getElementById('progressBar').style.width = '0%';
+    document.getElementById('progressStatus').textContent = 'Ready';
 }
 
 // Local image caching functions
@@ -712,4 +688,108 @@ async function cacheDeckImages(deck) {
         addTerminalLine('Error caching deck images', 'error');
         return [];
     }
+}
+
+function updateDeckAnalysis(deck) {
+    const deckAnalysis = document.getElementById('deckAnalysis');
+
+    if (!deck || deck.length === 0) {
+        deckAnalysis.innerHTML = '<p class="text-muted">No deck data available for analysis.</p>';
+        return;
+    }
+
+    // Calculate analysis metrics
+    const analysis = calculateDeckAnalysis(deck);
+
+    deckAnalysis.innerHTML = `
+        <div class="mana-curve-container">
+            <div class="mana-curve-title">Mana Curve</div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="color-distribution">
+                        <h6>Color Distribution</h6>
+                        ${Object.entries(analysis.colorDistribution).map(([color, count]) =>
+        `<div class="color-item"><span class="color-indicator color-${color}"></span> ${color}: ${count} cards</div>`
+    ).join('')}
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="mana-curve">
+                        <div class="mana-curve-grid">
+                            <div class="mana-curve-grid-line"></div>
+                            <div class="mana-curve-grid-line"></div>
+                            <div class="mana-curve-grid-line"></div>
+                            <div class="mana-curve-grid-line"></div>
+                            <div class="mana-curve-grid-line"></div>
+                        </div>
+                        ${(() => {
+            const manaCurve = analysis.manaCurve;
+            const maxCount = Math.max(...Object.values(manaCurve));
+            const cmcRange = ['0', '1', '2', '3', '4', '5+'];
+
+            return cmcRange.map(cmc => {
+                const count = manaCurve[cmc] || 0;
+                const height = maxCount > 0 ? Math.max(20, (count / maxCount) * 80) : 20;
+                return `<div class="mana-curve-bar" style="height: ${height}px" title="${count} cards at ${cmc} CMC">
+                                <div class="count">${count}</div>
+                            </div>`;
+            }).join('');
+        })()}
+                    </div>
+                    <div class="mana-curve-labels">
+                        <div class="mana-curve-label">0</div>
+                        <div class="mana-curve-label">1</div>
+                        <div class="mana-curve-label">2</div>
+                        <div class="mana-curve-label">3</div>
+                        <div class="mana-curve-label">4</div>
+                        <div class="mana-curve-label">5+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function calculateDeckAnalysis(deck) {
+    const analysis = {
+        colorDistribution: {},
+        cardTypes: {},
+        manaCurve: {},
+        totalCards: deck.length,
+        averageCMC: 0,
+        averageRating: 0
+    };
+
+    let totalCMC = 0;
+    let totalRating = 0;
+
+    deck.forEach(card => {
+        // Color distribution
+        const colors = card.colors || [];
+        if (colors.length === 0) {
+            analysis.colorDistribution['Colorless'] = (analysis.colorDistribution['Colorless'] || 0) + 1;
+        } else {
+            colors.forEach(color => {
+                analysis.colorDistribution[color] = (analysis.colorDistribution[color] || 0) + 1;
+            });
+        }
+
+        // Card types
+        const type = card.type || 'Unknown';
+        analysis.cardTypes[type] = (analysis.cardTypes[type] || 0) + 1;
+
+        // Mana curve
+        const cmc = card.cmc || 0;
+        analysis.manaCurve[cmc] = (analysis.manaCurve[cmc] || 0) + 1;
+        totalCMC += cmc;
+
+        // Rating
+        const rating = card.rating || 5;
+        totalRating += rating;
+    });
+
+    analysis.averageCMC = totalCMC / deck.length;
+    analysis.averageRating = totalRating / deck.length;
+
+    return analysis;
 }

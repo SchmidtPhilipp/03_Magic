@@ -1,4 +1,7 @@
 Name,Set code,Set name,Collector number,Foil,Rarity,Quantity,ManaBox ID,Scryfall ID,Purchase price,Misprint,Altered,Condition,Language,Purchase price currency
+Lightning Bolt,FIN,Final Fantasy,164,normal,uncommon,1,106610,9f2b202c-91da-40ec-8324-6b6be7cb3bc8,0.07,false,false,near_mint,en,EUR
+Lightning Bolt,FIN,Final Fantasy,164,normal,common,1,106610,9f2b202c-91da-40ec-8324-6b6be7cb3bc8,0.07,false,false,near_mint,en,EUR
+Counterspell,FIN,Final Fantasy,164,normal,common,1,106610,9f2b202c-91da-40ec-8324-6b6be7cb3bc8,0.07,false,false,near_mint,en,EUR
 "Ultimecia, Time Sorceress // Ultimecia, Omnipotent",FIN,Final Fantasy,247,normal,uncommon,1,105581,2d6a2b68-5407-464e-a335-7866fd969c30,0.02,false,false,near_mint,en,EUR
 Vivi Ornitier,FIN,Final Fantasy,248,normal,mythic,1,105748,ecc1027a-8c07-44a0-bdde-fa2844cff694,41.34,false,false,near_mint,en,EUR
 Locke Cole,FIN,Final Fantasy,234,normal,uncommon,1,106552,572feb8c-6976-40a8-8a34-b4db836cca56,0.06,false,false,near_mint,en,EUR

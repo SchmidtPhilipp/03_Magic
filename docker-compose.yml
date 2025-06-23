@@ -5,7 +5,7 @@ services:
     build: .
     container_name: mtg-optimizer-dev
     ports:
-      - "5000:5000"
+      - "5050:5050"
     volumes:
       # Mount the entire project directory for live development
       - .:/app

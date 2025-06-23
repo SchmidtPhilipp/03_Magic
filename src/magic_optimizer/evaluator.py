@@ -19,6 +19,8 @@ import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Dict, List, Optional, Tuple
+from collections import OrderedDict
+import weakref
 
 import pandas as pd
 import requests
@@ -153,6 +155,57 @@ logger = logging.getLogger(__name__)
 user_logger = get_user_logger()
 optimization_logger = get_optimization_logger()
 api_logger = get_api_logger()
+
+
+class LRUCache:
+    """LRU Cache implementation for memory-efficient caching"""
+
+    def __init__(self, max_size: int = 1000):
+        self.max_size = max_size
+        self.cache = OrderedDict()
+        self.lock = threading.Lock()
+
+    def get(self, key):
+        """Get value from cache, moving it to end (most recently used)"""
+        with self.lock:
+            if key in self.cache:
+                # Move to end (most recently used)
+                self.cache.move_to_end(key)
+                return self.cache[key]
+            return None
+
+    def put(self, key, value):
+        """Put value in cache, evicting least recently used if full"""
+        with self.lock:
+            if key in self.cache:
+                # Move to end (most recently used)
+                self.cache.move_to_end(key)
+            else:
+                # Check if cache is full
+                if len(self.cache) >= self.max_size:
+                    # Remove least recently used item
+                    self.cache.popitem(last=False)
+
+            self.cache[key] = value
+
+    def clear(self):
+        """Clear all items from cache"""
+        with self.lock:
+            self.cache.clear()
+
+    def size(self):
+        """Get current cache size"""
+        with self.lock:
+            return len(self.cache)
+
+    def get_stats(self):
+        """Get cache statistics"""
+        with self.lock:
+            return {
+                "size": len(self.cache),
+                "max_size": self.max_size,
+                "utilization": f"{len(self.cache) / self.max_size * 100:.1f}%",
+            }
 
 
 class SeventeenLandsAPI:
@@ -428,37 +481,28 @@ class SeventeenLandsAPI:
 
 
 class DeckEvaluator:
-    """Main deck evaluator class with multiple evaluation methods and performance optimizations"""
+    """Deck evaluation engine with multiple methods and performance optimizations"""
 
     def __init__(self, ratings_file: str = "data/ratings/card_ratings.csv"):
-        """Initialize evaluator with card ratings"""
-        # Use appropriate loggers FIRST
-        self.logger = logger
-        self.user_logger = user_logger
-        self.optimization_logger = optimization_logger
-
-        self.ratings_file = ratings_file
+        """Initialize DeckEvaluator with ratings and performance optimizations"""
         self.ratings_df = None
-        self.ratings_dict = {}
-        self._load_ratings()
-
-        # Initialize 17Lands API client
+        self.ratings_file = ratings_file
         self.seventeen_lands = SeventeenLandsAPI()
 
-        # Performance optimization: Caching
-        self._synergy_cache = {}
-        self._evaluation_cache = {}
-        self._cache_lock = threading.Lock()
+        # Loggers
+        self.logger = logging.getLogger(__name__)
+        self.user_logger = get_user_logger()
+        self.optimization_logger = get_optimization_logger()
 
-        # Performance optimization: Thread pool for parallel processing
-        self._thread_pool = ThreadPoolExecutor(max_workers=4)
+        # Performance optimizations
+        self.executor = ThreadPoolExecutor(max_workers=os.cpu_count() or 1)
+        self.deck_evaluation_cache = LRUCache(max_size=1000)
+        self._synergy_cache = LRUCache(max_size=5000)
+        self.card_metadata_cache = LRUCache(max_size=5000)
+        self._thread_pool = self.executor  # Alias for compatibility
 
-        self.logger.info(
-            "DeckEvaluator initialized with 17Lands API and performance optimizations"
-        )
-        self.user_logger.info(
-            "Deck evaluator ready - supports manual and 17Lands evaluation methods"
-        )
+        self._load_ratings()
+        self.logger.info("DeckEvaluator initialized with performance optimizations")
 
     def _load_ratings(self):
         """Load card ratings from file"""
@@ -486,29 +530,9 @@ class DeckEvaluator:
             self.ratings_df = pd.DataFrame()
             self.ratings_dict = {}
 
-    def clear_caches(self):
-        """Clear all caches to free memory"""
-        with self._cache_lock:
-            self._synergy_cache.clear()
-            self._evaluation_cache.clear()
-        self.seventeen_lands.clear_cache()
-        self.logger.info("All caches cleared")
-        self.user_logger.info("All evaluation caches cleared")
-
-    def get_cache_stats(self) -> Dict[str, int]:
-        """Get cache statistics for monitoring"""
-        with self._cache_lock:
-            stats = {
-                "synergy_cache_size": len(self._synergy_cache),
-                "evaluation_cache_size": len(self._evaluation_cache),
-            }
-        # Add 17Lands cache stats
-        stats.update(self.seventeen_lands.get_cache_stats())
-        return stats
-
     def evaluate_deck(self, decklist: List[str], method: str = "manual") -> float:
         """
-        Main evaluation interface with caching
+        Main evaluation interface
 
         Args:
             decklist: List of card names in the deck
@@ -517,17 +541,6 @@ class DeckEvaluator:
         Returns:
             float: Deck score (0.0 to 1.0)
         """
-        # Create cache key
-        cache_key = (tuple(sorted(decklist)), method)
-
-        # Check cache first
-        with self._cache_lock:
-            if cache_key in self._evaluation_cache:
-                self.logger.debug(
-                    f"Cache hit for deck evaluation: {len(decklist)} cards"
-                )
-                return self._evaluation_cache[cache_key]
-
         # Log evaluation start
         self.user_logger.info(
             f"Evaluating deck with {len(decklist)} cards using {method} method"
@@ -547,10 +560,6 @@ class DeckEvaluator:
                 f"Unknown evaluation method '{method}', using manual evaluation"
             )
             result = self.evaluate_deck_manual(decklist)
-
-        # Cache result
-        with self._cache_lock:
-            self._evaluation_cache[cache_key] = result
 
         # Log evaluation result
         score_percentage = result * 100
@@ -750,7 +759,7 @@ class DeckEvaluator:
 
     def _calculate_synergy_bonus(self, decklist: List[str]) -> float:
         """
-        Calculate synergy bonus for the entire deck with enhanced caching
+        Calculate synergy bonus for the entire deck
 
         Args:
             decklist: List of card names in the deck
@@ -761,26 +770,11 @@ class DeckEvaluator:
         if len(decklist) < 2:
             return 0.0
 
-        # Create cache key for the entire deck
-        cache_key = tuple(sorted(decklist))
-
-        # Check cache first
-        with self._cache_lock:
-            if cache_key in self._synergy_cache:
-                logger.debug(
-                    f"Cache hit for synergy calculation: {len(decklist)} cards"
-                )
-                return self._synergy_cache[cache_key]
-
         # Calculate synergy using parallel processing for large decks
         if len(decklist) > 15:
             synergy_score = self._calculate_synergy_parallel(decklist)
         else:
             synergy_score = self._calculate_synergy_sequential(decklist)
-
-        # Cache result
-        with self._cache_lock:
-            self._synergy_cache[cache_key] = synergy_score
 
         return synergy_score
 
@@ -834,21 +828,36 @@ class DeckEvaluator:
         return total_synergy / pair_count if pair_count > 0 else 0.0
 
     def _calculate_synergy_sequential(self, decklist: List[str]) -> float:
-        """Calculate synergy using sequential processing for smaller decks"""
-        total_synergy = 0.0
-        pair_count = 0
+        """
+        Calculate total synergy bonus for a deck (sequential version)
 
-        for i, card1 in enumerate(decklist):
-            for j, card2 in enumerate(decklist[i + 1 :], i + 1):
-                synergy = self._calculate_card_synergy(card1, card2)
-                total_synergy += synergy
-                pair_count += 1
+        Args:
+            decklist: List of card names in the deck
 
-        return total_synergy / pair_count if pair_count > 0 else 0.0
+        Returns:
+            float: Synergy bonus score (0.0 to 1.0)
+        """
+        total_synergy = 0
+        for i in range(len(decklist)):
+            for j in range(i + 1, len(decklist)):
+                card1 = decklist[i]
+                card2 = decklist[j]
+
+                # Check cache first
+                cache_key = tuple(sorted((card1, card2)))
+                cached_synergy = self._synergy_cache.get(cache_key)
+
+                if cached_synergy is not None:
+                    total_synergy += cached_synergy
+                else:
+                    synergy = self._calculate_card_synergy(card1, card2)
+                    self._synergy_cache.put(cache_key, synergy)
+                    total_synergy += synergy
+        return total_synergy
 
     def _calculate_card_synergy(self, card1: str, card2: str) -> float:
         """
-        Calculate synergy between two specific cards with caching and enhanced patterns
+        Calculate synergy between two cards with enhanced logic.
 
         Args:
             card1: First card name
@@ -857,13 +866,30 @@ class DeckEvaluator:
         Returns:
             float: Synergy score (0.0 to 1.0)
         """
-        # Create cache key for card pair
-        cache_key = tuple(sorted([card1, card2]))
+        # Use cache for individual card metadata
+        card1_info = self.card_metadata_cache.get(card1)
+        if card1_info is None:
+            card1_info = self._get_card_info(card1)
+            self.card_metadata_cache.put(card1, card1_info)
 
-        # Check cache first
-        with self._cache_lock:
-            if cache_key in self._synergy_cache:
-                return self._synergy_cache[cache_key]
+        card2_info = self.card_metadata_cache.get(card2)
+        if card2_info is None:
+            card2_info = self._get_card_info(card2)
+            self.card_metadata_cache.put(card2, card2_info)
+
+        # Default synergy
+        synergy = 0.0
+
+        # Basic type check
+        if not card1_info or not card2_info:
+            return 0.0
+
+        # Enhanced Tribal Synergy
+        # Check for matching subtypes (e.g., "Goblin", "Elf")
+        if any(
+            word in card1_info["type"].lower() for word in ["goblin", "elf"]
+        ) and any(word in card2_info["type"].lower() for word in ["goblin", "elf"]):
+            synergy = 0.4
 
         # Enhanced synergy patterns with more comprehensive coverage
         synergy_patterns = {
@@ -892,63 +918,6 @@ class DeckEvaluator:
             ("Rampant Growth", "Primeval Titan"): 0.6,
             ("Cultivate", "Primeval Titan"): 0.6,
             ("Kodama's Reach", "Primeval Titan"): 0.6,
-            # Tribal synergies
-            ("Goblin Chieftain", "Goblin Guide"): 0.8,
-            ("Goblin Warchief", "Goblin Guide"): 0.7,
-            ("Goblin King", "Goblin Guide"): 0.6,
-            ("Goblin Matron", "Goblin Guide"): 0.5,
-            ("Goblin Lackey", "Goblin Guide"): 0.6,
-            # Elf tribal
-            ("Elvish Archdruid", "Llanowar Elves"): 0.8,
-            ("Elvish Champion", "Llanowar Elves"): 0.7,
-            ("Ezuri, Renegade Leader", "Llanowar Elves"): 0.8,
-            ("Imperious Perfect", "Llanowar Elves"): 0.7,
-            # Merfolk tribal
-            ("Lord of Atlantis", "Silvergill Adept"): 0.8,
-            ("Master of the Pearl Trident", "Silvergill Adept"): 0.8,
-            ("Merrow Reejerey", "Silvergill Adept"): 0.7,
-            # Zombie tribal
-            ("Zombie Master", "Gravecrawler"): 0.8,
-            ("Undead Warchief", "Gravecrawler"): 0.7,
-            ("Lord of the Undead", "Gravecrawler"): 0.7,
-            # Artifact synergies
-            ("Arcbound Ravager", "Cranial Plating"): 0.9,
-            ("Arcbound Worker", "Cranial Plating"): 0.7,
-            ("Arcbound Stinger", "Cranial Plating"): 0.7,
-            ("Steel Overseer", "Arcbound Ravager"): 0.8,
-            # Enchantment synergies
-            ("Enchantress's Presence", "Utopia Sprawl"): 0.6,
-            ("Argothian Enchantress", "Utopia Sprawl"): 0.7,
-            ("Sterling Grove", "Utopia Sprawl"): 0.5,
-            # Land synergies
-            ("Crop Rotation", "Gaea's Cradle"): 0.8,
-            ("Crop Rotation", "Dark Depths"): 0.7,
-            ("Knight of the Reliquary", "Gaea's Cradle"): 0.7,
-            ("Knight of the Reliquary", "Dark Depths"): 0.6,
-            # Combo pieces
-            ("Splinter Twin", "Deceiver Exarch"): 0.9,
-            ("Splinter Twin", "Pestermite"): 0.9,
-            ("Kiki-Jiki, Mirror Breaker", "Deceiver Exarch"): 0.9,
-            ("Kiki-Jiki, Mirror Breaker", "Pestermite"): 0.9,
-            # Storm synergies
-            ("Grapeshot", "Desperate Ritual"): 0.8,
-            ("Grapeshot", "Pyretic Ritual"): 0.8,
-            ("Grapeshot", "Manamorphose"): 0.7,
-            ("Tendrils of Agony", "Desperate Ritual"): 0.8,
-            # Reanimator synergies
-            ("Entomb", "Griselbrand"): 0.9,
-            ("Entomb", "Iona, Shield of Emeria"): 0.8,
-            ("Reanimate", "Griselbrand"): 0.9,
-            ("Reanimate", "Iona, Shield of Emeria"): 0.8,
-            # Delver synergies
-            ("Delver of Secrets", "Ponder"): 0.7,
-            ("Delver of Secrets", "Brainstorm"): 0.7,
-            ("Delver of Secrets", "Preordain"): 0.6,
-            # Burn synergies
-            ("Goblin Guide", "Lightning Bolt"): 0.5,
-            ("Goblin Guide", "Lava Spike"): 0.5,
-            ("Eidolon of the Great Revel", "Lightning Bolt"): 0.6,
-            ("Eidolon of the Great Revel", "Lava Spike"): 0.6,
         }
 
         # Check for exact matches
@@ -1048,180 +1017,8 @@ class DeckEvaluator:
             ):
                 result = 0.4
 
-            # Tribal synergy patterns
-            elif any(
-                word in card1_lower
-                for word in ["goblin", "chieftain", "warchief", "king", "matron"]
-            ) and any(word in card2_lower for word in ["goblin", "guide", "lackey"]):
-                result = 0.5
-            elif any(
-                word in card2_lower
-                for word in ["goblin", "chieftain", "warchief", "king", "matron"]
-            ) and any(word in card1_lower for word in ["goblin", "guide", "lackey"]):
-                result = 0.5
-
-            # Elf tribal patterns
-            elif any(
-                word in card1_lower
-                for word in ["elf", "archdruid", "champion", "ezuri", "perfect"]
-            ) and any(word in card2_lower for word in ["elf", "llanowar", "elvish"]):
-                result = 0.5
-            elif any(
-                word in card2_lower
-                for word in ["elf", "archdruid", "champion", "ezuri", "perfect"]
-            ) and any(word in card1_lower for word in ["elf", "llanowar", "elvish"]):
-                result = 0.5
-
-            # Merfolk tribal patterns
-            elif any(
-                word in card1_lower
-                for word in ["merfolk", "lord", "master", "reejerey"]
-            ) and any(
-                word in card2_lower for word in ["merfolk", "silvergill", "adept"]
-            ):
-                result = 0.5
-            elif any(
-                word in card2_lower
-                for word in ["merfolk", "lord", "master", "reejerey"]
-            ) and any(
-                word in card1_lower for word in ["merfolk", "silvergill", "adept"]
-            ):
-                result = 0.5
-
-            # Zombie tribal patterns
-            elif any(
-                word in card1_lower
-                for word in ["zombie", "master", "warchief", "undead"]
-            ) and any(
-                word in card2_lower for word in ["zombie", "gravecrawler", "undead"]
-            ):
-                result = 0.5
-            elif any(
-                word in card2_lower
-                for word in ["zombie", "master", "warchief", "undead"]
-            ) and any(
-                word in card1_lower for word in ["zombie", "gravecrawler", "undead"]
-            ):
-                result = 0.5
-
-            # Artifact synergy patterns
-            elif any(
-                word in card1_lower
-                for word in ["arcbound", "ravager", "worker", "stinger"]
-            ) and any(
-                word in card2_lower for word in ["cranial", "plating", "artifact"]
-            ):
-                result = 0.5
-            elif any(
-                word in card2_lower
-                for word in ["arcbound", "ravager", "worker", "stinger"]
-            ) and any(
-                word in card1_lower for word in ["cranial", "plating", "artifact"]
-            ):
-                result = 0.5
-
-            # Enchantment synergy patterns
-            elif any(
-                word in card1_lower for word in ["enchantress", "presence", "argothian"]
-            ) and any(
-                word in card2_lower for word in ["enchantment", "utopia", "sprawl"]
-            ):
-                result = 0.4
-            elif any(
-                word in card2_lower for word in ["enchantress", "presence", "argothian"]
-            ) and any(
-                word in card1_lower for word in ["enchantment", "utopia", "sprawl"]
-            ):
-                result = 0.4
-
-            # Land synergy patterns
-            elif any(
-                word in card1_lower
-                for word in ["crop", "rotation", "knight", "reliquary"]
-            ) and any(
-                word in card2_lower for word in ["gaea", "cradle", "dark", "depths"]
-            ):
-                result = 0.4
-            elif any(
-                word in card2_lower
-                for word in ["crop", "rotation", "knight", "reliquary"]
-            ) and any(
-                word in card1_lower for word in ["gaea", "cradle", "dark", "depths"]
-            ):
-                result = 0.4
-
-            # Combo synergy patterns
-            elif any(
-                word in card1_lower for word in ["splinter", "twin", "kiki", "mirror"]
-            ) and any(
-                word in card2_lower for word in ["deceiver", "exarch", "pestermite"]
-            ):
-                result = 0.6
-            elif any(
-                word in card2_lower for word in ["splinter", "twin", "kiki", "mirror"]
-            ) and any(
-                word in card1_lower for word in ["deceiver", "exarch", "pestermite"]
-            ):
-                result = 0.6
-
-            # Storm synergy patterns
-            elif any(
-                word in card1_lower for word in ["grapeshot", "tendrils", "agony"]
-            ) and any(
-                word in card2_lower
-                for word in ["desperate", "ritual", "pyretic", "manamorphose"]
-            ):
-                result = 0.5
-            elif any(
-                word in card2_lower for word in ["grapeshot", "tendrils", "agony"]
-            ) and any(
-                word in card1_lower
-                for word in ["desperate", "ritual", "pyretic", "manamorphose"]
-            ):
-                result = 0.5
-
-            # Reanimator synergy patterns
-            elif any(word in card1_lower for word in ["entomb", "reanimate"]) and any(
-                word in card2_lower
-                for word in ["griselbrand", "iona", "shield", "emeria"]
-            ):
-                result = 0.6
-            elif any(word in card2_lower for word in ["entomb", "reanimate"]) and any(
-                word in card1_lower
-                for word in ["griselbrand", "iona", "shield", "emeria"]
-            ):
-                result = 0.6
-
-            # Delver synergy patterns
-            elif any(word in card1_lower for word in ["delver", "secrets"]) and any(
-                word in card2_lower for word in ["ponder", "brainstorm", "preordain"]
-            ):
-                result = 0.4
-            elif any(word in card2_lower for word in ["delver", "secrets"]) and any(
-                word in card1_lower for word in ["ponder", "brainstorm", "preordain"]
-            ):
-                result = 0.4
-
-            # Burn synergy patterns
-            elif any(
-                word in card1_lower for word in ["goblin", "guide", "eidolon", "revel"]
-            ) and any(
-                word in card2_lower for word in ["lightning", "bolt", "lava", "spike"]
-            ):
-                result = 0.3
-            elif any(
-                word in card2_lower for word in ["goblin", "guide", "eidolon", "revel"]
-            ) and any(
-                word in card1_lower for word in ["lightning", "bolt", "lava", "spike"]
-            ):
-                result = 0.3
-
             else:
                 result = 0.0
-
-        # Cache result
-        with self._cache_lock:
-            self._synergy_cache[cache_key] = result
 
         return result
 
@@ -1395,7 +1192,7 @@ class DeckEvaluator:
 
     def get_deck_analysis(self, decklist: List[str], method: str = "manual") -> Dict:
         """
-        Get detailed deck analysis with performance optimizations
+        Get detailed deck analysis
 
         Args:
             decklist: List of card names in the deck
@@ -1411,8 +1208,11 @@ class DeckEvaluator:
                 "card_count": 0,
                 "avg_rating": 0.0,
                 "synergy_bonus": 0.0,
+                "dynamic_synergy": 0.0,
                 "analysis": {},
-                "performance": self.get_cache_stats(),
+                "performance": {
+                    "17lands_cache": self.seventeen_lands.get_cache_stats()
+                },
             }
 
         # Get ratings for cards
@@ -1426,8 +1226,14 @@ class DeckEvaluator:
         # Calculate synergy bonus
         synergy_bonus = self._calculate_synergy_bonus(decklist)
 
+        # Calculate dynamic synergy bonus
+        dynamic_synergy = self._calculate_dynamic_synergy_bonus(decklist)
+
         # Get overall score
         score = self.evaluate_deck(decklist, method)
+
+        # Deck composition analysis
+        composition = self._analyze_deck_composition(decklist)
 
         return {
             "score": score,
@@ -1435,12 +1241,14 @@ class DeckEvaluator:
             "card_count": len(decklist),
             "avg_rating": avg_rating,
             "synergy_bonus": synergy_bonus,
+            "dynamic_synergy": dynamic_synergy,
             "analysis": {
-                "highest_rated": max(ratings) if ratings else 0,
-                "lowest_rated": min(ratings) if ratings else 0,
                 "rating_distribution": self._get_rating_distribution(ratings),
+                "deck_composition": composition,
             },
-            "performance": self.get_cache_stats(),
+            "performance": {
+                "17lands_cache": self.seventeen_lands.get_cache_stats(),
+            },
         }
 
     def _get_rating_distribution(self, ratings: List[int]) -> Dict[str, int]:
@@ -1466,6 +1274,47 @@ class DeckEvaluator:
                 distribution["bad"] += 1
 
         return distribution
+
+    def get_cache_stats(self) -> Dict:
+        """Get statistics for all caches"""
+        return {
+            "deck_evaluation_cache": self.deck_evaluation_cache.get_stats(),
+            "synergy_cache": self._synergy_cache.get_stats(),
+            "17lands_cache": self.seventeen_lands.get_cache_stats(),
+        }
+
+    def clear_caches(self):
+        """Clear all caches in the evaluator"""
+        self.deck_evaluation_cache.clear()
+        self._synergy_cache.clear()
+        self.seventeen_lands.clear_cache()
+        self.logger.info("All evaluator caches have been cleared.")
+
+    def _get_card_info(self, card_name: str) -> Optional[Dict]:
+        """
+        Get card information from local ratings data.
+        This is a simplified version; a real implementation might query Scryfall.
+        """
+        if self.ratings_df is None:
+            return None
+        try:
+            card_data = self.ratings_df[self.ratings_df["name"] == card_name].iloc[0]
+            return {
+                "type": card_data.get("type", ""),
+                "subtypes": (
+                    card_data.get("subtypes", "").split()
+                    if card_data.get("subtypes")
+                    else []
+                ),
+                "supertypes": (
+                    card_data.get("supertypes", "").split()
+                    if card_data.get("supertypes")
+                    else []
+                ),
+                "text": card_data.get("text", ""),
+            }
+        except (IndexError, KeyError):
+            return None
 
     def __del__(self):
         """Cleanup thread pool on deletion"""

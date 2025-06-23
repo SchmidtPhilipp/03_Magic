@@ -45,7 +45,7 @@ class EnhancedDeckBuilder:
         export_formats: List[str] = None,
         lambda_penalty: float = 0.5,
         total_deck_size: int = None,
-        land_ratio: float = None,
+        num_lands: int = None,
         evaluation_method: str = "manual",
     ) -> Dict:
         """
@@ -54,27 +54,33 @@ class EnhancedDeckBuilder:
         Args:
             collection_df: DataFrame with card collection
             num_colors: Maximum number of colors to use in deck
-            deck_size: Target non-land card count (if total_deck_size/land_ratio given, this is ignored)
+            deck_size: Target non-land card count (if total_deck_size/num_lands given, this is ignored)
             algorithm: 'genetic', 'simulated_annealing', or 'greedy'
             export_formats: List of formats to export ('arena', 'mtgo', 'cockatrice', etc.)
             lambda_penalty: Penalty multiplier for exceeding color limit
             total_deck_size: (optional) total deck size (lands + non-lands)
-            land_ratio: (optional) ratio of lands in deck
+            num_lands: (optional) absolute number of lands in deck
             evaluation_method: '17lands' or 'manual' evaluation method
         """
 
-        # If total_deck_size and land_ratio are given, calculate non-land count
-        if total_deck_size is not None and land_ratio is not None:
-            num_lands = round(total_deck_size * land_ratio)
-            deck_size = total_deck_size - num_lands
+        # If total_deck_size and num_lands are given, calculate non-land count
+        if total_deck_size is not None and num_lands is not None:
+            non_land_count = total_deck_size - num_lands
             print(
-                f"[DeckBuilder] Using total deck size {total_deck_size}, land ratio {land_ratio}, lands {num_lands}, non-lands {deck_size}"
+                f"[DeckBuilder] Using total deck size {total_deck_size}, lands {num_lands}, non-lands {non_land_count}"
             )
+            # Use the calculated non-land count for optimization
+            deck_size = non_land_count
+        else:
+            num_lands = None
 
         print(f"\n=== ENHANCED DECK OPTIMIZATION ===")
         print(f"Algorithm: {algorithm.upper()}")
         print(f"Max Colors: {num_colors}")
-        print(f"Deck Size: {deck_size}")
+        print(f"Non-Land Cards: {deck_size}")
+        if total_deck_size is not None:
+            print(f"Total Deck Size: {total_deck_size}")
+            print(f"Expected Lands: {num_lands}")
         print(f"Lambda Penalty: {lambda_penalty}")
         print(f"Evaluation Method: {evaluation_method}")
 
@@ -105,9 +111,12 @@ class EnhancedDeckBuilder:
 
         # Add optimal lands to the deck
         print(f"\n=== ADDING OPTIMAL LANDS ===")
-        if total_deck_size is not None and land_ratio is not None:
+        if total_deck_size is not None and num_lands is not None:
             complete_deck = self.add_lands_to_deck(
-                result["deck"], result["target_colors"], total_deck_size, land_ratio
+                result["deck"],
+                result["target_colors"],
+                total_deck_size,
+                num_lands=num_lands,
             )
         else:
             complete_deck = self.add_lands_to_deck(
@@ -139,8 +148,8 @@ class EnhancedDeckBuilder:
         lambda_penalty: float = 0.5,
         evaluation_method: str = "manual",
     ) -> Dict:
-        """Build deck using greedy algorithm with dynamic color constraints"""
-        print("Running Greedy Algorithm with Dynamic Color Constraints...")
+        """Build deck using greedy algorithm with strict color selection"""
+        print("Running Greedy Algorithm with Strict Color Selection...")
         print(f"Evaluation Method: {evaluation_method}")
 
         # Prepare eligible cards (no color filtering)
@@ -148,25 +157,30 @@ class EnhancedDeckBuilder:
             collection_df, num_colors
         )
 
-        # If only one color is requested, filter eligible cards to strictly mono-color (or colorless)
-        if num_colors == 1:
-            # Find the most common color in the eligible pool
-            color_counts = {}
-            for card in eligible_cards:
-                for color in card.get("colors", set()):
-                    color_counts[color] = color_counts.get(color, 0) + 1
-            if color_counts:
-                main_color = max(color_counts, key=color_counts.get)
-                eligible_cards = [
-                    card
-                    for card in eligible_cards
-                    if (card.get("colors", set()) == {main_color})
-                    or (not card.get("colors"))
-                ]
+        # Count color occurrences
+        color_counts = {}
+        for card in eligible_cards:
+            for color in card.get("colors", set()):
+                color_counts[color] = color_counts.get(color, 0) + 1
+
+        # Wähle die besten Farben (z.B. 2 Farben mit meisten Karten)
+        best_colors = []
+        if num_colors > 0 and color_counts:
+            best_colors = sorted(color_counts, key=color_counts.get, reverse=True)[
+                :num_colors
+            ]
+            print(f"Selected colors for deck: {best_colors}")
+
+        # Filtere Karten auf diese Farben (und farblose Karten)
+        def is_allowed(card):
+            colors = card.get("colors", set())
+            return not colors or colors.issubset(set(best_colors))
+
+        filtered_cards = [card for card in eligible_cards if is_allowed(card)]
 
         # Exclude all lands from eligible cards (basic and nonbasic)
         eligible_spells = [
-            card for card in eligible_cards if card.get("type") != "Land"
+            card for card in filtered_cards if card.get("type") != "Land"
         ]
 
         if len(eligible_spells) < deck_size:
@@ -185,62 +199,21 @@ class EnhancedDeckBuilder:
         color_counts = {}
         deck_colors = set()
 
-        # Phase 1: Add cards with highest ratings while monitoring color count
+        print(f"Target non-land cards: {deck_size}")
+
         for card in eligible_spells:
             if len(deck) >= deck_size:
                 break
-
-            card_colors = card.get("colors", set())
-
-            # Check if adding this card would exceed color limit
-            temp_deck = deck + [card]
-            temp_colors = set()
-            for temp_card in temp_deck:
-                colors = temp_card.get("colors", set())
-                temp_colors.update(colors)
-
-            # If adding this card would exceed color limit, skip it
-            if len(temp_colors) > num_colors:
-                continue
-
-            # FIXED: Allow cards that expand the color pool up to the limit
-            # Only restrict if we're already at the color limit
-            if len(deck_colors) >= num_colors and card_colors:
-                # If we're at the limit, only allow cards that use existing colors
-                if not (card_colors & deck_colors):
-                    continue  # Skip cards that don't use existing colors
-
             deck.append(card)
-
-            # Update color counts and deck colors
+            card_colors = card.get("colors", set())
             for color in card_colors:
                 color_counts[color] = color_counts.get(color, 0) + 1
             deck_colors.update(card_colors)
 
-        # Phase 2: Fill remaining slots with best available cards
-        remaining_slots = deck_size - len(deck)
-        remaining_cards = [card for card in eligible_spells if card not in deck]
-
-        # Sort remaining cards by rating
-        remaining_cards.sort(key=lambda x: x["rating"], reverse=True)
-
-        for card in remaining_cards[:remaining_slots]:
-            card_colors = card.get("colors", set())
-
-            # Apply same color compatibility check
-            if len(deck_colors) >= num_colors and card_colors:
-                # If we're at the limit, only allow cards that use existing colors
-                if not (card_colors & deck_colors):
-                    continue  # Skip cards that don't use existing colors
-
-            deck.append(card)
-            # Update color counts
-            for color in card_colors:
-                color_counts[color] = color_counts.get(color, 0) + 1
-            deck_colors.update(card_colors)
+        print(f"Added {len(deck)} non-land cards (target was {deck_size})")
 
         # Get actual colors used
-        actual_colors = sorted(list(color_counts.keys()))
+        actual_colors = sorted(list(deck_colors))
 
         # Calculate final score
         final_score = self.optimizer.calculate_deck_score(
@@ -370,6 +343,9 @@ class EnhancedDeckBuilder:
         # Use provided num_lands or calculate optimal land count
         if num_lands is not None:
             optimal_lands = num_lands
+            print(
+                f"[calculate_optimal_lands] Using explicit num_lands: {optimal_lands}"
+            )
         else:
             # Calculate optimal land count (typically 33-40% of deck)
             if deck_size <= 40:  # Limited format
@@ -390,13 +366,15 @@ class EnhancedDeckBuilder:
             elif avg_cmc < 2.5:
                 optimal_lands -= 1
 
+            # Only apply min/max if not explicit
             optimal_lands = min(optimal_lands, deck_size - non_land_cards)
             if deck_size <= 40:
                 optimal_lands = max(15, optimal_lands)
             else:
                 optimal_lands = max(20, optimal_lands)
-
-        print(f"Calculated optimal lands: {optimal_lands}")
+            print(
+                f"[calculate_optimal_lands] Auto-calculated optimal lands: {optimal_lands}"
+            )
 
         lands = []
         lands_needed = optimal_lands
@@ -527,18 +505,25 @@ class EnhancedDeckBuilder:
         deck: List[Dict],
         target_colors: List[str],
         deck_size: int = 40,
-        land_ratio: float = None,
+        num_lands: int = None,
         collection_df: pd.DataFrame = None,
     ) -> List[Dict]:
-        """Add optimal lands to the deck, using deck_size and land_ratio if given"""
-        if land_ratio is not None:
-            num_lands = round(deck_size * land_ratio)
+        """Add optimal lands to the deck, using deck_size and num_lands if given"""
+        if num_lands is not None:
             non_land_count = deck_size - num_lands
             print(
-                f"[AddLands] Using deck size {deck_size}, land ratio {land_ratio}, lands {num_lands}, non-lands {non_land_count}"
+                f"[AddLands] Using deck size {deck_size}, lands {num_lands}, non-lands {non_land_count}"
             )
-            # Truncate deck to non_land_count
-            deck = deck[:non_land_count]
+            # Truncate deck to the correct number of non-land cards
+            if len(deck) > non_land_count:
+                print(
+                    f"[AddLands] Truncating deck from {len(deck)} to {non_land_count} non-land cards"
+                )
+                deck = deck[:non_land_count]
+            elif len(deck) < non_land_count:
+                print(
+                    f"[AddLands] WARNING: Only {len(deck)} non-land cards available, wanted {non_land_count}!"
+                )
             # Add lands with specific count
             lands = self.calculate_optimal_lands(
                 deck, target_colors, deck_size, num_lands, collection_df
@@ -549,5 +534,8 @@ class EnhancedDeckBuilder:
                 deck, target_colors, deck_size, collection_df=collection_df
             )
 
-        print(f"Added {len(lands)} lands to deck")
+        print(f"[AddLands] Added {len(lands)} lands to deck")
+        print(
+            f"[AddLands] Final deck size: {len(deck) + len(lands)} (Nonlands: {len(deck)}, Lands: {len(lands)})"
+        )
         return deck + lands

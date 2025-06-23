@@ -120,6 +120,13 @@
                             <span class="d-none d-sm-inline">{{ config.WEB_TEXTS.optimize_button_text }}</span>
                             <span class="d-inline d-sm-none">Optimize</span>
                         </button>
+
+                        <!-- Stop Button (hidden by default) -->
+                        <button id="stopBtn" class="btn btn-danger w-100 py-2 mt-2" style="display: none;">
+                            <i class="fas fa-stop"></i>
+                            <span class="d-none d-sm-inline">Stop Optimization</span>
+                            <span class="d-inline d-sm-none">Stop</span>
+                        </button>
                     </div>
                 </div>
 
@@ -195,6 +202,15 @@
                         <div id="resultsContent">
                             <p class="text-muted">{{ config.WEB_TEXTS.results_placeholder }}</p>
                         </div>
+                        <!-- Evaluation Method Display -->
+                        <div id="evaluationInfo" class="mt-3" style="display: none;">
+                            <div class="alert alert-info">
+                                <strong>Evaluation Method:</strong>
+                                <span id="evaluationMethodDisplay"></span>
+                                <br>
+                                <small id="evaluationMethodDescription"></small>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -247,6 +263,25 @@
                     <div class="card-body">
                         <div id="deckVisualization">
                             <p class="text-muted">{{ config.WEB_TEXTS.deck_placeholder }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Panel: Deck Analysis -->
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-chart-bar"></i>
+                            <span class="d-none d-sm-inline">Deck Analysis</span>
+                            <span class="d-inline d-sm-none">Analysis</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="deckAnalysis">
+                            <p class="text-muted">Deck analysis will appear here after optimization...</p>
                         </div>
                     </div>
                 </div>
