@@ -91,7 +91,7 @@ class SimulatedAnnealingOptimizer(BaseOptimizer):
         # Initial solution
         print(f"\n🎯 Creating initial random deck...")
         current_deck = self.create_random_deck(eligible_cards, deck_size, max_colors)
-        current_score = self.calculate_deck_score(
+        current_score = self.calculate_normalized_deck_score(
             current_deck,
             self.get_deck_colors(current_deck),
             deck_size,
@@ -121,7 +121,7 @@ class SimulatedAnnealingOptimizer(BaseOptimizer):
             neighbor_deck = self.generate_neighbor_deck(
                 current_deck, eligible_cards, deck_size, max_colors
             )
-            neighbor_score = self.calculate_deck_score(
+            neighbor_score = self.calculate_normalized_deck_score(
                 neighbor_deck,
                 self.get_deck_colors(neighbor_deck),
                 deck_size,

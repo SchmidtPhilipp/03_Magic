@@ -111,7 +111,7 @@ class GeneticAlgorithmOptimizer(BaseOptimizer):
             deck_scores = [
                 (
                     deck,
-                    self.calculate_deck_score(
+                    self.calculate_normalized_deck_score(
                         deck,
                         self.get_deck_colors(deck),
                         deck_size,

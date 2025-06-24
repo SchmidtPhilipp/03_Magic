@@ -94,6 +94,62 @@ class BaseOptimizer(ABC):
 
         return max(0.0, total_score)  # Ensure non-negative score
 
+    def calculate_normalized_deck_score(
+        self,
+        deck: List[Card],
+        target_colors: List[str],
+        deck_size: int = 40,
+        max_colors: int = 2,
+        lambda_penalty: float = 0.5,
+    ) -> float:
+        """
+        Calculate normalized deck score where all components are on 0-1 scale
+        This ensures lambda penalty is effective regardless of rating scale
+        """
+        if not deck:
+            return 0.0
+
+        # Extract card names for the evaluator
+        card_names = [card.name for card in deck]
+
+        # 1. Normalized Rating Score (35% weight)
+        raw_rating = self.evaluator.get_deck_rating(card_names)
+        # Normalize to 0-1 scale (assuming ratings are typically 0-10)
+        normalized_rating = min(1.0, raw_rating / 10.0) if raw_rating > 0 else 0.0
+        rating_score = normalized_rating * 0.35
+
+        # 2. Mana Curve Score (20% weight) - already 0-1
+        mana_curve = self.calculate_mana_curve(deck)
+        curve_score = self.evaluate_mana_curve(mana_curve, deck_size) * 0.20
+
+        # 3. Color Balance Score (15% weight) - already 0-1
+        actual_colors = self.get_deck_colors(deck)
+        color_score = self.evaluate_color_balance_dynamic(deck, actual_colors) * 0.15
+
+        # 4. Synergy Score (10% weight) - already 0-1
+        synergy_score = self.calculate_synergy_score(deck) * 0.10
+
+        # 5. Card Type Balance Score (5% weight) - already 0-1
+        type_score = self.evaluate_card_type_balance(deck) * 0.05
+
+        # 6. Normalized Color Constraint Penalty (15% weight)
+        # This is now more significant since all components are normalized
+        color_penalty = (
+            self.calculate_dynamic_color_penalty(deck, max_colors, lambda_penalty)
+            * 0.15
+        )
+
+        total_score = (
+            rating_score
+            + curve_score
+            + color_score
+            + synergy_score
+            + type_score
+            - color_penalty
+        )
+
+        return max(0.0, total_score)  # Ensure non-negative score
+
     def calculate_mana_curve(self, deck: List[Card]) -> Dict[int, int]:
         """Calculate the mana curve distribution"""
         curve = {i: 0 for i in range(8)}  # 0-7+ CMC
