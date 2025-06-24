@@ -42,37 +42,66 @@
                         <!-- File Upload -->
                         <div class="mb-3">
                             <label for="csvFile" class="form-label">{{ config.WEB_TEXTS.upload_csv_label }}</label>
-                            <input type="file" class="form-control" id="csvFile" accept=".csv">
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="csvFile" accept=".csv">
+                                <button class="btn btn-secondary" type="button" id="loadDefaultBtn">Load Example</button>
+                            </div>
                             <div id="fileStatus" class="mt-2"></div>
                         </div>
 
-                        <!-- Colors and Deck Size (before algorithm) -->
-                        <div class="row">
-                            <div class="col-md-6 col-12">
-                                <div class="mb-3">
-                                    <label for="numColors" class="form-label">{{ config.WEB_TEXTS.target_colors_label
-                                        }}</label>
-                                    <input type="number" class="form-control" id="numColors"
-                                        min="{{ config.NUMBERS.min_colors }}" max="{{ config.NUMBERS.max_colors }}"
-                                        value="{{ config.NUMBERS.default_num_colors }}">
+                        <!-- 1. Deck Size -->
+                        <div class="mb-3">
+                            <label for="deckSize" class="form-label">{{ config.WEB_TEXTS.deck_size_label }}</label>
+                            <input type="number" class="form-control" id="deckSize"
+                                min="{{ config.NUMBERS.min_deck_size }}"
+                                max="{{ config.NUMBERS.max_deck_size }}"
+                                value="{{ config.NUMBERS.default_deck_size }}">
+                        </div>
+
+                        <!-- 2. Number of Lands -->
+                        <div class="mb-3">
+                            <label for="numLands" class="form-label">Number of Lands</label>
+                            <input type="number" class="form-control" id="numLands"
+                                min="{{ config.NUMBERS.min_lands }}" max="{{ config.NUMBERS.max_lands }}"
+                                value="{{ config.NUMBERS.default_num_lands }}">
+                        </div>
+
+                        <!-- 3. Target Colors -->
+                        <div class="mb-3">
+                            <label for="numColors" class="form-label">{{ config.WEB_TEXTS.target_colors_label }}</label>
+                            <input type="number" class="form-control" id="numColors"
+                                min="{{ config.NUMBERS.min_colors }}" max="{{ config.NUMBERS.max_colors }}"
+                                value="{{ config.NUMBERS.default_num_colors }}">
+                        </div>
+
+                        <!-- 4. Fixed Colors -->
+                        <div class="mb-3">
+                            <label class="form-label">Fixed Colors (Optional)</label>
+                            <div id="fixedColors" class="d-flex justify-content-between">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="fixedColorW" value="W">
+                                    <label class="form-check-label" for="fixedColorW" title="White"><i
+                                            class="ms-1 fas fa-sun"></i></label>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="deckSize" class="form-label">{{ config.WEB_TEXTS.deck_size_label
-                                        }}</label>
-                                    <input type="number" class="form-control" id="deckSize"
-                                        min="{{ config.NUMBERS.min_deck_size }}"
-                                        max="{{ config.NUMBERS.max_deck_size }}"
-                                        value="{{ config.NUMBERS.default_deck_size }}">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="fixedColorU" value="U">
+                                    <label class="form-check-label" for="fixedColorU" title="Blue"><i
+                                            class="ms-1 fas fa-tint"></i></label>
                                 </div>
-                            </div>
-                            <div class="col-md-6 col-12">
-                                <div class="mb-3">
-                                    <label for="landRatio" class="form-label">{{ config.WEB_TEXTS.land_ratio_label }}
-                                        <span id="landRatioValue">{{ config.NUMBERS.default_land_ratio }}</span></label>
-                                    <input type="range" class="form-range" id="landRatio"
-                                        min="{{ config.NUMBERS.min_land_ratio }}"
-                                        max="{{ config.NUMBERS.max_land_ratio }}"
-                                        value="{{ config.NUMBERS.default_land_ratio }}">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="fixedColorB" value="B">
+                                    <label class="form-check-label" for="fixedColorB" title="Black"><i
+                                            class="ms-1 fas fa-skull"></i></label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="fixedColorR" value="R">
+                                    <label class="form-check-label" for="fixedColorR" title="Red"><i
+                                            class="ms-1 fas fa-fire"></i></label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="fixedColorG" value="G">
+                                    <label class="form-check-label" for="fixedColorG" title="Green"><i
+                                            class="ms-1 fas fa-leaf"></i></label>
                                 </div>
                             </div>
                         </div>
@@ -87,28 +116,30 @@
                             </select>
                         </div>
 
-                        <!-- Evaluation Method Settings -->
+                        <!-- Optimization Criterion -->
                         <div class="mb-3">
-                            <label for="evaluationMethod" class="form-label">Evaluation Method</label>
-                            <select id="evaluationMethod" name="evaluationMethod" class="form-select">
-                                <option value="manual">Manual Evaluation + Synergy</option>
-                                <option value="17lands">17Lands Data-Based Evaluation</option>
+                            <label for="optimizationCriterion" class="form-label">Optimization Criterion</label>
+                            <select id="optimizationCriterion" name="optimizationCriterion" class="form-select">
+                                <option value="empirical_mit">Empirical: MIT DraftBot Regression</option>
+                                <option value="manual">Manual Rating</option>
+                                <option value="empirical_vanilla">Empirical: Vanilla-Test + Keywords (LSV-Style)</option>
+                                <option value="empirical_cube">Empirical: CubeTutor Value System</option>
+                                <option value="empirical_average">Empirical: Average of All Models</option>
                             </select>
-                            <div id="evaluationDescription" class="form-text">
-                                Manual evaluation + synergy values from local dictionary.
+                            <div id="criterionDescription" class="form-text">
+                                The metric used by the algorithm to select the best cards.
                             </div>
                         </div>
 
                         <!-- Lambda Penalty (only for genetic/simulated annealing) -->
                         <div class="mb-3" id="lambdaContainer" style="display: none;">
-                            <label for="lambdaPenalty" class="form-label">{{ config.WEB_TEXTS.color_penalty_label
-                                }}</label>
-                            <input type="range" class="form-range" id="lambdaPenalty"
+                            <label for="lambdaPenalty" class="form-label">{{ config.WEB_TEXTS.color_penalty_label }}</label>
+                            <input type="number" class="form-control" id="lambdaPenalty"
                                 min="{{ config.NUMBERS.min_lambda }}" max="{{ config.NUMBERS.max_lambda }}"
                                 step="{{ config.NUMBERS.lambda_step }}" value="{{ config.NUMBERS.default_lambda }}">
-                            <div class="d-flex justify-content-between">
-                                <small>{{ config.WEB_TEXTS.lambda_soft }}</small>
-                                <small id="lambdaValue">{{ config.NUMBERS.default_lambda }}</small>
+                            <div class="form-text">
+                                <small>{{ config.WEB_TEXTS.lambda_soft }}</small> • 
+                                <small id="lambdaValue">{{ config.NUMBERS.default_lambda }}</small> • 
                                 <small>{{ config.WEB_TEXTS.lambda_hard }}</small>
                             </div>
                         </div>
@@ -205,10 +236,10 @@
                         <!-- Evaluation Method Display -->
                         <div id="evaluationInfo" class="mt-3" style="display: none;">
                             <div class="alert alert-info">
-                                <strong>Evaluation Method:</strong>
-                                <span id="evaluationMethodDisplay"></span>
+                                <strong>Optimization Criterion:</strong>
+                                <span id="criterionDisplay"></span>
                                 <br>
-                                <small id="evaluationMethodDescription"></small>
+                                <small id="criterionDescriptionDisplay"></small>
                             </div>
                         </div>
                     </div>

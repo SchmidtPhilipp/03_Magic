@@ -7,6 +7,44 @@ let optimizedDeckName = null;
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function () {
+    console.log("DOM fully loaded and parsed");
+
+    // --- Development Mode: Auto-load default collection ---
+    // Note: This requires the collection to be in the 'static' folder
+    // to be accessible by the client-side script.
+    const isDevMode = true; // Simple toggle for development
+    if (isDevMode) {
+        const defaultCollectionURL = "/static/FinalFantasy.csv";
+        const fileName = "FinalFantasy.csv";
+
+        fetch(defaultCollectionURL)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const file = new File([blob], fileName, { type: "text/csv" });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                
+                const fileInput = document.getElementById("fileInput");
+                fileInput.files = dataTransfer.files;
+
+                // Trigger the change event to update the UI
+                const event = new Event('change', { bubbles: true });
+                fileInput.dispatchEvent(event);
+                
+                console.log(`Development mode: Successfully loaded ${fileName}`);
+                updateUploadStatus(fileName, true);
+            })
+            .catch(error => {
+                console.error("Error auto-loading default collection:", error);
+                updateUploadStatus("Error loading default file.", false);
+            });
+    }
+
     initializeEventListeners();
     updateLambdaDisplay();
     updateLandRatioDisplay();
@@ -70,17 +108,22 @@ function initializeEventListeners() {
     // File upload
     document.getElementById('csvFile').addEventListener('change', handleFileUpload);
 
+    // Load default CSV button
+    document.getElementById('loadDefaultBtn').addEventListener('click', handleLoadDefault);
+
     // Algorithm change: show/hide lambda
     document.getElementById('algorithm').addEventListener('change', handleAlgorithmChange);
 
-    // Evaluation method change: update description
-    document.getElementById('evaluationMethod').addEventListener('change', handleEvaluationMethodChange);
+    // Optimization criterion change: update description
+    document.getElementById('optimizationCriterion').addEventListener('change', handleCriterionChange);
 
-    // Lambda penalty slider
+    // Fixed color checkboxes
+    document.querySelectorAll('#fixedColors input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', handleColorChange);
+    });
+
+    // Number input event listeners for real-time updates
     document.getElementById('lambdaPenalty').addEventListener('input', updateLambdaDisplay);
-
-    // Land ratio slider
-    document.getElementById('landRatio').addEventListener('input', updateLandRatioDisplay);
 
     // Deck card size slider
     document.getElementById('deckCardSize').addEventListener('input', updateDeckCardSizeDisplay);
@@ -101,11 +144,6 @@ function initializeEventListeners() {
 function updateLambdaDisplay() {
     const lambdaValue = document.getElementById('lambdaPenalty').value;
     document.getElementById('lambdaValue').textContent = lambdaValue;
-}
-
-function updateLandRatioDisplay() {
-    const val = document.getElementById('landRatio').value;
-    document.getElementById('landRatioValue').textContent = val;
 }
 
 function updateDeckCardSizeDisplay() {
@@ -189,6 +227,37 @@ function handleFileUpload(event) {
         });
 }
 
+function handleLoadDefault() {
+    const fileStatus = document.getElementById('fileStatus');
+    fileStatus.innerHTML = '<div class="loading"></div> Loading example collection...';
+
+    fetch('/load_default_csv')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                currentCsvFile = data.filepath;
+                fileStatus.innerHTML = `<div class="text-success"><i class="fas fa-check"></i> Example loaded successfully!</div>`;
+
+                // Show file info
+                document.getElementById('currentFileName').textContent = data.filename;
+                document.getElementById('currentCardCount').textContent = data.card_count;
+                document.getElementById('fileInfo').style.display = 'block';
+
+                // Enable optimize button
+                document.getElementById('optimizeBtn').disabled = false;
+
+                addTerminalLine(`Example loaded: ${data.filename} (${data.card_count} cards)`, 'success');
+            } else {
+                fileStatus.innerHTML = `<div class="text-danger"><i class="fas fa-times"></i> ${data.error}</div>`;
+                addTerminalLine(`Failed to load example: ${data.error}`, 'error');
+            }
+        })
+        .catch(error => {
+            fileStatus.innerHTML = `<div class="text-danger"><i class="fas fa-times"></i> Failed to load example</div>`;
+            addTerminalLine(`Error loading example: ${error.message}`, 'error');
+        });
+}
+
 function handleAlgorithmChange() {
     const algo = document.getElementById('algorithm').value;
     const lambdaContainer = document.getElementById('lambdaContainer');
@@ -199,14 +268,31 @@ function handleAlgorithmChange() {
     }
 }
 
-function handleEvaluationMethodChange() {
-    const method = document.getElementById('evaluationMethod').value;
-    const description = document.getElementById('evaluationDescription');
+function handleCriterionChange() {
+    const method = document.getElementById('optimizationCriterion').value;
+    const description = document.getElementById('criterionDescription');
 
     if (method === '17lands') {
         description.textContent = 'Data-based evaluation from 17Lands – combines GIH Winrate and IWD.';
     } else if (method === 'manual') {
-        description.textContent = 'Manual evaluation + synergy values from local dictionary.';
+        description.textContent = 'The metric used by the algorithm to select the best cards.';
+    } else if (method === 'game_mechanics') {
+        description.textContent = 'Rates cards based on their game mechanics: stats, keywords, removal, ramp, and more.';
+    }
+}
+
+function handleColorChange() {
+    const checkboxes = document.querySelectorAll('#fixedColors input[type="checkbox"]:checked');
+    const numColorsInput = document.getElementById('numColors');
+    const checkedCount = checkboxes.length;
+
+    if (checkedCount > 0) {
+        numColorsInput.min = checkedCount;
+        if (parseInt(numColorsInput.value) < checkedCount) {
+            numColorsInput.value = checkedCount;
+        }
+    } else {
+        numColorsInput.min = 1; // Reset to default min if no colors are fixed
     }
 }
 
@@ -277,22 +363,38 @@ function fallbackCopyTextToClipboard(text) {
 
 function startOptimization() {
     if (!currentCsvFile) {
-        addTerminalLine('No CSV file uploaded. Please upload a file first.', 'error');
+        addTerminalLine('Please upload a CSV file first.', 'error');
         return;
     }
 
-    // Get form values
-    const numColors = parseInt(document.getElementById('numColors').value);
-    const deckSize = parseInt(document.getElementById('deckSize').value);
-    const numLands = parseInt(document.getElementById('landRatio').value); // Now absolute number
-    const algorithm = document.getElementById('algorithm').value;
-    const lambdaPenalty = parseFloat(document.getElementById('lambdaPenalty').value);
-    const evaluationMethod = document.getElementById('evaluationMethod').value;
+    addTerminalLine('Starting optimization...', 'info');
 
-    // Show progress and disable button
-    document.getElementById('progressContainer').style.display = 'block';
-    document.getElementById('optimizeBtn').style.display = 'none';
+    // Disable optimize button, enable stop button
+    document.getElementById('optimizeBtn').disabled = true;
     document.getElementById('stopBtn').style.display = 'block';
+
+    const numColors = document.getElementById('numColors').value;
+    const deckSize = document.getElementById('deckSize').value;
+    const numLands = document.getElementById('numLands').value;
+    const algorithm = document.getElementById('algorithm').value;
+    const optimizationCriterion = document.getElementById('optimizationCriterion').value;
+    const lambdaPenalty = document.getElementById('lambdaPenalty').value;
+
+    const fixedColors = Array.from(document.querySelectorAll('#fixedColors input:checked')).map(cb => cb.value);
+
+    const params = {
+        filepath: currentCsvFile,
+        num_colors: parseInt(numColors),
+        deck_size: parseInt(deckSize),
+        num_lands: parseInt(numLands),
+        algorithm: algorithm,
+        optimization_criterion: optimizationCriterion,
+        lambda_penalty: parseFloat(lambdaPenalty),
+        fixed_colors: fixedColors,
+    };
+
+    // Show progress bar
+    document.getElementById('progressContainer').style.display = 'block';
 
     // Clear previous results
     clearResults();
@@ -304,16 +406,7 @@ function startOptimization() {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            csv_file_path: currentCsvFile,
-            num_colors: numColors,
-            total_deck_size: deckSize,
-            num_lands: numLands, // send as absolute value
-            algorithm: algorithm,
-            lambda_penalty: lambdaPenalty,
-            export_formats: ['arena', 'mtgo', 'html_artwork'],
-            evaluation_method: evaluationMethod
-        })
+        body: JSON.stringify(params)
     })
         .then(response => response.json())
         .then(data => {
@@ -432,34 +525,29 @@ function handleOptimizationResult(result) {
 
 function updateResultsPanel(result) {
     const resultsContent = document.getElementById('resultsContent');
-
-    // Display evaluation method info
     const evaluationInfo = document.getElementById('evaluationInfo');
-    const evaluationMethodDisplay = document.getElementById('evaluationMethodDisplay');
-    const evaluationMethodDescription = document.getElementById('evaluationMethodDescription');
+    const criterionDisplay = document.getElementById('criterionDisplay');
+    const criterionDescriptionDisplay = document.getElementById('criterionDescriptionDisplay');
 
-    if (result.evaluation_method) {
-        evaluationMethodDisplay.textContent = result.evaluation_method === '17lands' ?
-            '17Lands Data-Based Evaluation' : 'Manual Evaluation + Synergy';
-        evaluationMethodDescription.textContent = result.evaluation_method === '17lands' ?
-            'Uses real 17Lands data (GIH Winrate + IWD)' :
-            'Uses local ratings and synergy bonuses';
-        evaluationInfo.style.display = 'block';
-    } else {
-        evaluationInfo.style.display = 'none';
-    }
-
-    // Display results
-    resultsContent.innerHTML = `
-        <div class="mb-3">
-            <h6>Optimization Results</h6>
-            <p><strong>Score:</strong> ${(result.score * 100).toFixed(1)}%</p>
-            <p><strong>Algorithm:</strong> ${result.algorithm}</p>
-            <p><strong>Target Colors:</strong> ${result.target_colors}</p>
-        </div>
+    let html = `
+        <h5>Optimization Complete</h5>
+        <p><strong>Total Score:</strong> ${result.score.toFixed(4)}</p>
     `;
 
-    // Show download section
+    resultsContent.innerHTML = html;
+
+    // Display evaluation method
+    criterionDisplay.textContent = result.evaluation_method;
+    if (result.evaluation_method === '17lands') {
+        criterionDescriptionDisplay.textContent = 'Score based on 17Lands GIH Winrate and IWD.';
+    } else if (result.evaluation_method === 'manual') {
+        criterionDescriptionDisplay.textContent = 'Score based on manual ratings.';
+    } else if (result.evaluation_method === 'game_mechanics') {
+        criterionDescriptionDisplay.textContent = 'Score based on game mechanics: stats, keywords, removal, ramp, and more.';
+    }
+    evaluationInfo.style.display = 'block';
+
+    // Show download buttons
     document.getElementById('downloadSection').style.display = 'block';
 }
 

@@ -13,6 +13,7 @@ import threading
 import time
 from datetime import datetime
 from io import StringIO
+import shutil
 
 import pandas as pd
 import requests
@@ -25,6 +26,7 @@ from flask import (
     send_file,
     send_from_directory,
     url_for,
+    session,
 )
 from werkzeug.utils import secure_filename
 
@@ -97,6 +99,9 @@ app.config["MAX_CONTENT_LENGTH"] = (
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 os.makedirs(app.config["CACHE_FOLDER"], exist_ok=True)
 
+# Initialize the deck builder once to be shared across requests
+deck_builder = EnhancedDeckBuilder()
+
 user_logger.info("Logging system initialized")
 user_logger.info(f"Log files: logs/")
 
@@ -105,6 +110,14 @@ output_queue = queue.Queue()
 current_result = None
 optimization_running = False
 optimization_thread = None  # Add thread reference for stopping
+
+EVALUATION_CRITERIA = [
+    {"value": "empirical_mit", "label": "Empirical: MIT DraftBot Regression"},
+    {"value": "manual", "label": "Manual Ratings"},
+    {"value": "empirical_vanilla", "label": "Empirical: Vanilla-Test + Keywords (LSV-Style)"},
+    {"value": "empirical_cube", "label": "Empirical: CubeTutor Value System"},
+    {"value": "empirical_average", "label": "Empirical: Average of All Models"},
+]
 
 
 class OutputCapture:
@@ -143,14 +156,14 @@ sys.stdout = output_capture
 
 
 def run_optimization(
-    csv_file_path,
+    filepath,
     num_colors,
-    total_deck_size,
+    deck_size,
     num_lands,
     algorithm,
+    optimization_criterion,
     lambda_penalty,
-    export_formats,
-    evaluation_method,
+    fixed_colors,
 ):
     """Run optimization in a separate thread"""
     global current_result, optimization_running
@@ -160,8 +173,8 @@ def run_optimization(
         output_queue.put({"type": "status", "status": "starting"})
 
         # Load CSV file
-        print(f"Loading CSV file: {csv_file_path}")
-        collection_df = pd.read_csv(csv_file_path)
+        print(f"Loading CSV file: {filepath}")
+        collection_df = pd.read_csv(filepath)
         print(f"Loaded {len(collection_df)} cards from collection")
 
         # Check if optimization was stopped
@@ -169,21 +182,16 @@ def run_optimization(
             print("Optimization stopped by user")
             return
 
-        # Calculate non-land split
-        num_nonlands = total_deck_size - num_lands
-        print(
-            f"Deck size: {total_deck_size}, Lands: {num_lands}, Non-lands: {num_nonlands}"
-        )
-
-        # Initialize deck builder
-        deck_builder = EnhancedDeckBuilder()
-
         # Run optimization
         print(f"Starting optimization with {algorithm} algorithm...")
         print(
-            f"Target Colors: {num_colors}, Non-Land Cards: {num_nonlands}, Lambda Penalty: {lambda_penalty}"
+            f"Target Colors: {num_colors}, Deck Size: {deck_size}, Lands: {num_lands}, Lambda: {lambda_penalty}"
         )
-        print(f"Evaluation Method: {evaluation_method}")
+        print(f"Optimization Criterion: {optimization_criterion}")
+        if fixed_colors:
+            print(f"Fixed Colors: {', '.join(fixed_colors)}")
+        
+        print(f"DEBUG: Received fixed_colors: {fixed_colors}")
 
         # Check if optimization was stopped
         if not optimization_running:
@@ -193,13 +201,12 @@ def run_optimization(
         result = deck_builder.build_optimal_deck_advanced(
             collection_df=collection_df,
             num_colors=num_colors,
-            deck_size=num_nonlands,
-            algorithm=algorithm,
-            export_formats=export_formats,
-            lambda_penalty=lambda_penalty,
-            total_deck_size=total_deck_size,
+            total_deck_size=deck_size,
             num_lands=num_lands,
-            evaluation_method=evaluation_method,
+            algorithm=algorithm,
+            optimization_criterion=optimization_criterion,
+            lambda_penalty=lambda_penalty,
+            fixed_colors=fixed_colors,
         )
 
         # Check if optimization was stopped
@@ -216,7 +223,9 @@ def run_optimization(
                     "score": result["score"],
                     "target_colors": result["target_colors"],
                     "algorithm": result["algorithm"],
-                    "evaluation_method": result.get("evaluation_method", "manual"),
+                    "optimization_criterion": result.get(
+                        "optimization_criterion", "manual"
+                    ),
                     "exported_files": result.get("exported_files", []),
                 },
             }
@@ -249,15 +258,17 @@ def upload_file():
         return jsonify({"error": config.VALIDATION_MESSAGES["no_file"]}), 400
 
     file = request.files["file"]
-    if file.filename == "":
+    
+    if not file or not file.filename:
         return jsonify({"error": config.VALIDATION_MESSAGES["no_file_selected"]}), 400
 
-    if file and file.filename.endswith(".csv"):
+    if file.filename.endswith(".csv"):
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
         file.save(filepath)
-
-        # Try to load and validate the CSV
+        session["uploaded_file"] = filename
+        
+        # Try to load and validate the CSV for immediate feedback
         try:
             df = pd.read_csv(filepath)
             card_count = len(df)
@@ -266,7 +277,6 @@ def upload_file():
                     "success": True,
                     "filename": filename,
                     "card_count": card_count,
-                    "filepath": filepath,
                 }
             )
         except Exception as e:
@@ -284,36 +294,61 @@ def upload_file():
 
 @app.route("/optimize", methods=["POST"])
 def optimize():
-    """Start optimization process"""
+    """Start the deck optimization process"""
     global optimization_running, optimization_thread
 
     if optimization_running:
-        return jsonify({"error": "Optimization already running"}), 400
+        return jsonify({"error": "An optimization process is already running."}), 400
 
-    try:
-        data = request.get_json()
+    # Check for uploaded file
+    uploaded_file = session.get("uploaded_file")
+    if not uploaded_file:
+        # If no file is in session, use the default collection
+        print("No file uploaded. Using default FinalFantasy.csv collection.")
+        filepath = os.path.join("data", "collections", "FinalFantasy.csv")
+        # To be safe, place its name in the session for other parts of the app
+        session["uploaded_file"] = "FinalFantasy.csv"
+    else:
+        filepath = os.path.join(app.config["UPLOAD_FOLDER"], uploaded_file)
 
-        # Start optimization in separate thread
-        optimization_thread = threading.Thread(
-            target=run_optimization,
-            kwargs={
-                "csv_file_path": data["csv_file_path"],
-                "num_colors": data["num_colors"],
-                "total_deck_size": data["total_deck_size"],
-                "num_lands": data["num_lands"],
-                "algorithm": data["algorithm"],
-                "lambda_penalty": data["lambda_penalty"],
-                "export_formats": data.get("export_formats", ["arena", "mtgo"]),
-                "evaluation_method": data.get("evaluation_method", "manual"),
-            },
+    if not os.path.exists(filepath):
+        return (
+            jsonify({"error": f"File not found: {os.path.basename(filepath)}"}),
+            404,
         )
-        optimization_thread.daemon = True
-        optimization_thread.start()
+        
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid request"}), 400
 
-        return jsonify({"success": True})
+    num_colors = data.get("num_colors")
+    deck_size = data.get("deck_size")
+    num_lands = data.get("num_lands")
+    algorithm = data.get("algorithm")
+    optimization_criterion = data.get("optimization_criterion")
+    lambda_penalty = data.get("lambda_penalty")
+    fixed_colors = data.get("fixed_colors", [])
 
-    except Exception as e:
-        return jsonify({"error": f"Error starting optimization: {str(e)}"}), 500
+    if not all(
+        [filepath, num_colors, deck_size, num_lands, algorithm, optimization_criterion]
+    ):
+        return jsonify({"error": "Missing required parameters"}), 400
+
+    optimization_thread = threading.Thread(
+        target=run_optimization,
+        args=(
+            filepath,
+            num_colors,
+            deck_size,
+            num_lands,
+            algorithm,
+            optimization_criterion,
+            lambda_penalty,
+            fixed_colors,
+        ),
+    )
+    optimization_thread.start()
+    return jsonify({"success": True, "message": "Optimization started"})
 
 
 def convert_sets_to_lists(obj):
@@ -359,7 +394,6 @@ def download_deck(format):
         return jsonify({"error": "No deck available for download"}), 400
 
     try:
-        deck_builder = EnhancedDeckBuilder()
         exported_files = deck_builder.exporter.export_deck(
             deck=current_result["deck"],
             algorithm=current_result["algorithm"],
@@ -389,7 +423,7 @@ def get_deck_info():
         return jsonify({"error": "No deck available"}), 400
 
     deck = current_result["deck"]
-    evaluation_method = current_result.get("evaluation_method", "manual")
+    optimization_criterion = current_result.get("optimization_criterion", "manual")
 
     # Analyze deck
     color_counts = {}
@@ -427,15 +461,15 @@ def get_deck_info():
     if colorless_count > 0:
         color_counts["Colorless"] = colorless_count
 
-    # Get evaluation method details
-    evaluation_info = {
-        "method": evaluation_method,
+    # Get optimization criterion details
+    criterion_info = {
+        "criterion": optimization_criterion,
         "description": (
             "Manual evaluation + synergy values from local dictionary."
-            if evaluation_method == "manual"
+            if optimization_criterion == "manual"
             else "Data-based evaluation from 17Lands – combines GIH Winrate and IWD."
         ),
-        "is_17lands": evaluation_method == "17lands",
+        "is_17lands": optimization_criterion == "17lands",
     }
 
     return jsonify(
@@ -445,7 +479,7 @@ def get_deck_info():
                 "score": current_result["score"],
                 "colors": current_result["target_colors"],
                 "algorithm": current_result["algorithm"],
-                "evaluation": evaluation_info,
+                "optimization": criterion_info,
                 "analysis": {
                     "color_counts": color_counts,
                     "mana_curve": mana_curve,
@@ -462,7 +496,6 @@ def get_deck_info():
 def get_evaluation_methods():
     """Get available evaluation methods for UI dropdown"""
     try:
-        deck_builder = EnhancedDeckBuilder()
         methods = deck_builder.optimizer.get_evaluation_methods()
         return jsonify({"methods": methods})
     except Exception as e:
