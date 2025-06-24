@@ -41,10 +41,23 @@ For each card c in collection C:
         update_selected_colors(c)
 ```
 
+**Color Selection (Optimized):**
+```
+For each color c in {W, U, B, R, G}:
+    mean_rating(c) = Σ rating(cardᵢ) / |cards_in_color(c)|
+    
+selected_colors = top_n_colors_by_mean_rating(num_colors)
+```
+
 **Algorithm Steps:**
-1. **Color Selection**: Choose the best color combination based on card ratings
+1. **Color Selection**: Choose colors based on highest mean rating (optimized approach)
 2. **Card Selection**: Iteratively add the highest-scoring card that satisfies constraints
 3. **Land Distribution**: Calculate optimal land ratios based on mana curve
+
+**Optimization Features:**
+- **Mean Color Rating**: Fast color selection using average card ratings per color
+- **Fixed Color Support**: Respects user-selected colors and fills remaining slots
+- **Performance**: O(n) color selection vs O(2ⁿ) for exhaustive search
 
 **Time Complexity**: O(n × m) where n = number of cards, m = number of colors
 **Space Complexity**: O(n)
@@ -118,7 +131,19 @@ P(accept) = min(1, exp(-ΔE/T))
 **Time Complexity**: O(iterations × temperature_steps)
 **Space Complexity**: O(n)
 
-### **4. Color Constraint System**
+### **4. Algorithm-Specific Optimizations**
+
+**Color Selection Strategies:**
+- **Greedy Algorithm**: Uses mean color rating for fast, efficient color selection
+- **Genetic Algorithm**: Explores all color combinations for maximum optimization potential
+- **Simulated Annealing**: Tests color combinations to find global optima
+
+**Performance Trade-offs:**
+- **Speed**: Greedy (fastest) → Simulated Annealing → Genetic (most thorough)
+- **Quality**: Genetic (best) → Simulated Annealing → Greedy (good baseline)
+- **Memory**: Greedy (lowest) → Simulated Annealing → Genetic (highest)
+
+### **5. Color Constraint System**
 A sophisticated penalty system that encourages optimal color distribution.
 
 **Color Penalty Function:**
@@ -140,7 +165,7 @@ distance(color₁, color₂) = |color₁ - color₂| mod 5
 - **Low λ (0.1-0.5)**: Soft color constraints, allows more flexibility
 - **High λ (1.0-2.0)**: Strict color constraints, enforces color coherence
 
-### **5. Land Optimization**
+### **6. Land Optimization**
 Intelligent land distribution based on mana curve analysis.
 
 **Land Calculation:**
