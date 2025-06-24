@@ -218,21 +218,24 @@ class GeneticAlgorithmOptimizer(BaseOptimizer):
     def create_random_deck(
         self, eligible_cards: List, deck_size: int, max_colors: int = 2
     ) -> List:
-        """Create a random deck that respects color constraints more intelligently."""
+        """Create a random deck with better color diversity exploration."""
         if not eligible_cards:
             return []
 
-        # Try to find a valid set of cards
+        # Try to find a valid set of cards with varying color counts
         for _ in range(10):  # Try 10 times to build a valid deck
-            # Pick a random color combination
+            # Pick a random number of colors (1 to max_colors)
+            num_colors = random.randint(1, max_colors)
+            
+            # Get all available colors
             all_colors = set()
             for c in eligible_cards:
                 all_colors.update(c.colors)
             
-            if len(all_colors) < max_colors:
+            if len(all_colors) < num_colors:
                 target_colors = list(all_colors)
             else:
-                target_colors = random.sample(list(all_colors), max_colors)
+                target_colors = random.sample(list(all_colors), num_colors)
 
             # Filter cards by these colors
             color_filtered_cards = [
@@ -255,21 +258,66 @@ class GeneticAlgorithmOptimizer(BaseOptimizer):
     def crossover_decks(
         self, deck1: List, deck2: List, deck_size: int, eligible_cards: List
     ) -> Tuple[List, List]:
-        """Perform uniform crossover and repair to maintain deck size."""
+        """Perform intelligent crossover that preserves color diversity."""
         # Create copies to avoid modifying the original decks
         child1 = list(deck1)
         child2 = list(deck2)
+        
+        # Get colors from parents
+        parent1_colors = set(self.get_deck_colors(deck1))
+        parent2_colors = set(self.get_deck_colors(deck2))
         
         # Perform uniform crossover - each card has 50% chance to be swapped
         for i in range(min(len(child1), len(child2))):
             if random.random() < 0.5:
                 child1[i], child2[i] = child2[i], child1[i]
         
-        # Ensure both children have exactly deck_size cards and no duplicates
-        child1 = self._repair_deck(child1, deck_size, eligible_cards)
-        child2 = self._repair_deck(child2, deck_size, eligible_cards)
+        # Repair decks to maintain size and add diversity
+        child1 = self._repair_deck_with_color_diversity(child1, deck_size, eligible_cards, parent1_colors, parent2_colors)
+        child2 = self._repair_deck_with_color_diversity(child2, deck_size, eligible_cards, parent2_colors, parent1_colors)
         
         return child1, child2
+    
+    def _repair_deck_with_color_diversity(self, deck: List, deck_size: int, eligible_cards: List, 
+                                        primary_colors: set, secondary_colors: set) -> List:
+        """Repair a deck while maintaining color diversity from parents."""
+        # Remove duplicates while preserving order
+        seen = set()
+        unique_deck = []
+        for card in deck:
+            if card not in seen:
+                unique_deck.append(card)
+                seen.add(card)
+        
+        # If we need more cards, add them with color diversity
+        while len(unique_deck) < deck_size:
+            # 70% chance to add from primary colors, 30% from secondary
+            if random.random() < 0.7 and primary_colors:
+                target_colors = primary_colors
+            else:
+                target_colors = secondary_colors
+            
+            # Filter cards by target colors
+            available_cards = [
+                card for card in eligible_cards 
+                if card not in seen and (not card.colors or card.colors.issubset(target_colors))
+            ]
+            
+            if available_cards:
+                new_card = random.choice(available_cards)
+                unique_deck.append(new_card)
+                seen.add(new_card)
+            else:
+                # Fallback to any available card
+                available_cards = [card for card in eligible_cards if card not in seen]
+                if available_cards:
+                    new_card = random.choice(available_cards)
+                    unique_deck.append(new_card)
+                    seen.add(new_card)
+                else:
+                    break
+        
+        return unique_deck[:deck_size]
     
     def _repair_deck(self, deck: List, deck_size: int, eligible_cards: List) -> List:
         """Repair a deck to have exactly deck_size cards with no duplicates."""
@@ -278,19 +326,19 @@ class GeneticAlgorithmOptimizer(BaseOptimizer):
         unique_deck = []
         for card in deck:
             if card not in seen:
-                seen.add(card)
                 unique_deck.append(card)
+                seen.add(card)
         
-        # Fill up if too small
+        # If we need more cards, add them
         while len(unique_deck) < deck_size:
-            available_cards = [c for c in eligible_cards if c not in seen]
-            if not available_cards:
-                break  # No more cards available
-            new_card = random.choice(available_cards)
-            unique_deck.append(new_card)
-            seen.add(new_card)
+            available_cards = [card for card in eligible_cards if card not in seen]
+            if available_cards:
+                new_card = random.choice(available_cards)
+                unique_deck.append(new_card)
+                seen.add(new_card)
+            else:
+                break
         
-        # Truncate if too large
         return unique_deck[:deck_size]
 
     def mutate_deck(
@@ -300,26 +348,48 @@ class GeneticAlgorithmOptimizer(BaseOptimizer):
         deck_size: int,
         max_colors: int = 2,
     ) -> List:
-        """Mutate the deck by swapping one card."""
-        if not eligible_cards or not deck:
-            return deck
-
-        # Create a copy to avoid modifying the original
-        mutated_deck = list(deck)
+        """Mutate a deck with better color diversity exploration."""
+        if not deck:
+            return self.create_random_deck(eligible_cards, deck_size, max_colors)
         
-        # Remove a random card from the deck
-        removed_card_index = random.randint(0, len(mutated_deck) - 1)
-        removed_card = mutated_deck.pop(removed_card_index)
-
-        # Add a new random card from eligible cards
-        potential_new_cards = [
-            c for c in eligible_cards if c not in mutated_deck
-        ]
-        if potential_new_cards:
-            new_card = random.choice(potential_new_cards)
-            mutated_deck.append(new_card)
+        mutated_deck = list(deck)
+        current_colors = self.get_deck_colors(deck)
+        
+        # Different types of mutations
+        mutation_type = random.random()
+        
+        if mutation_type < 0.3:
+            # Color reduction mutation: remove cards from one color
+            if len(current_colors) > 1:
+                color_to_remove = random.choice(list(current_colors))
+                cards_to_remove = [card for card in mutated_deck if color_to_remove in card.colors]
+                if cards_to_remove:
+                    card_to_remove = random.choice(cards_to_remove)
+                    mutated_deck.remove(card_to_remove)
+        elif mutation_type < 0.6:
+            # Color addition mutation: add cards from a new color
+            all_colors = set()
+            for c in eligible_cards:
+                all_colors.update(c.colors)
+            new_colors = all_colors - set(current_colors)
+            if new_colors and len(current_colors) < max_colors:
+                new_color = random.choice(list(new_colors))
+                new_color_cards = [card for card in eligible_cards 
+                                 if new_color in card.colors and card not in mutated_deck]
+                if new_color_cards:
+                    # Replace a random card
+                    replace_index = random.randint(0, len(mutated_deck) - 1)
+                    mutated_deck[replace_index] = random.choice(new_color_cards)
         else:
-            mutated_deck.append(removed_card) # Add back if no replacement found
-
-        # Ensure the deck has exactly deck_size cards
-        return self._repair_deck(mutated_deck, deck_size, eligible_cards) 
+            # Standard mutation: replace a random card
+            if len(mutated_deck) > 0:
+                replace_index = random.randint(0, len(mutated_deck) - 1)
+                available_cards = [card for card in eligible_cards if card not in mutated_deck]
+                if available_cards:
+                    mutated_deck[replace_index] = random.choice(available_cards)
+        
+        # Ensure deck size is maintained
+        if len(mutated_deck) != deck_size:
+            mutated_deck = self._repair_deck(mutated_deck, deck_size, eligible_cards)
+        
+        return mutated_deck 
