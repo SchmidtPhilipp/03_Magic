@@ -1,14 +1,10 @@
 Name,Set code,Set name,Collector number,Foil,Rarity,Quantity,ManaBox ID,Scryfall ID,Purchase price,Misprint,Altered,Condition,Language,Purchase price currency
-Lightning Bolt,FIN,Final Fantasy,164,normal,uncommon,1,106610,9f2b202c-91da-40ec-8324-6b6be7cb3bc8,0.07,false,false,near_mint,en,EUR
-Lightning Bolt,FIN,Final Fantasy,164,normal,common,1,106610,9f2b202c-91da-40ec-8324-6b6be7cb3bc8,0.07,false,false,near_mint,en,EUR
-Counterspell,FIN,Final Fantasy,164,normal,common,1,106610,9f2b202c-91da-40ec-8324-6b6be7cb3bc8,0.07,false,false,near_mint,en,EUR
 "Ultimecia, Time Sorceress // Ultimecia, Omnipotent",FIN,Final Fantasy,247,normal,uncommon,1,105581,2d6a2b68-5407-464e-a335-7866fd969c30,0.02,false,false,near_mint,en,EUR
 Vivi Ornitier,FIN,Final Fantasy,248,normal,mythic,1,105748,ecc1027a-8c07-44a0-bdde-fa2844cff694,41.34,false,false,near_mint,en,EUR
 Locke Cole,FIN,Final Fantasy,234,normal,uncommon,1,106552,572feb8c-6976-40a8-8a34-b4db836cca56,0.06,false,false,near_mint,en,EUR
 Syncopate,FIN,Final Fantasy,80,normal,common,1,106409,83e1cd8d-5b97-427a-be75-2a1947f9c59b,0.96,false,false,near_mint,en,EUR
 Thunder Magic,FIN,Final Fantasy,165,normal,common,1,106610,9f2b202c-91da-40ec-8324-6b6be7cb3bc8,0.07,false,false,near_mint,en,EUR
 Primeval Titan,FCA,Final Fantasy: Through the Ages,48,normal,rare,1,106445,972dfe0d-1f8a-4e18-bcd8-c1ff6266c01a,3.45,false,false,near_mint,en,EUR
-Wandertale Mentor,BLB,Bloomburrow,240,normal,uncommon,1,95808,8c399a55-d02e-41ed-b827-8784b738c118,0.12,false,false,near_mint,en,EUR
 Absolute Virtue,FIN,Final Fantasy,212,normal,mythic,1,105689,aa192912-c9ee-403f-8a46-a338c9edb4b9,1.02,false,false,near_mint,en,EUR
 Rinoa Heartilly,FIN,Final Fantasy,237,normal,uncommon,1,105701,ba79d293-bf42-48b6-a868-5249f4beeb76,0.05,false,false,near_mint,en,EUR
 Aerith Rescue Mission,FIN,Final Fantasy,5,normal,common,1,106532,3123d16c-e1e6-4659-a7a3-2ec6efc6bf08,0.03,false,false,near_mint,en,EUR
@@ -60,7 +56,6 @@ Chocobo Racetrack,FIN,Final Fantasy,179,normal,uncommon,1,106516,1565813b-6912-4
 Balamb T-Rexaur,FIN,Final Fantasy,173,normal,common,1,106456,e5857b1b-73bc-458e-b26b-7ed8bef785f3,0.07,false,false,near_mint,en,EUR
 Chocobo Kick,FIN,Final Fantasy,178,normal,common,1,106698,ff8c8be0-8223-499c-8704-cb68e0a42ce2,0.08,false,false,near_mint,en,EUR
 Airship Crash,FIN,Final Fantasy,171,normal,common,1,106680,ec91c4e4-711f-464d-bc83-e6813f4fdcdb,0.04,false,false,near_mint,en,EUR
-"Quina, Qu Gourmet",FIN,Final Fantasy,194,normal,uncommon,1,106341,4f352b5e-9731-4a8e-b872-db5d3bf32211,0.1,false,false,near_mint,en,EUR
 Gigantoad,FIN,Final Fantasy,187,normal,common,1,106642,bc10d648-4053-460f-bc52-9c20477bf6de,0.04,false,false,near_mint,en,EUR
 Sazh's Chocobo,FIN,Final Fantasy,200,normal,uncommon,1,103809,dda6b4d0-1b60-46b0-b321-b9ffe15afff4,0.43,false,false,near_mint,en,EUR
 Town Greeter,FIN,Final Fantasy,209,normal,common,1,105610,49cd4efa-4df4-4257-9a42-60330f7781e2,0.02,false,false,near_mint,en,EUR
@@ -68,12 +63,12 @@ Poison the Waters,FIN,Final Fantasy,111,normal,uncommon,1,106380,ff2bafe7-4d0f-4
 Undercity Dire Rat,FIN,Final Fantasy,123,normal,common,1,106270,274788f4-fbf3-4a15-bdc0-f513a2fde30d,0.04,false,false,near_mint,en,EUR
 Qutrub Forayer,FIN,Final Fantasy,112,normal,common,1,106575,7475ecf6-23f5-45af-9ef0-ac7923bbc9cb,0.02,false,false,near_mint,en,EUR
 Phantom Train,FIN,Final Fantasy,110,normal,uncommon,1,106350,7a50d2ac-101d-41e1-b400-18fa7d2d7125,0.1,false,false,near_mint,en,EUR
-Gaius van Baelsar,FIN,Final Fantasy,102,normal,uncommon,1,106446,a4ee8ba5-6a79-4652-b2a4-a3dae804bc28,0.13,false,false,near_mint,en,EUR
 Evil Reawakened,FIN,Final Fantasy,98,normal,uncommon,1,106300,eb98cbc3-749c-44f4-974c-00be1286d69e,0.07,false,false,near_mint,en,EUR
 Vincent's Limit Break,FIN,Final Fantasy,126,normal,common,1,106499,0502c426-5271-4989-8598-5bc159afe79c,0.07,false,false,near_mint,en,EUR
-Al Bhed Salvagers,FIN,Final Fantasy,88,normal,uncommon,1,106278,58ccdcfc-a669-480f-bded-4273cfaf2045,0.02,false,false,near_mint,en,EUR
 Hecteyes,FIN,Final Fantasy,103,normal,common,2,106585,8680d052-c07b-4d9b-bda9-b5f69f44f424,0.07,false,false,near_mint,en,EUR
 "Guadosalam, Farplane Gateway",FIN,Final Fantasy,281,normal,common,2,106668,dfcbc131-fd50-4908-b539-c8e52bb70c58,0.08,false,false,near_mint,en,EUR
 Bard's Bow,FIN,Final Fantasy,174,normal,common,3,106530,2ac03e90-1e16-453f-88e4-a0448db73403,0.04,false,false,near_mint,en,EUR
 "Vector, Imperial Capital",FIN,Final Fantasy,291,normal,common,2,106512,10e5648e-4884-41e3-95f8-c76f6bca01e2,0.07,false,false,near_mint,en,EUR
 Shinra Reinforcements,FIN,Final Fantasy,118,normal,common,2,106282,7367b257-1a8c-4593-a307-7116e36e0342,0.05,false,false,near_mint,en,EUR
+Counterspell,FCA,Final Fantasy: Through the Ages,4,normal,uncommon,1,106455,e1e48b21-1a4f-4708-a4b4-e2e296df924c,0.14,false,false,near_mint,en,EUR
+Lightning Bolt,FCA,Final Fantasy: Through the Ages,40,normal,uncommon,2,106371,e89794ab-6070-4916-936f-2b42fe41d31b,0.39,false,false,near_mint,en,EUR

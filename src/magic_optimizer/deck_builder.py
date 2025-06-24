@@ -1,20 +1,21 @@
 import json
 import random
 import time
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Set, Tuple, Optional
 
 import numpy as np
 import pandas as pd
 
+from .card import Card
 from .exporters.deck_exporter import DeckExporter
-from .optimizer import AdvancedDeckOptimizer
+from .optimizers import create_optimizer
 from .validator import CardValidator
 
 
 class EnhancedDeckBuilder:
     def __init__(self, ratings_file: str = "data/ratings/card_ratings.csv"):
         """Initialize enhanced deck builder with advanced optimization"""
-        self.optimizer = AdvancedDeckOptimizer(ratings_file)
+        self.ratings_file = ratings_file
         self.validator = CardValidator()
         self.exporter = DeckExporter()
 
@@ -40,13 +41,13 @@ class EnhancedDeckBuilder:
         self,
         collection_df: pd.DataFrame,
         num_colors: int = 2,
-        deck_size: int = 40,
+        total_deck_size: int = 40,
+        num_lands: int = 17,
         algorithm: str = "genetic",
-        export_formats: List[str] = None,
+        optimization_criterion: str = "manual",
         lambda_penalty: float = 0.5,
-        total_deck_size: int = None,
-        num_lands: int = None,
-        evaluation_method: str = "manual",
+        fixed_colors: Optional[List[str]] = None,
+        export_formats: Optional[List[str]] = None,
     ) -> Dict:
         """
         Build optimal deck using advanced optimization algorithms
@@ -54,51 +55,51 @@ class EnhancedDeckBuilder:
         Args:
             collection_df: DataFrame with card collection
             num_colors: Maximum number of colors to use in deck
-            deck_size: Target non-land card count (if total_deck_size/num_lands given, this is ignored)
+            total_deck_size: Total deck size (lands + non-lands)
+            num_lands: Absolute number of lands in deck
             algorithm: 'genetic', 'simulated_annealing', or 'greedy'
-            export_formats: List of formats to export ('arena', 'mtgo', 'cockatrice', etc.)
-            lambda_penalty: Penalty multiplier for exceeding color limit
-            total_deck_size: (optional) total deck size (lands + non-lands)
-            num_lands: (optional) absolute number of lands in deck
-            evaluation_method: '17lands' or 'manual' evaluation method
+            optimization_criterion: 'manual' or '17lands'
+            lambda_penalty: Penalty for exceeding color limit in some algorithms
+            fixed_colors: A list of colors to force into the deck (e.g., ['W', 'U'])
+            export_formats: List of formats to export ('arena', 'mtgo', 'html_artwork')
         """
+        if fixed_colors is None:
+            fixed_colors = []
 
-        # If total_deck_size and num_lands are given, calculate non-land count
-        if total_deck_size is not None and num_lands is not None:
-            non_land_count = total_deck_size - num_lands
-            print(
-                f"[DeckBuilder] Using total deck size {total_deck_size}, lands {num_lands}, non-lands {non_land_count}"
-            )
-            # Use the calculated non-land count for optimization
-            deck_size = non_land_count
-        else:
-            num_lands = None
+        # Ensure num_lands is not greater than total_deck_size
+        if num_lands > total_deck_size:
+            print(f"Warning: Number of lands ({num_lands}) exceeds total deck size ({total_deck_size}). Adjusting lands to {total_deck_size}.")
+            num_lands = total_deck_size
+
+        deck_size = total_deck_size - num_lands
 
         print(f"\n=== ENHANCED DECK OPTIMIZATION ===")
         print(f"Algorithm: {algorithm.upper()}")
-        print(f"Max Colors: {num_colors}")
-        print(f"Non-Land Cards: {deck_size}")
-        if total_deck_size is not None:
-            print(f"Total Deck Size: {total_deck_size}")
-            print(f"Expected Lands: {num_lands}")
-        print(f"Lambda Penalty: {lambda_penalty}")
-        print(f"Evaluation Method: {evaluation_method}")
+        print(
+            f"Max Colors: {num_colors}, Fixed Colors: {fixed_colors if fixed_colors else 'None'}"
+        )
+        print(
+            f"Deck Size: {total_deck_size} (Non-Lands: {deck_size}, Lands: {num_lands})"
+        )
+        print(f"Optimization Criterion: {optimization_criterion}")
 
         start_time = time.time()
 
+        # Create optimizer with the appropriate evaluation method
+        optimizer = create_optimizer(
+            algorithm=algorithm,
+            evaluation_method=optimization_criterion,
+            ratings_file=self.ratings_file
+        )
+
         # Run optimization
-        if algorithm in ["genetic", "simulated_annealing"]:
-            result = self.optimizer.optimize_deck(
+        if algorithm in ["genetic", "simulated_annealing", "greedy"]:
+            result = optimizer.optimize_deck(
                 collection_df=collection_df,
                 num_colors=num_colors,
                 deck_size=deck_size,
-                algorithm=algorithm,
                 lambda_penalty=lambda_penalty,
-                evaluation_method=evaluation_method,
-            )
-        elif algorithm == "greedy":
-            result = self.build_greedy_deck(
-                collection_df, num_colors, deck_size, lambda_penalty, evaluation_method
+                fixed_colors=fixed_colors,
             )
         else:
             raise ValueError(f"Unknown algorithm: {algorithm}")
@@ -111,17 +112,9 @@ class EnhancedDeckBuilder:
 
         # Add optimal lands to the deck
         print(f"\n=== ADDING OPTIMAL LANDS ===")
-        if total_deck_size is not None and num_lands is not None:
-            complete_deck = self.add_lands_to_deck(
-                result["deck"],
-                result["target_colors"],
-                total_deck_size,
-                num_lands=num_lands,
-            )
-        else:
-            complete_deck = self.add_lands_to_deck(
-                result["deck"], result["target_colors"], deck_size
-            )
+        complete_deck = self.add_lands_to_deck(
+            result["deck"], result["target_colors"], total_deck_size, num_lands
+        )
         result["deck"] = complete_deck
 
         # Analyze and display deck
@@ -130,7 +123,7 @@ class EnhancedDeckBuilder:
         # Export in requested formats
         if export_formats:
             exported_files = self.exporter.export_deck(
-                deck=result["deck"],
+                deck=[card.to_dict() for card in result["deck"]],
                 algorithm=algorithm,
                 target_colors=result["target_colors"],
                 score=result["score"],
@@ -138,404 +131,191 @@ class EnhancedDeckBuilder:
             )
             result["exported_files"] = exported_files
 
+        result["deck"] = [card.to_dict() for card in result["deck"]]
         return result
 
-    def build_greedy_deck(
-        self,
-        collection_df: pd.DataFrame,
-        num_colors: int,
-        deck_size: int,
-        lambda_penalty: float = 0.5,
-        evaluation_method: str = "manual",
-    ) -> Dict:
-        """Build deck using greedy algorithm with strict color selection"""
-        print("Running Greedy Algorithm with Strict Color Selection...")
-        print(f"Evaluation Method: {evaluation_method}")
-
-        # Prepare eligible cards (no color filtering)
-        eligible_cards = self.optimizer.prepare_eligible_cards(
-            collection_df, num_colors
-        )
-
-        # Count color occurrences
-        color_counts = {}
-        for card in eligible_cards:
-            for color in card.get("colors", set()):
-                color_counts[color] = color_counts.get(color, 0) + 1
-
-        # Wähle die besten Farben (z.B. 2 Farben mit meisten Karten)
-        best_colors = []
-        if num_colors > 0 and color_counts:
-            best_colors = sorted(color_counts, key=color_counts.get, reverse=True)[
-                :num_colors
-            ]
-            print(f"Selected colors for deck: {best_colors}")
-
-        # Filtere Karten auf diese Farben (und farblose Karten)
-        def is_allowed(card):
-            colors = card.get("colors", set())
-            return not colors or colors.issubset(set(best_colors))
-
-        filtered_cards = [card for card in eligible_cards if is_allowed(card)]
-
-        # Exclude all lands from eligible cards (basic and nonbasic)
-        eligible_spells = [
-            card for card in filtered_cards if card.get("type") != "Land"
-        ]
-
-        if len(eligible_spells) < deck_size:
-            print(
-                f"Warning: Only {len(eligible_spells)} eligible cards for {deck_size}-card deck"
-            )
-            deck_size = len(eligible_spells)
-
-        print(f"Using {len(eligible_spells)} eligible cards for optimization")
-
-        # Sort cards by rating
-        eligible_spells.sort(key=lambda x: x["rating"], reverse=True)
-
-        # Build deck with greedy approach
-        deck = []
-        color_counts = {}
-        deck_colors = set()
-
-        print(f"Target non-land cards: {deck_size}")
-
-        for card in eligible_spells:
-            if len(deck) >= deck_size:
-                break
-            deck.append(card)
-            card_colors = card.get("colors", set())
-            for color in card_colors:
-                color_counts[color] = color_counts.get(color, 0) + 1
-            deck_colors.update(card_colors)
-
-        print(f"Added {len(deck)} non-land cards (target was {deck_size})")
-
-        # Get actual colors used
-        actual_colors = sorted(list(deck_colors))
-
-        # Calculate final score
-        final_score = self.optimizer.calculate_deck_score(
-            deck, [], deck_size, num_colors, lambda_penalty, evaluation_method
-        )
-
-        return {
-            "deck": deck,
-            "score": final_score,
-            "target_colors": actual_colors,
-            "algorithm": "greedy",
-            "evaluation_method": evaluation_method,
-        }
-
-    def analyze_deck(self, deck: List[Dict]):
+    def analyze_deck(self, deck: List[Card]):
         """Analyze and display detailed deck statistics"""
         print(f"\n=== DECK ANALYSIS ===")
         print(f"Total Cards: {len(deck)}")
-
-        # Color distribution
-        color_counts = {}
-        colorless_count = 0
+        
+        card_types = {}
         for card in deck:
-            colors = card["colors"]
-            if not colors:
-                colorless_count += 1
+            main_type = card.main_type
+            card_types[main_type] = card_types.get(main_type, 0) + 1
+        
+        print("\nCard Types:")
+        for type_name, count in sorted(card_types.items()):
+            print(f"- {type_name}: {count}")
+
+        non_land_cards = [c for c in deck if "Land" not in c.main_type]
+        if non_land_cards:
+            mana_curve = self._calculate_mana_curve(non_land_cards)
+            print("\nMana Curve (Non-lands):")
+            for cmc, count in sorted(mana_curve.items()):
+                if count > 0:
+                    print(f"- CMC {cmc}: {count}")
+
+    def _calculate_mana_curve(self, deck: List[Card]) -> Dict[int, int]:
+        """Calculate the mana curve distribution"""
+        curve = {i: 0 for i in range(8)}  # 0-7+ CMC
+
+        for card in deck:
+            cmc = card.cmc
+            if cmc >= 7:
+                curve[7] += 1
             else:
-                for color in colors:
-                    color_counts[color] = color_counts.get(color, 0) + 1
+                curve[int(cmc)] += 1
 
-        print(f"\nColor Distribution:")
-        for color, count in sorted(color_counts.items()):
-            print(f"  {color}: {count} cards")
-        if colorless_count > 0:
-            print(f"  Colorless: {colorless_count} cards")
+        return curve
 
-        # Mana curve
-        curve = self.optimizer.calculate_mana_curve(deck)
-        print(f"\nMana Curve:")
-        for cmc in range(8):
-            if curve[cmc] > 0:
-                print(f"  {cmc} CMC: {curve[cmc]} cards")
-
-        # Card types
-        type_counts = {}
+    def _get_deck_colors(self, deck: List[Card]) -> List[str]:
+        """Get the actual colors used in the deck"""
+        colors_used = set()
         for card in deck:
-            card_type = card.get("type", "Unknown")
-            type_counts[card_type] = type_counts.get(card_type, 0) + 1
-
-        print(f"\nCard Types:")
-        for card_type, count in sorted(type_counts.items()):
-            print(f"  {card_type}: {count} cards")
-
-        # Rating statistics
-        ratings = [card.get("rating", 0) for card in deck]
-        avg_rating = sum(ratings) / len(ratings) if ratings else 0
-        print(f"\nRating Statistics:")
-        print(f"  Average Rating: {avg_rating:.2f}/10")
-        print(f"  Highest Rating: {max(ratings)}/10")
-        print(f"  Lowest Rating: {min(ratings)}/10")
+            colors_used.update(card.colors)
+        return sorted(list(colors_used))
 
     def compare_algorithms(
         self, collection_df: pd.DataFrame, num_colors: int = 2, deck_size: int = 40
     ) -> Dict:
-        """Compare different optimization algorithms"""
-        print(f"\n=== ALGORITHM COMPARISON ===")
+        """Compare performance of different optimization algorithms"""
+        print(f"\n=== COMPARING OPTIMIZATION ALGORITHMS ===")
+        print(f"Deck Size: {deck_size}, Colors: {num_colors}")
 
-        algorithms = ["greedy", "genetic", "simulated_annealing"]
         results = {}
+        algorithms = ["greedy", "genetic", "simulated_annealing"]
 
-        for algorithm in algorithms:
-            print(f"\nTesting {algorithm.upper()} algorithm...")
-            try:
-                result = self.build_optimal_deck_advanced(
-                    collection_df, num_colors, deck_size, algorithm, [], 0.5
-                )
-                results[algorithm] = {
-                    "score": result["score"],
-                    "colors": result["target_colors"],
-                    "deck": result["deck"],
-                }
-            except Exception as e:
-                print(f"Error with {algorithm}: {e}")
-                results[algorithm] = None
-
-        # Display comparison
-        print(f"\n=== COMPARISON RESULTS ===")
-        for algorithm, result in results.items():
-            if result:
-                print(
-                    f"{algorithm.upper()}: Score = {result['score']:.4f}, Colors = {result['colors']}"
-                )
-            else:
-                print(f"{algorithm.upper()}: Failed")
-
-        # Find best algorithm
-        best_algorithm = max(
-            results.keys(), key=lambda k: results[k]["score"] if results[k] else 0
-        )
-
-        print(f"\nBest Algorithm: {best_algorithm.upper()}")
-        print(f"Best Score: {results[best_algorithm]['score']:.4f}")
+        for algo in algorithms:
+            print(f"\n--- Running {algo.upper()} ---")
+            result = self.build_optimal_deck_advanced(
+                collection_df=collection_df,
+                num_colors=num_colors,
+                total_deck_size=deck_size,
+                num_lands=int(deck_size * 17 / 40),
+                algorithm=str(algo),
+            )
+            results[algo] = result
 
         return results
 
     def calculate_optimal_lands(
         self,
-        deck: List[Dict],
+        deck: List[Card],
         target_colors: List[str],
         deck_size: int = 40,
-        num_lands: int = None,
-        collection_df: pd.DataFrame = None,
-    ) -> List[Dict]:
+        num_lands: Optional[int] = None,
+        collection_df: Optional[pd.DataFrame] = None,
+    ) -> List[Card]:
         """
-        Calculate optimal land count and add appropriate lands to the deck
-        Args:
-            deck: Current deck without lands
-            target_colors: Target colors for the deck
-            deck_size: Target deck size
-            num_lands: Optional specific number of lands to add
-            collection_df: The full collection DataFrame (for nonbasic lands)
-        Returns:
-            List of land cards to add
+        Calculate the optimal number and type of basic lands for a deck.
         """
-        non_land_cards = len(deck)
+        if num_lands is None:
+            num_lands = max(0, deck_size - len(deck))
 
-        # Use provided num_lands or calculate optimal land count
-        if num_lands is not None:
-            optimal_lands = num_lands
-            print(
-                f"[calculate_optimal_lands] Using explicit num_lands: {optimal_lands}"
-            )
-        else:
-            # Calculate optimal land count (typically 33-40% of deck)
-            if deck_size <= 40:  # Limited format
-                optimal_lands = max(16, min(18, int(deck_size * 0.42)))
-            else:  # Constructed format
-                optimal_lands = max(22, min(26, int(deck_size * 0.40)))
+        if num_lands == 0:
+            return []
 
-            # Adjust based on mana curve
-            curve = self.optimizer.calculate_mana_curve(deck)
-            avg_cmc = (
-                sum(cmc * count for cmc, count in curve.items()) / non_land_cards
-                if non_land_cards > 0
-                else 0
-            )
+        # Calculate mana symbols required by the deck
+        mana_symbols: Dict[str, int] = {}
+        for card in deck:
+            # This is a simplified version. A full implementation would parse mana costs.
+            # For now, we rely on the card's colors.
+            for color in card.colors:
+                mana_symbols[color] = mana_symbols.get(color, 0) + 1
 
-            if avg_cmc > 3.5:
-                optimal_lands += 1
-            elif avg_cmc < 2.5:
-                optimal_lands -= 1
+        total_symbols = sum(mana_symbols.values())
+        if total_symbols == 0:
+            # If no colored spells, add lands based on target colors, or just one type if no targets
+            if not target_colors:
+                deck_colors = self._get_deck_colors(deck)
+                if "W" in deck_colors:
+                    return [self._create_land_card("Plains", "W")] * num_lands
+                else: # Default to plains
+                    return [self._create_land_card("Plains", "W")] * num_lands
+            
+            num_per_color = num_lands // len(target_colors)
+            lands: List[Card] = []
+            for color in target_colors:
+                land_name = self.get_land_name_for_color(color)
+                lands.extend([self._create_land_card(land_name, color)] * num_per_color)
+            
+            # Add remainder
+            if len(lands) < num_lands:
+                land_name = self.get_land_name_for_color(target_colors[0])
+                lands.extend([self._create_land_card(land_name, target_colors[0])] * (num_lands - len(lands)))
+            return lands
 
-            # Only apply min/max if not explicit
-            optimal_lands = min(optimal_lands, deck_size - non_land_cards)
-            if deck_size <= 40:
-                optimal_lands = max(15, optimal_lands)
-            else:
-                optimal_lands = max(20, optimal_lands)
-            print(
-                f"[calculate_optimal_lands] Auto-calculated optimal lands: {optimal_lands}"
-            )
 
+        # Distribute lands based on mana symbol proportions
         lands = []
-        lands_needed = optimal_lands
+        # sort mana symbols to make land distribution deterministic
+        sorted_mana_symbols = sorted(mana_symbols.items(), key=lambda item: item[1], reverse=True)
 
-        # 1. Add nonbasic lands from collection that match deck colors
-        nonbasic_lands = []
-        if collection_df is not None:
-            for _, row in collection_df.iterrows():
-                card_name = (
-                    row["Card Name"]
-                    if "Card Name" in collection_df.columns
-                    else row.iloc[0]
-                )
-                # Get card data
-                card_data = self.optimizer.get_card_data(card_name)
-                if not card_data:
-                    continue
-                type_line = card_data.get("type_line", "")
-                if "Land" in type_line and "Basic" not in type_line:
-                    # Check if land produces at least one deck color
-                    produces_colors = set()
-                    if "colors" in card_data:
-                        produces_colors.update(card_data["colors"])
-                    if "card_faces" in card_data:
-                        for face in card_data["card_faces"]:
-                            produces_colors.update(face.get("colors", []))
-                    if produces_colors & set(target_colors):
-                        # Add as many as available in collection
-                        qty = row["Quantity"] if "Quantity" in row else 1
-                        for _ in range(int(qty)):
-                            nonbasic_lands.append(
-                                {
-                                    "name": card_name,
-                                    "colors": produces_colors,
-                                    "rating": 6,  # Slightly above basic
-                                    "cmc": 0,
-                                    "type": "Land",
-                                    "card_data": card_data,
-                                }
-                            )
-        # Add nonbasic lands up to the number needed
-        for land in nonbasic_lands:
-            if lands_needed <= 0:
-                break
-            lands.append(land)
-            lands_needed -= 1
+        for color, count in sorted_mana_symbols:
+            proportion = count / total_symbols
+            num_lands_for_color = round(proportion * num_lands)
+            land_name = self.get_land_name_for_color(color)
+            lands.extend([self._create_land_card(land_name, color)] * num_lands_for_color)
 
-        # 2. Fill remaining with basic lands as before
-        if lands_needed > 0:
-            if target_colors:
-                # Calculate land distribution based on color requirements
-                color_requirements = {color: 0 for color in target_colors}
-                for card in deck:
-                    colors = card.get("colors", set())
-                    for color in colors:
-                        if color in target_colors:
-                            color_requirements[color] += 1
+        # Adjust land count if rounding caused a mismatch
+        while len(lands) < num_lands:
+            # Add to the most represented color
+            most_represented_color = sorted_mana_symbols[0][0]
+            land_name = self.get_land_name_for_color(most_represented_color)
+            lands.append(self._create_land_card(land_name, most_represented_color))
 
-                total_colored_requirements = sum(color_requirements.values())
-                if total_colored_requirements == 0:
-                    # If no colored requirements, distribute evenly
-                    color_shares = {
-                        color: 1 / len(target_colors) for color in target_colors
-                    }
-                else:
-                    color_shares = {
-                        color: color_requirements[color] / total_colored_requirements
-                        for color in target_colors
-                    }
-
-                # Calculate number of lands per color (initial assignment)
-                lands_per_color = {
-                    color: int(lands_needed * share)
-                    for color, share in color_shares.items()
-                }
-                assigned = sum(lands_per_color.values())
-                # Distribute any remaining lands to colors with highest share
-                remaining = lands_needed - assigned
-                if remaining > 0:
-                    # Sort colors by share descending
-                    sorted_colors = sorted(
-                        target_colors, key=lambda c: color_shares[c], reverse=True
-                    )
-                    for i in range(remaining):
-                        lands_per_color[sorted_colors[i % len(sorted_colors)]] += 1
-
-                # Add basic lands for each color
-                for color, count in lands_per_color.items():
-                    land_name = None
-                    if color == "W":
-                        land_name = "Plains"
-                    elif color == "U":
-                        land_name = "Island"
-                    elif color == "B":
-                        land_name = "Swamp"
-                    elif color == "R":
-                        land_name = "Mountain"
-                    elif color == "G":
-                        land_name = "Forest"
-                    if land_name:
-                        for _ in range(count):
-                            lands.append(self._create_land_card(land_name, color))
-            else:
-                # If no colors, default to Plains (never Wastes)
-                for _ in range(lands_needed):
-                    lands.append(self._create_land_card("Plains", "W"))
-
+        if len(lands) > num_lands:
+            lands = lands[:num_lands]
+            
         return lands
 
-    def _create_land_card(self, land_name: str, color: str) -> Dict:
-        """Create a land card dictionary"""
-        return {
+    def get_land_name_for_color(self, color: str) -> str:
+        """Get the basic land name for a given color initial."""
+        return {"W": "Plains", "U": "Island", "B": "Swamp", "R": "Mountain", "G": "Forest"}.get(
+            color, "Plains"
+        )
+
+    def _create_land_card(self, land_name: str, color: str) -> Card:
+        """Create a dictionary representing a basic land card."""
+        return Card({
             "name": land_name,
-            "colors": set([color]) if color else set(),
-            "rating": 5,  # Neutral rating for lands
+            "type_line": "Basic Land",
+            "colors": [], # Basic lands are colorless
+            "color_identity": [color],
             "cmc": 0,
-            "type": "Land",
-            "card_data": {
-                "name": land_name,
-                "type_line": "Basic Land",
-                "colors": [color] if color else [],
-                "cmc": 0,
-            },
-        }
+        })
 
     def add_lands_to_deck(
         self,
-        deck: List[Dict],
+        deck: List[Card],
         target_colors: List[str],
         deck_size: int = 40,
-        num_lands: int = None,
-        collection_df: pd.DataFrame = None,
-    ) -> List[Dict]:
-        """Add optimal lands to the deck, using deck_size and num_lands if given"""
-        if num_lands is not None:
-            non_land_count = deck_size - num_lands
-            print(
-                f"[AddLands] Using deck size {deck_size}, lands {num_lands}, non-lands {non_land_count}"
-            )
-            # Truncate deck to the correct number of non-land cards
-            if len(deck) > non_land_count:
-                print(
-                    f"[AddLands] Truncating deck from {len(deck)} to {non_land_count} non-land cards"
-                )
-                deck = deck[:non_land_count]
-            elif len(deck) < non_land_count:
-                print(
-                    f"[AddLands] WARNING: Only {len(deck)} non-land cards available, wanted {non_land_count}!"
-                )
-            # Add lands with specific count
-            lands = self.calculate_optimal_lands(
-                deck, target_colors, deck_size, num_lands, collection_df
-            )
-        else:
-            # Add lands with automatic calculation
-            lands = self.calculate_optimal_lands(
-                deck, target_colors, deck_size, collection_df=collection_df
-            )
+        num_lands: Optional[int] = None,
+        collection_df: Optional[pd.DataFrame] = None,
+    ) -> List[Card]:
+        """
+        Add the optimal number of lands to a deck to reach the desired size.
+        """
+        non_land_deck = [c for c in deck if "Land" not in c.main_type]
+        
+        if num_lands is None:
+            num_lands = deck_size - len(non_land_deck)
+            if num_lands < 0:
+                print("Warning: Deck size exceeds target size before adding lands.")
+                num_lands = 0
 
-        print(f"[AddLands] Added {len(lands)} lands to deck")
-        print(
-            f"[AddLands] Final deck size: {len(deck) + len(lands)} (Nonlands: {len(deck)}, Lands: {len(lands)})"
+        print(f"Calculating and adding {num_lands} lands...")
+        
+        optimal_lands = self.calculate_optimal_lands(
+            deck=non_land_deck,
+            target_colors=target_colors,
+            deck_size=deck_size,
+            num_lands=num_lands,
+            collection_df=collection_df,
         )
-        return deck + lands
+
+        complete_deck = non_land_deck + optimal_lands
+        print(f"Final deck size with lands: {len(complete_deck)}")
+
+        return complete_deck

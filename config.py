@@ -4,6 +4,8 @@ Configuration file for MTG Sealed Deck Optimizer
 Centralizes all configurable elements for easy customization
 """
 
+import os
+
 # =============================================================================
 # APPLICATION METADATA
 # =============================================================================
@@ -121,9 +123,9 @@ NUMBERS = {
     "default_deck_size": 40,
     "min_deck_size": 20,
     "max_deck_size": 60,
-    "default_land_ratio": 17,
-    "min_land_ratio": 14,
-    "max_land_ratio": 24,
+    "default_num_lands": 17,
+    "min_lands": 10,
+    "max_lands": 24,
     # Lambda penalty
     "default_lambda": 0.5,
     "min_lambda": 0.1,
@@ -238,7 +240,6 @@ VALIDATION_MESSAGES = {
     "optimization_error": "Error during optimization: {error}",
 }
 
-
 # =============================================================================
 # HELPER FUNCTIONS
 # =============================================================================
@@ -264,3 +265,15 @@ def get_export_format_options():
         )
         for key, value in EXPORT_FORMATS.items()
     ]
+
+# =============================================================================
+# NEW CONSTANTS
+# =============================================================================
+MAX_CACHE_SIZE = 10000
+CACHE_EXPIRATION = 3600  # 1 hour
+
+# --- File Paths ---
+UPLOADS_DIR = "uploads"
+LOGS_DIR = "logs"
+DATA_DIR = "data"
+RATINGS_FILE = os.path.join(DATA_DIR, "ratings", "card_ratings.csv")

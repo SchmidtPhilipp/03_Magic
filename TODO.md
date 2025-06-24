@@ -1,5 +1,25 @@
 # MTG Sealed Deck Optimizer - TODO List
 
+## Project Knowledge Base
+
+This section summarizes key architectural decisions and bug fixes to provide context for future development.
+
+### The "Ultimecia" Bug and Double-Faced Cards
+
+*   **Problem:** A multi-color card ("Ultimecia", Blue/Black) was incorrectly appearing in decks that should have excluded it (e.g., a Blue/Red deck).
+*   **Root Cause:** The `Card` class was only checking the top-level `colors` attribute of the card data from the Scryfall API. For double-faced cards, this attribute is often empty. The correct color information is stored in a `card_faces` list, with each face having its own `colors` attribute. Because the top-level `colors` field was empty, the card was being incorrectly identified as colorless.
+*   **Solution:**
+    1.  The `colors` property in the `Card` class (`src/magic_optimizer/card.py`) was updated to check for the existence of a `card_faces` field.
+    2.  If `card_faces` exists, the logic now iterates through each face and aggregates the colors from all of them, providing a complete and accurate set of colors for the entire card.
+*   **Key Takeaway:** The `Card` class is now robust enough to handle complex card structures like double-faced cards, ensuring accurate color filtering.
+
+### Application Stability and Memory Management
+
+*   **Problem:** The web application would frequently crash or be `Killed` by the system, especially during repeated optimizations.
+*   **Root Cause:** A new instance of the `EnhancedDeckBuilder` was being created for every optimization request in `web_app.py`. Since the builder and its sub-components (like `AdvancedDeckOptimizer` and `DeckEvaluator`) manage large data caches, this caused a severe memory leak, quickly exhausting system resources.
+*   **Solution:** The instantiation of `EnhancedDeckBuilder` was moved to the global scope in `web_app.py`, creating a single, shared instance that is reused for all optimization requests. This eliminated the memory leak and stabilized the application.
+*   **Key Takeaway:** Stateful objects managing large datasets should be instantiated once and shared across requests in the web application to ensure stability and performance.
+
 ## Completed Tasks ✓
 
 ### Core Functionality

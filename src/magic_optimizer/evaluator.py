@@ -18,7 +18,7 @@ import shutil
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, overload, Literal
 from collections import OrderedDict
 import weakref
 
@@ -352,12 +352,15 @@ class SeventeenLandsAPI:
     ) -> Dict[str, Dict]:
         """Fetch a single batch of cards from 17Lands API"""
         try:
+            # Determine the expansion based on the cards in the collection
+            expansion = self._detect_expansion(card_names)
+            
             # 17Lands API endpoint for card data
             url = f"https://www.17lands.com/card_ratings/data"
             params = {
-                "expansion": "LTR",  # Lord of the Rings set
+                "expansion": expansion,
                 "format": format_name,
-                "start_date": "2023-06-20",  # Set release date
+                "start_date": "2023-01-01",  # Start from beginning of year
                 "end_date": "2024-12-31",  # Future date to get all data
             }
 
@@ -427,6 +430,103 @@ class SeventeenLandsAPI:
             self.logger.error(f"Error fetching 17Lands data for batch: {e}")
             return {card_name: {} for card_name in card_names}
 
+    def _detect_expansion_for_card(self, card_name: str) -> str:
+        """Detect the expansion code for a specific card"""
+        try:
+            import requests
+            response = requests.get(f"https://api.scryfall.com/cards/named?exact={card_name}", timeout=5)
+            if response.status_code == 200:
+                card_data = response.json()
+                set_code = card_data.get("set", "").upper()
+                if set_code:
+                    self.logger.debug(f"Detected expansion for {card_name}: {set_code}")
+                    
+                    # Map some common set codes to 17Lands-compatible ones
+                    set_mapping = {
+                        #"FIN": "BLB",  # Final Fantasy -> Bloomburrow (fallback to recent set)
+                        #"FCA": "BLB",  # Final Fantasy: Through the Ages -> Bloomburrow
+                        "BLB": "BLB",  # Bloomburrow
+                        "DSK": "DSK",  # Duskmourn
+                        "OTJ": "OTJ",  # Outlaws of Thunder Junction
+                        "MKM": "MKM",  # Murders at Karlov Manor
+                        "LTR": "LTR",  # Lord of the Rings
+                        "WOE": "WOE",  # Wilds of Eldraine
+                        "LCI": "LCI",  # Lost Caverns of Ixalan
+                        "ONE": "ONE",  # Phyrexia: All Will Be One
+                        "DMU": "DMU",  # Dominaria United
+                        "SNC": "SNC",  # Streets of New Capenna
+                        "NEO": "NEO",  # Kamigawa: Neon Dynasty
+                        "VOW": "VOW",  # Innistrad: Crimson Vow
+                        "MID": "MID",  # Innistrad: Midnight Hunt
+                        "AFR": "AFR",  # Adventures in the Forgotten Realms
+                        "STX": "STX",  # Strixhaven: School of Mages
+                        "KHM": "KHM",  # Kaldheim
+                        "ZNR": "ZNR",  # Zendikar Rising
+                    }
+                    
+                    return set_mapping.get(set_code, "BLB")  # Default to Bloomburrow
+        except Exception as e:
+            self.logger.debug(f"Error detecting expansion for {card_name}: {e}")
+        
+        # If detection fails, default to a recent set that's likely to have data
+        self.logger.debug(f"Could not detect expansion for {card_name}, defaulting to BLB")
+        return "BLB"
+
+    def _detect_expansion(self, card_names: List[str]) -> str:
+        """Detect the most likely expansion code for the given cards (legacy method for batch processing)"""
+        # This method is now only used for batch processing
+        # For individual cards, use _detect_expansion_for_card instead
+        if card_names:
+            return self._detect_expansion_for_card(card_names[0])
+        return "BLB"
+
+    def _fetch_single_card(self, card_name: str, expansion: str, format_name: str) -> Dict:
+        """Fetch data for a single card from 17Lands API with specific expansion"""
+        try:
+            # 17Lands API endpoint for card data
+            url = f"https://www.17lands.com/card_ratings/data"
+            params = {
+                "expansion": expansion,
+                "format": format_name,
+                "start_date": "2023-01-01",  # Start from beginning of year
+                "end_date": "2024-12-31",  # Future date to get all data
+            }
+
+            self.logger.debug(f"Making API request to 17Lands for {card_name} in {expansion}")
+            response = requests.get(url, params=params, timeout=30)
+
+            if response.status_code == 200:
+                data = response.json()
+                self.logger.debug(f"Received {len(data)} cards from 17Lands API for {expansion}")
+
+                # Look for this specific card in the data
+                for card_data in data:
+                    if card_data.get("name", "").lower() == card_name.lower():
+                        # Extract relevant metrics
+                        result = {
+                            "name": card_data.get("name", card_name),
+                            "game_in_hand_win_rate": card_data.get("game_in_hand_win_rate", 0.0),
+                            "improvement_when_drawn": card_data.get("improvement_when_drawn", 0.0),
+                            "avg_seen": card_data.get("avg_seen", 0.0),
+                            "avg_pick": card_data.get("avg_pick", 0.0),
+                            "drawn_win_rate": card_data.get("drawn_win_rate", 0.0),
+                            "ever_drawn_win_rate": card_data.get("ever_drawn_win_rate", 0.0),
+                        }
+                        self.logger.debug(f"Found 17Lands data for {card_name}")
+                        return result
+
+                # Card not found in this expansion
+                self.logger.debug(f"{card_name} not found in {expansion} data")
+                return {}
+
+            else:
+                self.logger.warning(f"17Lands API returned status {response.status_code} for {expansion}")
+                return {}
+
+        except Exception as e:
+            self.logger.error(f"Error fetching 17Lands data for {card_name} in {expansion}: {e}")
+            return {}
+
     def get_card_data(self, card_name: str, format_name: str = "PremierDraft") -> Dict:
         """
         Get 17Lands data for a single card with caching
@@ -438,9 +538,27 @@ class SeventeenLandsAPI:
         Returns:
             Dict with 17Lands metrics or empty dict if not found
         """
-        # Use batch processing for single card
-        batch_results = self.get_card_data_batch([card_name], format_name)
-        return batch_results.get(card_name, {})
+        # Check cache first
+        cache_key = f"{card_name}_{format_name}"
+        with self.cache_lock:
+            if cache_key in self.cache:
+                return self.cache[cache_key]
+        
+        # Detect expansion for this specific card
+        expansion = self._detect_expansion_for_card(card_name)
+        
+        # Fetch data for this card with the detected expansion
+        card_data = self._fetch_single_card(card_name, expansion, format_name)
+        
+        # Cache the result
+        with self.cache_lock:
+            self.cache[cache_key] = card_data
+            
+        # Save cache periodically
+        if len(self.cache) % 10 == 0:
+            self._save_cache()
+            
+        return card_data
 
     def get_cache_stats(self) -> Dict:
         """Get cache statistics"""
@@ -488,6 +606,7 @@ class DeckEvaluator:
         self.ratings_df = None
         self.ratings_file = ratings_file
         self.seventeen_lands = SeventeenLandsAPI()
+        self.ratings_dict = {}
 
         # Loggers
         self.logger = logging.getLogger(__name__)
@@ -531,76 +650,60 @@ class DeckEvaluator:
             self.ratings_dict = {}
 
     def evaluate_deck(self, decklist: List[str], method: str = "manual") -> float:
-        """
-        Main evaluation interface
-
-        Args:
-            decklist: List of card names in the deck
-            method: Evaluation method ("17lands" or "manual")
-
-        Returns:
-            float: Deck score (0.0 to 1.0)
-        """
-        # Log evaluation start
-        self.user_logger.info(
-            f"Evaluating deck with {len(decklist)} cards using {method} method"
-        )
-        self.optimization_logger.debug(
-            f"Starting deck evaluation: {method} method, {len(decklist)} cards"
-        )
-
-        # Calculate evaluation
-        if method == "17lands":
-            result = self.evaluate_deck_17lands(decklist)
-        elif method == "manual":
-            result = self.evaluate_deck_manual(decklist)
-        else:
-            self.logger.warning(f"Unknown evaluation method: {method}. Using manual.")
-            self.user_logger.warning(
-                f"Unknown evaluation method '{method}', using manual evaluation"
-            )
-            result = self.evaluate_deck_manual(decklist)
-
-        # Log evaluation result
-        score_percentage = result * 100
-        self.user_logger.info(
-            f"Deck evaluation complete: {score_percentage:.1f}% score"
-        )
-        self.optimization_logger.debug(
-            f"Evaluation result: {result:.4f} ({method} method)"
-        )
-
-        return result
-
-    def evaluate_deck_17lands(self, decklist: List[str]) -> float:
-        """
-        Evaluate deck using real 17Lands data with performance optimizations
-
-        Uses game_in_hand_win_rate and improvement_when_drawn from 17Lands API.
-
-        Args:
-            decklist: List of card names in the deck
-
-        Returns:
-            float: Deck score (0.0 to 1.0)
-        """
+        """Evaluate deck using selected method"""
         if not decklist:
             return 0.0
 
-        # Use parallel processing for large decks
-        if len(decklist) > 20:
-            return self._evaluate_deck_17lands_parallel(decklist)
+        # Use cache for full deck evaluation
+        cache_key = (tuple(sorted(decklist)), method)
+        cached_score = self.deck_evaluation_cache.get(cache_key)
+        if cached_score is not None:
+            return cached_score
 
-        # Get 17Lands data for all cards in batch
-        card_metrics = self._get_17lands_metrics_batch(decklist)
+        if method == "17lands":
+            score = self.evaluate_deck_17lands(decklist, as_dict=False)
+        else:
+            score = self.evaluate_deck_manual(decklist)
 
-        if not card_metrics:
-            return 0.0
+        self.deck_evaluation_cache.put(cache_key, score)
+        return score
 
-        # Calculate average score
-        avg_score = sum(card_metrics) / len(card_metrics)
+    @overload
+    def evaluate_deck_17lands(
+        self, decklist: List[str], as_dict: Literal[True]
+    ) -> Dict[str, float]: ...
 
-        # Normalize to 0-1 scale
+    @overload
+    def evaluate_deck_17lands(
+        self, decklist: List[str], as_dict: Literal[False] = False
+    ) -> float: ...
+
+    def evaluate_deck_17lands(self, decklist: List[str], as_dict: bool = False):
+        """
+        Evaluate deck using 17Lands data (GIH Winrate + IWD)
+        Now uses batch processing for improved performance.
+        """
+        if not decklist:
+            return {} if as_dict else 0.0
+
+        metrics = self._get_17lands_metrics_batch(decklist)
+
+        if as_dict:
+            return {
+                card: score
+                for card, score in zip(decklist, metrics)
+                if score is not None
+            }
+
+        valid_metrics = [m for m in metrics if m is not None]
+        if not valid_metrics:
+            # Fallback to manual if no 17lands data is found
+            self.logger.warning(
+                "No valid 17Lands data found for deck evaluation. Using manual evaluation."
+            )
+            return self.evaluate_deck_manual(decklist)
+
+        avg_score = sum(valid_metrics) / len(valid_metrics)
         return max(0.0, min(1.0, avg_score))
 
     def _get_17lands_metrics_batch(self, decklist: List[str]) -> List[float]:
