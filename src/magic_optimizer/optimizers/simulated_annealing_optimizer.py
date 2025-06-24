@@ -79,7 +79,17 @@ class SimulatedAnnealingOptimizer(BaseOptimizer):
         lambda_penalty: float = 0.5,
     ) -> List:
         """Optimize deck using Simulated Annealing."""
+        print(f"🌡️ Simulated Annealing Configuration:")
+        print(f"   Iterations: {iterations}")
+        print(f"   Initial Temperature: {initial_temp}")
+        print(f"   Cooling Rate: 0.995 (geometric)")
+        print(f"   Deck Size: {deck_size}")
+        print(f"   Max Colors: {max_colors}")
+        print(f"   Lambda Penalty: {lambda_penalty}")
+        print(f"   Eligible Cards: {len(eligible_cards)}")
+        
         # Initial solution
+        print(f"\n🎯 Creating initial random deck...")
         current_deck = self.create_random_deck(eligible_cards, deck_size, max_colors)
         current_score = self.calculate_deck_score(
             current_deck,
@@ -88,10 +98,23 @@ class SimulatedAnnealingOptimizer(BaseOptimizer):
             max_colors,
             lambda_penalty,
         )
+        print(f"✅ Initial deck created with score: {current_score:.3f}")
+        print(f"   Initial colors: {self.get_deck_colors(current_deck)}")
 
         best_deck: List = current_deck
         best_score = current_score
         temp = initial_temp
+        
+        # Statistics tracking
+        accepted_better = 0
+        accepted_worse = 0
+        rejected = 0
+        improvement_count = 0
+        iteration_stats = []
+
+        print(f"\n🔄 Starting simulated annealing optimization...")
+        print(f"{'Iter':>4} {'Temp':>8} {'Current':>8} {'Best':>8} {'Accept':>6} {'Colors':>10}")
+        print("-" * 55)
 
         for i in range(iterations):
             # Generate a neighbor solution
@@ -107,23 +130,70 @@ class SimulatedAnnealingOptimizer(BaseOptimizer):
             )
 
             # Decide whether to move to the neighbor
-            if neighbor_score > current_score:
+            score_diff = neighbor_score - current_score
+            accepted = False
+            
+            if score_diff > 0:
+                # Always accept better solutions
                 current_deck = neighbor_deck
                 current_score = neighbor_score
+                accepted_better += 1
+                accepted = True
             else:
                 # Accept a worse solution with a certain probability
-                probability = np.exp((neighbor_score - current_score) / temp)
+                probability = np.exp(score_diff / temp)
                 if random.random() < probability:
                     current_deck = neighbor_deck
                     current_score = neighbor_score
+                    accepted_worse += 1
+                    accepted = True
+                else:
+                    rejected += 1
 
             # Update best solution found so far
             if current_score > best_score:
                 best_deck = current_deck
                 best_score = current_score
+                improvement_count += 1
+                print(f"{i:>4} {temp:>8.2f} {current_score:>8.3f} {best_score:>8.3f} {'YES':>6} {''.join(sorted(self.get_deck_colors(current_deck))):>10} ⭐")
+            else:
+                # Log every 50th iteration to avoid spam
+                if i % 50 == 0:
+                    accept_rate = (accepted_better + accepted_worse) / (i + 1) * 100
+                    print(f"{i:>4} {temp:>8.2f} {current_score:>8.3f} {best_score:>8.3f} {'YES' if accepted else 'NO':>6} {''.join(sorted(self.get_deck_colors(current_deck))):>10}")
+
+            # Store iteration stats
+            iteration_stats.append({
+                'iteration': i,
+                'temperature': temp,
+                'current_score': current_score,
+                'best_score': best_score,
+                'accepted': accepted,
+                'score_diff': score_diff
+            })
 
             # Cool down the temperature
             temp *= 0.995  # Geometric cooling
+
+        print(f"\n🏆 Simulated Annealing completed!")
+        print(f"   Best score achieved: {best_score:.3f}")
+        print(f"   Best deck colors: {self.get_deck_colors(best_deck)}")
+        print(f"   Total iterations: {iterations}")
+        print(f"   Final temperature: {temp:.2f}")
+        
+        # Acceptance statistics
+        total_attempts = accepted_better + accepted_worse + rejected
+        print(f"\n📊 Acceptance Statistics:")
+        print(f"   Better solutions accepted: {accepted_better} ({accepted_better/total_attempts*100:.1f}%)")
+        print(f"   Worse solutions accepted: {accepted_worse} ({accepted_worse/total_attempts*100:.1f}%)")
+        print(f"   Solutions rejected: {rejected} ({rejected/total_attempts*100:.1f}%)")
+        print(f"   Total improvements: {improvement_count}")
+        
+        # Temperature analysis
+        if iteration_stats:
+            avg_temp = sum(stat['temperature'] for stat in iteration_stats) / len(iteration_stats)
+            print(f"   Average temperature: {avg_temp:.2f}")
+            print(f"   Temperature range: {initial_temp:.2f} → {temp:.2f}")
 
         return best_deck
 

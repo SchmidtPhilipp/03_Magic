@@ -81,14 +81,30 @@ class GeneticAlgorithmOptimizer(BaseOptimizer):
         lambda_penalty: float = 0.5,
     ) -> List:
         """Optimize deck using a Genetic Algorithm."""
+        print(f"🧬 Genetic Algorithm Configuration:")
+        print(f"   Population Size: {population_size}")
+        print(f"   Generations: {generations}")
+        print(f"   Mutation Rate: {mutation_rate}")
+        print(f"   Deck Size: {deck_size}")
+        print(f"   Max Colors: {max_colors}")
+        print(f"   Lambda Penalty: {lambda_penalty}")
+        print(f"   Eligible Cards: {len(eligible_cards)}")
+        
         # Step 1: Initialize population
+        print(f"\n🎯 Initializing population of {population_size} decks...")
         population = [
             self.create_random_deck(eligible_cards, deck_size, max_colors)
             for _ in range(population_size)
         ]
+        print(f"✅ Population initialized successfully")
 
         best_deck_overall: List = []
         best_score_overall = -1.0
+        generation_stats = []
+
+        print(f"\n🔄 Starting evolution over {generations} generations...")
+        print(f"{'Gen':>3} {'Best':>8} {'Avg':>8} {'Worst':>8} {'Improvement':>12} {'Colors':>10}")
+        print("-" * 60)
 
         for gen in range(generations):
             # Step 2: Evaluate population
@@ -108,16 +124,45 @@ class GeneticAlgorithmOptimizer(BaseOptimizer):
 
             # Sort by score
             deck_scores.sort(key=lambda x: x[1], reverse=True)
+            
+            # Calculate statistics
+            scores = [score for _, score in deck_scores]
+            best_score = scores[0]
+            avg_score = sum(scores) / len(scores)
+            worst_score = scores[-1]
+            
+            # Track improvement
+            improvement = best_score - best_score_overall if best_score > best_score_overall else 0
+            
+            # Get colors of best deck
+            best_colors = self.get_deck_colors(deck_scores[0][0])
+            color_str = "".join(sorted(best_colors)) if best_colors else "None"
 
             # Update best overall
-            if deck_scores[0][1] > best_score_overall:
+            if best_score > best_score_overall:
                 best_deck_overall = deck_scores[0][0]
-                best_score_overall = deck_scores[0][1]
+                best_score_overall = best_score
+                print(f"{gen:>3} {best_score:>8.3f} {avg_score:>8.3f} {worst_score:>8.3f} {improvement:>12.3f} {color_str:>10} ⭐")
+            else:
+                print(f"{gen:>3} {best_score:>8.3f} {avg_score:>8.3f} {worst_score:>8.3f} {improvement:>12.3f} {color_str:>10}")
+
+            # Store generation stats
+            generation_stats.append({
+                'generation': gen,
+                'best_score': best_score,
+                'avg_score': avg_score,
+                'worst_score': worst_score,
+                'improvement': improvement
+            })
 
             # Step 3: Selection (Elitism and Tournament)
-            new_population = [deck_scores[0][0]]  # Keep the best
+            new_population = [deck_scores[0][0]]  # Keep the best (elitism)
+            elite_count = 1
 
             # Fill the rest of the new population
+            crossover_count = 0
+            mutation_count = 0
+            
             while len(new_population) < population_size:
                 # Select parents (e.g., tournament selection)
                 parent1 = self.tournament_selection(deck_scores)
@@ -125,20 +170,42 @@ class GeneticAlgorithmOptimizer(BaseOptimizer):
 
                 # Step 4: Crossover
                 child1, child2 = self.crossover_decks(parent1, parent2, deck_size, eligible_cards)
+                crossover_count += 2
 
                 # Step 5: Mutation
                 if random.random() < mutation_rate:
                     child1 = self.mutate_deck(
                         child1, eligible_cards, deck_size, max_colors
                     )
+                    mutation_count += 1
                 if random.random() < mutation_rate:
                     child2 = self.mutate_deck(
                         child2, eligible_cards, deck_size, max_colors
                     )
+                    mutation_count += 1
 
                 new_population.extend([child1, child2])
 
             population = new_population[:population_size]
+            
+            # Log detailed stats every 10 generations
+            if (gen + 1) % 10 == 0:
+                print(f"\n📊 Generation {gen + 1} Statistics:")
+                print(f"   Elite individuals: {elite_count}")
+                print(f"   Crossover operations: {crossover_count}")
+                print(f"   Mutation operations: {mutation_count}")
+                print(f"   Population diversity: {len(set(tuple(deck) for deck in population))} unique decks")
+
+        print(f"\n🏆 Evolution completed!")
+        print(f"   Best score achieved: {best_score_overall:.3f}")
+        print(f"   Best deck colors: {self.get_deck_colors(best_deck_overall)}")
+        print(f"   Total generations: {generations}")
+        
+        # Final statistics
+        if generation_stats:
+            total_improvement = generation_stats[-1]['best_score'] - generation_stats[0]['best_score']
+            print(f"   Total improvement: {total_improvement:.3f}")
+            print(f"   Average score per generation: {sum(stat['avg_score'] for stat in generation_stats) / len(generation_stats):.3f}")
 
         return best_deck_overall
 
