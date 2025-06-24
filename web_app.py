@@ -135,6 +135,8 @@ class OutputCapture:
                 len(self.buffer) > config.NUMBERS["max_output_lines"]
             ):  # Keep last 1000 lines
                 self.buffer.pop(0)
+            
+            # Send output immediately to web interface
             output_queue.put(
                 {
                     "type": "output",
@@ -145,8 +147,15 @@ class OutputCapture:
                     ],  # Send last 50 lines
                 }
             )
+            
+            # Force immediate delivery
+            try:
+                output_queue.get_nowait()
+            except queue.Empty:
+                pass
 
     def flush(self):
+        # Ensure any buffered output is sent
         pass
 
 
@@ -192,6 +201,9 @@ def run_optimization(
             print(f"Fixed Colors: {', '.join(fixed_colors)}")
         
         print(f"DEBUG: Received fixed_colors: {fixed_colors}")
+        
+        # Force flush to ensure output is captured
+        sys.stdout.flush()
 
         # Check if optimization was stopped
         if not optimization_running:
@@ -208,6 +220,9 @@ def run_optimization(
             lambda_penalty=lambda_penalty,
             fixed_colors=fixed_colors,
         )
+
+        # Force flush again after optimization
+        sys.stdout.flush()
 
         # Check if optimization was stopped
         if not optimization_running:
@@ -232,12 +247,14 @@ def run_optimization(
         )
 
         print("Optimization completed successfully!")
+        sys.stdout.flush()
 
     except Exception as e:
         print(f"Error during optimization: {e}")
         import traceback
 
         traceback.print_exc()
+        sys.stdout.flush()
         output_queue.put({"type": "error", "error": str(e)})
 
     finally:
