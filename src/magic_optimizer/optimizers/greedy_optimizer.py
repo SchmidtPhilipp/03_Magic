@@ -13,6 +13,44 @@ from .base_optimizer import BaseOptimizer
 class GreedyOptimizer(BaseOptimizer):
     """Greedy algorithm implementation for deck optimization."""
     
+    def select_target_colors_by_mean_rating(
+        self,
+        eligible_cards: List,
+        num_colors: int,
+        fixed_colors: Optional[List[str]] = None,
+    ) -> List[str]:
+        """Select colors based on highest mean rating (optimized for greedy algorithm)."""
+        print(f"Selecting colors using mean rating approach...")
+        
+        # Start with fixed colors if provided
+        selected_colors = fixed_colors or []
+        
+        # Calculate mean rating for each color
+        color_ratings = {}
+        for color in ['W', 'U', 'B', 'R', 'G']:
+            if color in selected_colors:
+                continue  # Skip already selected colors
+                
+            color_cards = [card for card in eligible_cards if color in card.colors]
+            if color_cards:
+                mean_rating = sum(card.rating for card in color_cards) / len(color_cards)
+                color_ratings[color] = mean_rating
+                print(f"Color {color}: {len(color_cards)} cards, mean rating: {mean_rating:.2f}")
+            else:
+                color_ratings[color] = 0.0
+                print(f"Color {color}: 0 cards")
+        
+        # Sort colors by mean rating and pick top remaining colors
+        sorted_colors = sorted(color_ratings.items(), key=lambda x: x[1], reverse=True)
+        remaining_slots = num_colors - len(selected_colors)
+        
+        for color, rating in sorted_colors[:remaining_slots]:
+            selected_colors.append(color)
+            print(f"Added color {color} (rating: {rating:.2f})")
+        
+        print(f"Final selected colors: {selected_colors}")
+        return selected_colors
+    
     def optimize_deck(
         self,
         collection_df: pd.DataFrame,
@@ -33,8 +71,8 @@ class GreedyOptimizer(BaseOptimizer):
         # Filter out all lands from eligible cards
         eligible_cards = [card for card in eligible_cards if "Land" not in card.main_type]
 
-        # Step 2: Determine target colors
-        target_colors = self.select_target_colors(eligible_cards, num_colors, fixed_colors or [])
+        # Step 2: Determine target colors using mean rating approach (optimized for greedy)
+        target_colors = self.select_target_colors_by_mean_rating(eligible_cards, num_colors, fixed_colors)
         print(f"Target colors selected: {target_colors}")
 
         # Step 3: Filter cards to target colors (strict filtering for greedy)
