@@ -2,6 +2,7 @@ import requests
 import time
 import json
 from typing import Dict, List, Optional
+import pandas as pd 
 
 class CardValidator:
     """Validates and corrects Magic: The Gathering card names using Scryfall API"""
@@ -65,6 +66,68 @@ class CardValidator:
             result['card_data'] = card_data
         
         return result
+    
+    def enrich_card_data(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Enrich card data with information from Scryfall API
+        
+        Args:
+            df: DataFrame with card names
+            
+        Returns:
+            Enriched DataFrame with colors, cmc, type, and ratings
+        """
+        
+        enriched_cards = []
+        
+        for idx, row in df.iterrows():
+            # Handle both 'name' and 'Name' column names
+            card_name = row.get('name') or row.get('Name')
+            if not card_name:
+                continue
+            validation_result = self.validate_card_name(card_name)
+            
+            if validation_result['is_valid']:
+                card_data = validation_result['card_data']
+                
+                # Extract colors
+                colors = card_data.get('colors', [])
+                color_str = ''.join(colors) if colors else ''
+                
+                # Extract CMC
+                cmc = card_data.get('cmc', 0)
+                
+                # Extract type
+                type_line = card_data.get('type_line', '')
+                
+                # Get rating (you might want to implement a rating system)
+                rating = 5.0  # Default rating
+                
+                enriched_cards.append({
+                    'Name': card_name,
+                    'rating': rating,
+                    'colors': color_str,
+                    'cmc': cmc,
+                    'type': type_line,
+                    'set_code': row.get('set_code', ''),
+                    'collector_number': row.get('collector_number', '')
+                })
+            else:
+                # Keep the card with default values if validation fails
+                enriched_cards.append({
+                    'Name': card_name,
+                    'rating': 5.0,
+                    'colors': '',
+                    'cmc': 0,
+                    'type': '',
+                    'set_code': row.get('set_code', ''),
+                    'collector_number': row.get('collector_number', '')
+                })
+            
+            # Rate limiting
+            time.sleep(0.1)
+        
+        return pd.DataFrame(enriched_cards)
     
     def validate_cards(self, card_names: List[str], sample_size: Optional[int] = None) -> Dict:
         """Validate a list of card names"""

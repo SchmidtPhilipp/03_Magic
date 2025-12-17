@@ -1,0 +1,20 @@
+[Unit]
+Description=MTG Sealed Deck Optimizer (Flask)
+After=network.target
+
+[Service]
+Type=simple
+User=mtgapp
+Group=mtgapp
+WorkingDirectory=/opt/mtg-optimizer
+EnvironmentFile=/etc/mtg-optimizer.env
+ExecStart=/opt/mtg-optimizer/venv/bin/python /opt/mtg-optimizer/web_app.py
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=15
+StandardOutput=append:/var/log/mtg-optimizer/app.log
+StandardError=append:/var/log/mtg-optimizer/app.err.log
+
+[Install]
+WantedBy=multi-user.target
+

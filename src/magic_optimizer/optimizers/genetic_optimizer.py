@@ -24,6 +24,7 @@ class GeneticAlgorithmOptimizer(BaseOptimizer):
         population_size: int = 50,
         generations: int = 100,
         mutation_rate: float = 0.1,
+        max_runtime_seconds: Optional[int] = None,
     ) -> Dict:
         """Optimize deck using Genetic Algorithm."""
         print(f"Starting Genetic Algorithm optimization...")
@@ -48,6 +49,7 @@ class GeneticAlgorithmOptimizer(BaseOptimizer):
             generations,
             mutation_rate,
             lambda_penalty,
+            max_runtime_seconds,
         )
 
         # Step 4: Final Evaluation
@@ -79,6 +81,7 @@ class GeneticAlgorithmOptimizer(BaseOptimizer):
         generations: int = 100,
         mutation_rate: float = 0.1,
         lambda_penalty: float = 0.5,
+        max_runtime_seconds: Optional[int] = None,
     ) -> List:
         """Optimize deck using a Genetic Algorithm."""
         print(f"🧬 Genetic Algorithm Configuration:")
@@ -103,9 +106,12 @@ class GeneticAlgorithmOptimizer(BaseOptimizer):
         generation_stats = []
 
         print(f"\n🔄 Starting evolution over {generations} generations...")
+        if max_runtime_seconds:
+            print(f"⏱️  Runtime limit: {max_runtime_seconds} seconds")
         print(f"{'Gen':>3} {'Best':>8} {'Avg':>8} {'Worst':>8} {'Improvement':>12} {'Colors':>10}")
         print("-" * 60)
 
+        start_time = time.time()
         for gen in range(generations):
             # Step 2: Evaluate population
             deck_scores = [
@@ -130,6 +136,17 @@ class GeneticAlgorithmOptimizer(BaseOptimizer):
             best_score = scores[0]
             avg_score = sum(scores) / len(scores)
             worst_score = scores[-1]
+            
+            # Send progress update after best_score is calculated
+            progress_percent = int((gen + 1) / generations * 100)
+            print(f"PROGRESS: Generation {gen + 1}/{generations} ({progress_percent}%) - Best Score: {best_score:.3f}")
+            
+            # Check runtime limit
+            if max_runtime_seconds:
+                elapsed_time = time.time() - start_time
+                if elapsed_time >= max_runtime_seconds:
+                    print(f"⏰ Runtime limit reached ({elapsed_time:.1f}s). Stopping optimization.")
+                    break
             
             # Track improvement
             improvement = best_score - best_score_overall if best_score > best_score_overall else 0

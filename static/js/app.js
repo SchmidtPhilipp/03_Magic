@@ -1,9 +1,10 @@
 // Magic Deck Optimizer Web App JavaScript
 
-let currentCsvFile = null;
+let currentFile = null;
 let statusInterval = null;
 let optimizedDeck = null;
 let optimizedDeckName = null;
+let currentOptimizationId = null;
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function () {
@@ -12,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Development Mode: Auto-load default collection ---
     // Note: This requires the collection to be in the 'static' folder
     // to be accessible by the client-side script.
-    const isDevMode = true; // Simple toggle for development
+    const isDevMode = false; // Disabled to allow manual file uploads
     if (isDevMode) {
         const defaultCollectionURL = "/static/FinalFantasy.csv";
         const fileName = "FinalFantasy.csv";
@@ -29,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);
                 
-                const fileInput = document.getElementById("fileInput");
+                const fileInput = document.getElementById("csvFile");
                 fileInput.files = dataTransfer.files;
 
                 // Trigger the change event to update the UI
@@ -37,11 +38,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 fileInput.dispatchEvent(event);
                 
                 console.log(`Development mode: Successfully loaded ${fileName}`);
-                updateUploadStatus(fileName, true);
             })
             .catch(error => {
                 console.error("Error auto-loading default collection:", error);
-                updateUploadStatus("Error loading default file.", false);
             });
     }
 
@@ -49,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function () {
     updateLambdaDisplay();
     updateLandRatioDisplay();
     updateDeckCardSizeDisplay();
-    setDefaultCsvForDebug();
 
     // Add mobile-specific optimizations
     addMobileOptimizations();
@@ -109,7 +107,7 @@ function initializeEventListeners() {
     document.getElementById('csvFile').addEventListener('change', handleFileUpload);
 
     // Load default CSV button
-    document.getElementById('loadDefaultBtn').addEventListener('click', handleLoadDefault);
+
 
     // Algorithm change: show/hide lambda
     document.getElementById('algorithm').addEventListener('change', handleAlgorithmChange);
@@ -188,8 +186,13 @@ function updateDeckCardSizes(scale = 1.0) {
 
 function handleFileUpload(event) {
     const file = event.target.files[0];
-    if (!file) return;
+    if (!file) {
+        console.log('No file selected');
+        return;
+    }
 
+    console.log('File selected:', file.name, file.type, file.size);
+    
     const formData = new FormData();
     formData.append('file', file);
 
@@ -197,14 +200,22 @@ function handleFileUpload(event) {
     const fileStatus = document.getElementById('fileStatus');
     fileStatus.innerHTML = '<div class="loading"></div> Uploading...';
 
+    console.log('Starting upload to /upload endpoint...');
+    
     fetch('/upload', {
         method: 'POST',
         body: formData
     })
-        .then(response => response.json())
+        .then(response => {
+            console.log('Upload response status:', response.status);
+            return response.json();
+        })
         .then(data => {
+            console.log('Upload response data:', data);
             if (data.success) {
-                currentCsvFile = data.filepath;
+                currentFile = data.filepath;
+                console.log('currentFile set to:', currentFile);
+                console.log('File upload successful, enabling optimize button');
                 fileStatus.innerHTML = `<div class="text-success"><i class="fas fa-check"></i> File uploaded successfully!</div>`;
 
                 // Show file info
@@ -214,57 +225,39 @@ function handleFileUpload(event) {
 
                 // Enable optimize button
                 document.getElementById('optimizeBtn').disabled = false;
+                console.log('Optimize button enabled');
 
                 addTerminalLine(`File uploaded: ${data.filename} (${data.card_count} cards)`, 'success');
             } else {
+                console.log('Upload failed:', data.error);
                 fileStatus.innerHTML = `<div class="text-danger"><i class="fas fa-times"></i> ${data.error}</div>`;
                 addTerminalLine(`Upload failed: ${data.error}`, 'error');
             }
         })
         .catch(error => {
+            console.log('Upload error:', error);
             fileStatus.innerHTML = `<div class="text-danger"><i class="fas fa-times"></i> Upload failed</div>`;
             addTerminalLine(`Upload error: ${error.message}`, 'error');
         });
 }
 
-function handleLoadDefault() {
-    const fileStatus = document.getElementById('fileStatus');
-    fileStatus.innerHTML = '<div class="loading"></div> Loading example collection...';
 
-    fetch('/load_default_csv')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                currentCsvFile = data.filepath;
-                fileStatus.innerHTML = `<div class="text-success"><i class="fas fa-check"></i> Example loaded successfully!</div>`;
-
-                // Show file info
-                document.getElementById('currentFileName').textContent = data.filename;
-                document.getElementById('currentCardCount').textContent = data.card_count;
-                document.getElementById('fileInfo').style.display = 'block';
-
-                // Enable optimize button
-                document.getElementById('optimizeBtn').disabled = false;
-
-                addTerminalLine(`Example loaded: ${data.filename} (${data.card_count} cards)`, 'success');
-            } else {
-                fileStatus.innerHTML = `<div class="text-danger"><i class="fas fa-times"></i> ${data.error}</div>`;
-                addTerminalLine(`Failed to load example: ${data.error}`, 'error');
-            }
-        })
-        .catch(error => {
-            fileStatus.innerHTML = `<div class="text-danger"><i class="fas fa-times"></i> Failed to load example</div>`;
-            addTerminalLine(`Error loading example: ${error.message}`, 'error');
-        });
-}
 
 function handleAlgorithmChange() {
     const algo = document.getElementById('algorithm').value;
     const lambdaContainer = document.getElementById('lambdaContainer');
+    const runtimeLimitContainer = document.getElementById('runtimeLimitContainer');
+    
     if (algo === 'genetic' || algo === 'simulated_annealing') {
         lambdaContainer.style.display = '';
     } else {
         lambdaContainer.style.display = 'none';
+    }
+    
+    if (algo === 'genetic') {
+        runtimeLimitContainer.style.display = '';
+    } else {
+        runtimeLimitContainer.style.display = 'none';
     }
 }
 
@@ -302,7 +295,7 @@ function setDefaultCsvForDebug() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                currentCsvFile = data.filepath;
+                currentFile = data.filepath;
                 document.getElementById('fileStatus').innerHTML = '<div class="text-success"><i class="fas fa-check"></i> Default FinalFantasy.csv loaded for debugging.</div>';
                 document.getElementById('currentFileName').textContent = data.filename;
                 document.getElementById('currentCardCount').textContent = data.card_count;
@@ -362,10 +355,15 @@ function fallbackCopyTextToClipboard(text) {
 }
 
 function startOptimization() {
-    if (!currentCsvFile) {
-        addTerminalLine('Please upload a CSV file first.', 'error');
+    console.log('startOptimization called, currentFile:', currentFile);
+    console.log('currentFile type:', typeof currentFile);
+    console.log('currentFile value:', currentFile);
+    if (!currentFile) {
+        console.log('No currentFile, showing error message');
+        addTerminalLine('Please upload a collection file (CSV or TXT) first.', 'error');
         return;
     }
+    console.log('currentFile exists, proceeding with optimization');
 
     addTerminalLine('Starting optimization...', 'info');
 
@@ -379,11 +377,12 @@ function startOptimization() {
     const algorithm = document.getElementById('algorithm').value;
     const optimizationCriterion = document.getElementById('optimizationCriterion').value;
     const lambdaPenalty = document.getElementById('lambdaPenalty').value;
+    const runtimeLimit = document.getElementById('runtimeLimit').value;
 
     const fixedColors = Array.from(document.querySelectorAll('#fixedColors input:checked')).map(cb => cb.value);
 
     const params = {
-        filepath: currentCsvFile,
+        filepath: currentFile,
         num_colors: parseInt(numColors),
         deck_size: parseInt(deckSize),
         num_lands: parseInt(numLands),
@@ -392,6 +391,11 @@ function startOptimization() {
         lambda_penalty: parseFloat(lambdaPenalty),
         fixed_colors: fixedColors,
     };
+
+    // Add runtime limit for genetic algorithm
+    if (algorithm === 'genetic' && runtimeLimit) {
+        params.max_runtime_seconds = parseInt(runtimeLimit);
+    }
 
     // Show progress bar
     document.getElementById('progressContainer').style.display = 'block';
@@ -409,15 +413,16 @@ function startOptimization() {
         body: JSON.stringify(params)
     })
         .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                addTerminalLine('Optimization started successfully!', 'success');
-                startStatusPolling();
-            } else {
-                addTerminalLine(`Optimization failed: ${data.error}`, 'error');
-                resetOptimizationState();
-            }
-        })
+            .then(data => {
+        if (data.success) {
+            currentOptimizationId = data.optimization_id;
+            addTerminalLine('Optimization started successfully!', 'success');
+            startStatusPolling();
+        } else {
+            addTerminalLine(`Optimization failed: ${data.error}`, 'error');
+            resetOptimizationState();
+        }
+    })
         .catch(error => {
             addTerminalLine(`Error starting optimization: ${error.message}`, 'error');
             resetOptimizationState();
@@ -425,12 +430,20 @@ function startOptimization() {
 }
 
 function stopOptimization() {
+    if (!currentOptimizationId) {
+        addTerminalLine('No optimization to stop.', 'warning');
+        return;
+    }
+
     // Send stop request to backend
     fetch('/stop_optimization', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-        }
+        },
+        body: JSON.stringify({
+            optimization_id: currentOptimizationId
+        })
     })
         .then(response => response.json())
         .then(data => {
@@ -452,29 +465,36 @@ function startStatusPolling() {
     if (statusInterval) clearInterval(statusInterval);
 
     statusInterval = setInterval(() => {
-        fetch('/status')
+        if (!currentOptimizationId) {
+            console.error('No optimization ID for status polling');
+            return;
+        }
+
+        fetch(`/status?optimization_id=${currentOptimizationId}`)
             .then(response => response.json())
             .then(data => {
                 // Process messages
-                data.messages.forEach(message => {
-                    switch (message.type) {
-                        case 'output':
-                            addTerminalLine(message.text);
-                            break;
-                        case 'status':
-                            updateProgressStatus(message.status);
-                            break;
-                        case 'result':
-                            handleOptimizationResult(message.result);
-                            break;
-                        case 'error':
-                            addTerminalLine(`Error: ${message.error}`, 'error');
-                            break;
-                    }
-                });
+                if (data.messages) {
+                    data.messages.forEach(message => {
+                        switch (message.type) {
+                            case 'output':
+                                addTerminalLine(message.text);
+                                break;
+                            case 'status':
+                                updateProgressStatus(message.status);
+                                break;
+                            case 'result':
+                                handleOptimizationResult(message.result);
+                                break;
+                            case 'error':
+                                addTerminalLine(`Error: ${message.error}`, 'error');
+                                break;
+                        }
+                    });
+                }
 
                 // Update progress
-                if (!data.running && statusInterval) {
+                if (!data.running && data.result) {
                     clearInterval(statusInterval);
                     statusInterval = null;
                     resetOptimizationState();
@@ -490,18 +510,52 @@ function updateProgressStatus(status) {
     const progressStatus = document.getElementById('progressStatus');
     const progressBar = document.getElementById('progressBar');
 
-    switch (status) {
-        case 'starting':
-            progressStatus.textContent = 'Starting...';
-            progressBar.style.width = '10%';
-            break;
-        case 'completed':
-            progressStatus.textContent = 'Completed!';
-            progressBar.style.width = '100%';
-            break;
-        default:
-            progressStatus.textContent = status;
-            progressBar.style.width = '50%';
+    // Check if this is a progress message
+    if (status.startsWith('PROGRESS:')) {
+        const progressMatch = status.match(/PROGRESS:\s*(.+)/);
+        if (progressMatch) {
+            const progressText = progressMatch[1];
+            progressStatus.textContent = progressText;
+            
+            // Try to extract percentage from the text
+            const percentMatch = progressText.match(/\((\d+)%\)/);
+            if (percentMatch) {
+                const percent = parseInt(percentMatch[1]);
+                progressBar.style.width = percent + '%';
+            } else {
+                // If no percentage, show some progress based on text content
+                if (progressText.includes('Generation')) {
+                    progressBar.style.width = '75%';
+                } else if (progressText.includes('Iteration')) {
+                    progressBar.style.width = '60%';
+                } else if (progressText.includes('Sorting')) {
+                    progressBar.style.width = '90%';
+                } else {
+                    progressBar.style.width = '50%';
+                }
+            }
+            
+            // Add score information to the status if available
+            const scoreMatch = progressText.match(/Best Score: ([\d.]+)/);
+            if (scoreMatch) {
+                progressStatus.textContent = progressText + ` (Score: ${scoreMatch[1]})`;
+            }
+        }
+    } else {
+        // Handle regular status messages
+        switch (status) {
+            case 'starting':
+                progressStatus.textContent = 'Starting...';
+                progressBar.style.width = '10%';
+                break;
+            case 'completed':
+                progressStatus.textContent = 'Completed!';
+                progressBar.style.width = '100%';
+                break;
+            default:
+                progressStatus.textContent = status;
+                progressBar.style.width = '50%';
+        }
     }
 }
 
@@ -714,6 +768,9 @@ function resetOptimizationState() {
         clearInterval(statusInterval);
         statusInterval = null;
     }
+
+    // Clear optimization ID
+    currentOptimizationId = null;
 
     // Reset UI
     document.getElementById('progressContainer').style.display = 'none';

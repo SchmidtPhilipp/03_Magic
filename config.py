@@ -6,6 +6,14 @@ Centralizes all configurable elements for easy customization
 
 import os
 
+
+def _get_bool(env_name: str, default: bool) -> bool:
+    """Parse environment variable into boolean."""
+    value = os.environ.get(env_name)
+    if value is None:
+        return default
+    return value.lower() in ("1", "true", "yes", "on")
+
 # =============================================================================
 # APPLICATION METADATA
 # =============================================================================
@@ -31,7 +39,7 @@ WEB_TEXTS = {
     "github_icon": "fab fa-github",
     # Welcome messages
     "welcome_title": "Welcome to Sealed Limited Optimizer!",
-    "welcome_message": "Upload a CSV file and configure settings to start.",
+    "welcome_message": "Upload a collection file (CSV or TXT) and configure settings to start.",
     # Panel headers
     "deck_settings_title": "Deck Settings",
     "deck_settings_icon": "fas fa-cog",
@@ -46,7 +54,7 @@ WEB_TEXTS = {
     "current_file_title": "Current File",
     "current_file_icon": "fas fa-file-csv",
     # Form labels
-    "upload_csv_label": "Upload Collection CSV",
+    "upload_csv_label": "Upload Collection (CSV or TXT)",
     "target_colors_label": "Target Colors",
     "deck_size_label": "Deck Size (total)",
     "land_ratio_label": "Number of Lands:",
@@ -218,11 +226,11 @@ EXPORT_FORMATS = {
 # APPLICATION SETTINGS
 # =============================================================================
 APP_CONFIG = {
-    "secret_key": "magic_optimizer_secret_key",
-    "debug": True,
-    "host": "0.0.0.0",
-    "port": 5050,
-    "threaded": True,
+    "secret_key": os.environ.get("SECRET_KEY", "magic_optimizer_secret_key"),
+    "debug": _get_bool("DEBUG", True),
+    "host": os.environ.get("HOST", "0.0.0.0"),
+    "port": int(os.environ.get("PORT", "5050")),
+    "threaded": _get_bool("THREADED", True),
 }
 
 # =============================================================================
@@ -231,7 +239,7 @@ APP_CONFIG = {
 VALIDATION_MESSAGES = {
     "no_file": "No file provided",
     "no_file_selected": "No file selected",
-    "invalid_file_type": "Invalid file type. Please upload a CSV file.",
+    "invalid_file_type": "Invalid file type. Please upload a CSV or TXT file.",
     "invalid_csv": "Invalid CSV file: {error}",
     "optimization_running": "Optimization already running",
     "file_upload_success": "File uploaded successfully",

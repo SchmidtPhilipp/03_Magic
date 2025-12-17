@@ -11,6 +11,7 @@ import queue
 import sys
 import threading
 import time
+import uuid
 from datetime import datetime
 from io import StringIO
 import shutil
@@ -105,11 +106,184 @@ deck_builder = EnhancedDeckBuilder()
 user_logger.info("Logging system initialized")
 user_logger.info(f"Log files: logs/")
 
-# Global variables for communication between threads
-output_queue = queue.Queue()
-current_result = None
-optimization_running = False
-optimization_thread = None  # Add thread reference for stopping
+# Concurrent optimization management
+class OptimizationManager:
+    """Manages multiple concurrent optimization processes"""
+    
+    def __init__(self):
+        self.active_optimizations = {}  # optimization_id -> optimization_info
+        self.lock = threading.Lock()
+    
+    def start_optimization(self, optimization_id, params):
+        """Start a new optimization process"""
+        with self.lock:
+            if optimization_id in self.active_optimizations:
+                return False, "Optimization already exists"
+            
+            # Create queue for this optimization
+            output_queue = queue.Queue()
+            
+            # Create output capture for this optimization
+            output_capture = OutputCapture(output_queue)
+            
+            # Store optimization info
+            self.active_optimizations[optimization_id] = {
+                'params': params,
+                'queue': output_queue,
+                'output_capture': output_capture,
+                'thread': None,
+                'running': False,
+                'result': None,
+                'start_time': time.time()
+            }
+            
+            # Start optimization thread
+            thread = threading.Thread(
+                target=self._run_optimization,
+                args=(optimization_id, params, output_capture)
+            )
+            thread.daemon = True
+            thread.start()
+            
+            self.active_optimizations[optimization_id]['thread'] = thread
+            self.active_optimizations[optimization_id]['running'] = True
+            
+            return True, "Optimization started"
+    
+    def stop_optimization(self, optimization_id):
+        """Stop a specific optimization"""
+        with self.lock:
+            if optimization_id in self.active_optimizations:
+                self.active_optimizations[optimization_id]['running'] = False
+                return True, "Optimization stopped"
+            return False, "Optimization not found"
+    
+    def get_optimization_status(self, optimization_id):
+        """Get status of a specific optimization"""
+        with self.lock:
+            if optimization_id not in self.active_optimizations:
+                return None
+            
+            opt_info = self.active_optimizations[optimization_id]
+            
+            # Get messages from queue
+            messages = []
+            while not opt_info['queue'].empty():
+                try:
+                    msg = opt_info['queue'].get_nowait()
+                    messages.append(msg)
+                except queue.Empty:
+                    break
+            
+            return {
+                'running': opt_info['running'],
+                'result': opt_info['result'],
+                'messages': messages,
+                'start_time': opt_info['start_time']
+            }
+    
+    def cleanup_optimization(self, optimization_id):
+        """Clean up completed optimization"""
+        with self.lock:
+            if optimization_id in self.active_optimizations:
+                del self.active_optimizations[optimization_id]
+    
+    def _run_optimization(self, optimization_id, params, output_capture):
+        """Run optimization in a separate thread"""
+        try:
+            # Set up output capture for this thread
+            original_stdout = sys.stdout
+            sys.stdout = output_capture
+            
+            # Send starting message
+            output_capture.queue.put({"type": "status", "status": "starting"})
+            
+            # Load collection file
+            filepath = params['filepath']
+            print(f"Loading collection file: {filepath}")
+            collection_df = deck_builder.load_collection(filepath)
+            print(f"Loaded {len(collection_df)} cards from collection")
+            
+            # Check if optimization was stopped
+            if not self.active_optimizations[optimization_id]['running']:
+                print("Optimization stopped by user")
+                return
+            
+            # Run optimization
+            algorithm = params['algorithm']
+            print(f"Starting optimization with {algorithm} algorithm...")
+            print(f"Target Colors: {params['num_colors']}, Deck Size: {params['deck_size']}, Lands: {params['num_lands']}, Lambda: {params['lambda_penalty']}")
+            print(f"Optimization Criterion: {params['optimization_criterion']}")
+            if params['fixed_colors']:
+                print(f"Fixed Colors: {', '.join(params['fixed_colors'])}")
+            
+            print(f"DEBUG: Received fixed_colors: {params['fixed_colors']}")
+            sys.stdout.flush()
+            
+            # Check if optimization was stopped
+            if not self.active_optimizations[optimization_id]['running']:
+                print("Optimization stopped by user")
+                return
+            
+            # Prepare parameters for build_optimal_deck_advanced
+            build_params = {
+                "collection_df": collection_df,
+                "num_colors": params['num_colors'],
+                "total_deck_size": params['deck_size'],
+                "num_lands": params['num_lands'],
+                "algorithm": params['algorithm'],
+                "optimization_criterion": params['optimization_criterion'],
+                "lambda_penalty": params['lambda_penalty'],
+                "fixed_colors": params['fixed_colors'],
+            }
+            
+            # Add runtime limit if provided
+            if 'max_runtime_seconds' in params:
+                build_params['max_runtime_seconds'] = params['max_runtime_seconds']
+            
+            result = deck_builder.build_optimal_deck_advanced(**build_params)
+            
+            sys.stdout.flush()
+            
+            # Check if optimization was stopped
+            if not self.active_optimizations[optimization_id]['running']:
+                print("Optimization stopped by user")
+                return
+            
+            # Store result
+            self.active_optimizations[optimization_id]['result'] = result
+            output_capture.queue.put({
+                "type": "result",
+                "result": {
+                    "deck": result["deck"],
+                    "score": result["score"],
+                    "target_colors": result["target_colors"],
+                    "algorithm": result["algorithm"],
+                    "optimization_criterion": result.get("optimization_criterion", "manual"),
+                    "exported_files": result.get("exported_files", []),
+                },
+            })
+            
+            print("Optimization completed successfully!")
+            sys.stdout.flush()
+            
+        except Exception as e:
+            print(f"Error during optimization: {e}")
+            import traceback
+            traceback.print_exc()
+            sys.stdout.flush()
+            output_capture.queue.put({"type": "error", "error": str(e)})
+        
+        finally:
+            # Restore original stdout
+            sys.stdout = original_stdout
+            # Mark as not running
+            self.active_optimizations[optimization_id]['running'] = False
+            output_capture.queue.put({"type": "status", "status": "completed"})
+
+
+# Global optimization manager
+optimization_manager = OptimizationManager()
 
 EVALUATION_CRITERIA = [
     {"value": "empirical_mit", "label": "Empirical: MIT DraftBot Regression"},
@@ -123,143 +297,41 @@ EVALUATION_CRITERIA = [
 class OutputCapture:
     """Capture print output and send to web interface"""
 
-    def __init__(self):
+    def __init__(self, queue):
+        self.queue = queue
         self.buffer = []
-        self.lock = threading.Lock()
 
     def write(self, text):
-        with self.lock:
-            timestamp = datetime.now().strftime("%H:%M:%S")
-            self.buffer.append(f"[{timestamp}] {text}")
-            if (
-                len(self.buffer) > config.NUMBERS["max_output_lines"]
-            ):  # Keep last 1000 lines
-                self.buffer.pop(0)
-            
-            # Send output immediately to web interface
-            output_queue.put(
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        self.buffer.append(f"[{timestamp}] {text}")
+        if len(self.buffer) > config.NUMBERS["max_output_lines"]:
+            self.buffer.pop(0)
+        
+        # Send output immediately to web interface
+        try:
+            self.queue.put_nowait(
                 {
                     "type": "output",
                     "timestamp": timestamp,
                     "text": text,
                     "full_buffer": self.buffer[
                         -config.NUMBERS["output_buffer_size"] :
-                    ],  # Send last 50 lines
+                    ],
                 }
             )
-            
-            # Force immediate delivery
-            try:
-                output_queue.get_nowait()
-            except queue.Empty:
-                pass
+        except queue.Full:
+            # If queue is full, just skip this message to prevent blocking
+            pass
 
     def flush(self):
         # Ensure any buffered output is sent
         pass
 
 
-# Redirect stdout to our capture
-output_capture = OutputCapture()
-sys.stdout = output_capture
+# Note: Output capture is now handled per-optimization in OptimizationManager
 
 
-def run_optimization(
-    filepath,
-    num_colors,
-    deck_size,
-    num_lands,
-    algorithm,
-    optimization_criterion,
-    lambda_penalty,
-    fixed_colors,
-):
-    """Run optimization in a separate thread"""
-    global current_result, optimization_running
 
-    try:
-        optimization_running = True
-        output_queue.put({"type": "status", "status": "starting"})
-
-        # Load CSV file
-        print(f"Loading CSV file: {filepath}")
-        collection_df = pd.read_csv(filepath)
-        print(f"Loaded {len(collection_df)} cards from collection")
-
-        # Check if optimization was stopped
-        if not optimization_running:
-            print("Optimization stopped by user")
-            return
-
-        # Run optimization
-        print(f"Starting optimization with {algorithm} algorithm...")
-        print(
-            f"Target Colors: {num_colors}, Deck Size: {deck_size}, Lands: {num_lands}, Lambda: {lambda_penalty}"
-        )
-        print(f"Optimization Criterion: {optimization_criterion}")
-        if fixed_colors:
-            print(f"Fixed Colors: {', '.join(fixed_colors)}")
-        
-        print(f"DEBUG: Received fixed_colors: {fixed_colors}")
-        
-        # Force flush to ensure output is captured
-        sys.stdout.flush()
-
-        # Check if optimization was stopped
-        if not optimization_running:
-            print("Optimization stopped by user")
-            return
-
-        result = deck_builder.build_optimal_deck_advanced(
-            collection_df=collection_df,
-            num_colors=num_colors,
-            total_deck_size=deck_size,
-            num_lands=num_lands,
-            algorithm=algorithm,
-            optimization_criterion=optimization_criterion,
-            lambda_penalty=lambda_penalty,
-            fixed_colors=fixed_colors,
-        )
-
-        # Force flush again after optimization
-        sys.stdout.flush()
-
-        # Check if optimization was stopped
-        if not optimization_running:
-            print("Optimization stopped by user")
-            return
-
-        current_result = result
-        output_queue.put(
-            {
-                "type": "result",
-                "result": {
-                    "deck": result["deck"],
-                    "score": result["score"],
-                    "target_colors": result["target_colors"],
-                    "algorithm": result["algorithm"],
-                    "optimization_criterion": result.get(
-                        "optimization_criterion", "manual"
-                    ),
-                    "exported_files": result.get("exported_files", []),
-                },
-            }
-        )
-
-        print("Optimization completed successfully!")
-        sys.stdout.flush()
-
-    except Exception as e:
-        print(f"Error during optimization: {e}")
-        import traceback
-
-        traceback.print_exc()
-        sys.stdout.flush()
-        output_queue.put({"type": "error", "error": str(e)})
-
-    finally:
-        optimization_running = False
-        output_queue.put({"type": "status", "status": "completed"})
 
 
 @app.route("/")
@@ -293,6 +365,7 @@ def upload_file():
                 {
                     "success": True,
                     "filename": filename,
+                    "filepath": filepath,
                     "card_count": card_count,
                 }
             )
@@ -305,17 +378,44 @@ def upload_file():
                 ),
                 400,
             )
+    elif file.filename.endswith(".txt"):
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+        file.save(filepath)
+        session["uploaded_file"] = filename
+        
+        # Try to load and validate the text file for immediate feedback
+        try:
+            from src.magic_optimizer.utils.text_parser import TextFileParser
+            text_parser = TextFileParser()
+            df = text_parser.parse_text_file(filepath)
+            card_count = len(df)
+            return jsonify(
+                {
+                    "success": True,
+                    "filename": filename,
+                    "filepath": filepath,
+                    "card_count": card_count,
+                }
+            )
+        except Exception as e:
+            return (
+                jsonify(
+                    {
+                        "error": f"Invalid text file: {str(e)}",
+                    }
+                ),
+                400,
+            )
 
-    return jsonify({"error": "Invalid file format. Please upload a CSV file."}), 400
+    return jsonify({"error": "Invalid file format. Please upload a CSV or TXT file."}), 400
 
 
 @app.route("/optimize", methods=["POST"])
 def optimize():
     """Start the deck optimization process"""
-    global optimization_running, optimization_thread
-
-    if optimization_running:
-        return jsonify({"error": "An optimization process is already running."}), 400
+    # Generate unique optimization ID
+    optimization_id = str(uuid.uuid4())
 
     # Check for uploaded file
     uploaded_file = session.get("uploaded_file")
@@ -351,21 +451,29 @@ def optimize():
     ):
         return jsonify({"error": "Missing required parameters"}), 400
 
-    optimization_thread = threading.Thread(
-        target=run_optimization,
-        args=(
-            filepath,
-            num_colors,
-            deck_size,
-            num_lands,
-            algorithm,
-            optimization_criterion,
-            lambda_penalty,
-            fixed_colors,
-        ),
-    )
-    optimization_thread.start()
-    return jsonify({"success": True, "message": "Optimization started"})
+    # Prepare optimization parameters
+    params = {
+        'filepath': filepath,
+        'num_colors': num_colors,
+        'deck_size': deck_size,
+        'num_lands': num_lands,
+        'algorithm': algorithm,
+        'optimization_criterion': optimization_criterion,
+        'lambda_penalty': lambda_penalty,
+        'fixed_colors': fixed_colors,
+    }
+    
+    # Start optimization
+    success, message = optimization_manager.start_optimization(optimization_id, params)
+    
+    if success:
+        return jsonify({
+            "success": True, 
+            "message": "Optimization started",
+            "optimization_id": optimization_id
+        })
+    else:
+        return jsonify({"error": message}), 400
 
 
 def convert_sets_to_lists(obj):
@@ -382,40 +490,48 @@ def convert_sets_to_lists(obj):
 @app.route("/status")
 def get_status():
     """Get current optimization status and output"""
-    messages = []
-    while not output_queue.empty():
-        try:
-            msg = output_queue.get_nowait()
+    optimization_id = request.args.get('optimization_id')
+    
+    if not optimization_id:
+        return jsonify({"error": "Missing optimization_id parameter"}), 400
+    
+    status = optimization_manager.get_optimization_status(optimization_id)
+    
+    if status is None:
+        return jsonify({"error": "Optimization not found"}), 404
+    
             # Convert sets to lists in result messages
+    if status['result']:
+        status['result'] = convert_sets_to_lists(status['result'])
+    
+    for msg in status['messages']:
             if msg.get("type") == "result" and "result" in msg:
                 msg["result"] = convert_sets_to_lists(msg["result"])
-            messages.append(msg)
-        except queue.Empty:
-            break
-
-    return jsonify(
-        {
-            "messages": messages,
-            "running": optimization_running,
-            "has_result": current_result is not None,
-        }
-    )
+    
+    return jsonify(status)
 
 
 @app.route("/download/<format>")
 def download_deck(format):
     """Download deck in specified format"""
-    global current_result
-
-    if not current_result or "deck" not in current_result:
+    # Find the most recent completed optimization
+    latest_result = None
+    latest_time = 0
+    
+    for opt_id, opt_info in optimization_manager.active_optimizations.items():
+        if opt_info['result'] and opt_info['start_time'] > latest_time:
+            latest_result = opt_info['result']
+            latest_time = opt_info['start_time']
+    
+    if not latest_result or "deck" not in latest_result:
         return jsonify({"error": "No deck available for download"}), 400
 
     try:
         exported_files = deck_builder.exporter.export_deck(
-            deck=current_result["deck"],
-            algorithm=current_result["algorithm"],
-            target_colors=current_result["target_colors"],
-            score=current_result["score"],
+            deck=latest_result["deck"],
+            algorithm=latest_result["algorithm"],
+            target_colors=latest_result["target_colors"],
+            score=latest_result["score"],
             formats=[format],
         )
 
@@ -434,13 +550,20 @@ def download_deck(format):
 @app.route("/deck_info")
 def get_deck_info():
     """Get current deck information"""
-    global current_result
-
-    if not current_result:
+    # Find the most recent completed optimization
+    latest_result = None
+    latest_time = 0
+    
+    for opt_id, opt_info in optimization_manager.active_optimizations.items():
+        if opt_info['result'] and opt_info['start_time'] > latest_time:
+            latest_result = opt_info['result']
+            latest_time = opt_info['start_time']
+    
+    if not latest_result:
         return jsonify({"error": "No deck available"}), 400
 
-    deck = current_result["deck"]
-    optimization_criterion = current_result.get("optimization_criterion", "manual")
+    deck = latest_result["deck"]
+    optimization_criterion = latest_result.get("optimization_criterion", "manual")
 
     # Analyze deck
     color_counts = {}
@@ -493,9 +616,9 @@ def get_deck_info():
         convert_sets_to_lists(
             {
                 "deck": deck,
-                "score": current_result["score"],
-                "colors": current_result["target_colors"],
-                "algorithm": current_result["algorithm"],
+                "score": latest_result["score"],
+                "colors": latest_result["target_colors"],
+                "algorithm": latest_result["algorithm"],
                 "optimization": criterion_info,
                 "analysis": {
                     "color_counts": color_counts,
@@ -597,13 +720,20 @@ def cache_card_image(card_name):
 @app.route("/cache_deck_images", methods=["POST"])
 def cache_deck_images():
     """Cache images for all cards in the current deck"""
-    global current_result
-
-    if not current_result or "deck" not in current_result:
+    # Find the most recent completed optimization
+    latest_result = None
+    latest_time = 0
+    
+    for opt_id, opt_info in optimization_manager.active_optimizations.items():
+        if opt_info['result'] and opt_info['start_time'] > latest_time:
+            latest_result = opt_info['result']
+            latest_time = opt_info['start_time']
+    
+    if not latest_result or "deck" not in latest_result:
         return jsonify({"error": "No deck available"}), 400
 
     try:
-        deck = current_result["deck"]
+        deck = latest_result["deck"]
         cached_images = []
         failed_images = []
 
@@ -683,29 +813,21 @@ def export_html_with_artwork():
 
 @app.route("/stop_optimization", methods=["POST"])
 def stop_optimization():
-    """Stop the current optimization process"""
-    global optimization_running, optimization_thread
-
-    try:
-        if optimization_running:
-            optimization_running = False
-            print("Optimization stop requested by user")
-
-            # Wait for thread to finish (with timeout)
-            if optimization_thread and optimization_thread.is_alive():
-                optimization_thread.join(timeout=5.0)
-
-            return jsonify({"success": True, "message": "Optimization stopped"})
-        else:
-            return jsonify({"success": False, "error": "No optimization running"})
-
-    except Exception as e:
-        return (
-            jsonify(
-                {"success": False, "error": f"Error stopping optimization: {str(e)}"}
-            ),
-            500,
-        )
+    """Stop a specific optimization process"""
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid request"}), 400
+    
+    optimization_id = data.get("optimization_id")
+    if not optimization_id:
+        return jsonify({"error": "Missing optimization_id parameter"}), 400
+    
+    success, message = optimization_manager.stop_optimization(optimization_id)
+    
+    if success:
+        return jsonify({"success": True, "message": "Optimization stopped"})
+    else:
+        return jsonify({"error": message}), 400
 
 
 if __name__ == "__main__":

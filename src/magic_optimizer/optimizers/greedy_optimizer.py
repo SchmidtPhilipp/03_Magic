@@ -121,6 +121,9 @@ class GreedyOptimizer(BaseOptimizer):
         print(f"DEBUG: Greedy algorithm - Target deck size: {deck_size}")
         print(f"DEBUG: Greedy algorithm - Available cards: {len(eligible_cards)}")
         
+        # Send progress update for greedy (it's fast, so just one update)
+        print(f"PROGRESS: Sorting {len(eligible_cards)} cards and selecting top {deck_size}")
+        
         # Sort cards by their optimization score
         sorted_cards = sorted(eligible_cards, key=lambda x: x.optimization_score, reverse=True)
         

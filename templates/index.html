@@ -43,8 +43,7 @@
                         <div class="mb-3">
                             <label for="csvFile" class="form-label">{{ config.WEB_TEXTS.upload_csv_label }}</label>
                             <div class="input-group">
-                                <input type="file" class="form-control" id="csvFile" accept=".csv">
-                                <button class="btn btn-secondary" type="button" id="loadDefaultBtn">Load Example</button>
+                                <input type="file" class="form-control" id="csvFile" accept=".csv,.txt">
                             </div>
                             <div id="fileStatus" class="mt-2"></div>
                         </div>
@@ -141,6 +140,16 @@
                                 <small>{{ config.WEB_TEXTS.lambda_soft }}</small> • 
                                 <small id="lambdaValue">{{ config.NUMBERS.default_lambda }}</small> • 
                                 <small>{{ config.WEB_TEXTS.lambda_hard }}</small>
+                            </div>
+                        </div>
+
+                        <!-- Runtime Limit (only for genetic algorithm) -->
+                        <div class="mb-3" id="runtimeLimitContainer" style="display: none;">
+                            <label for="runtimeLimit" class="form-label">Runtime Limit (seconds)</label>
+                            <input type="number" class="form-control" id="runtimeLimit"
+                                min="30" max="3600" step="30" value="300" placeholder="300">
+                            <div class="form-text">
+                                <small>Maximum time to run the genetic algorithm (30 seconds to 1 hour)</small>
                             </div>
                         </div>
 

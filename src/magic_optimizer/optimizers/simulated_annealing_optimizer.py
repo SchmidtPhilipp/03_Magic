@@ -117,6 +117,10 @@ class SimulatedAnnealingOptimizer(BaseOptimizer):
         print("-" * 55)
 
         for i in range(iterations):
+            # Send progress update every 50 iterations to avoid spam
+            if i % 50 == 0 or i == iterations - 1:
+                progress_percent = int((i + 1) / iterations * 100)
+                print(f"PROGRESS: Iteration {i + 1}/{iterations} ({progress_percent}%) - Best Score: {best_score:.3f}")
             # Generate a neighbor solution
             neighbor_deck = self.generate_neighbor_deck(
                 current_deck, eligible_cards, deck_size, max_colors

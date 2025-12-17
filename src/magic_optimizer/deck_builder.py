@@ -10,6 +10,7 @@ from .card import Card
 from .exporters.deck_exporter import DeckExporter
 from .optimizers import create_optimizer
 from .validator import CardValidator
+from .utils.text_parser import TextFileParser
 
 
 class EnhancedDeckBuilder:
@@ -28,8 +29,16 @@ class EnhancedDeckBuilder:
                 collection_df = pd.read_csv(collection_file)
             elif collection_file.endswith(".json"):
                 collection_df = pd.read_json(collection_file)
+            elif collection_file.endswith(".txt"):
+                # Use text parser for .txt files
+                text_parser = TextFileParser()
+                collection_df = text_parser.parse_text_file(collection_file)
+                
+                # Enrich text file data with card information from Scryfall
+                print("Enriching card data from text file...")
+                collection_df = self.validator.enrich_card_data(collection_df)
             else:
-                raise ValueError("Unsupported file format. Use CSV or JSON.")
+                raise ValueError("Unsupported file format. Use CSV, JSON, or TXT.")
 
             print(f"Loaded collection with {len(collection_df)} cards")
             return collection_df
@@ -48,6 +57,7 @@ class EnhancedDeckBuilder:
         lambda_penalty: float = 0.5,
         fixed_colors: Optional[List[str]] = None,
         export_formats: Optional[List[str]] = None,
+        max_runtime_seconds: Optional[int] = None,
     ) -> Dict:
         """
         Build optimal deck using advanced optimization algorithms
@@ -94,13 +104,19 @@ class EnhancedDeckBuilder:
 
         # Run optimization
         if algorithm in ["genetic", "simulated_annealing", "greedy"]:
-            result = optimizer.optimize_deck(
-                collection_df=collection_df,
-                num_colors=num_colors,
-                deck_size=deck_size,
-                lambda_penalty=lambda_penalty,
-                fixed_colors=fixed_colors,
-            )
+            optimizer_params = {
+                "collection_df": collection_df,
+                "num_colors": num_colors,
+                "deck_size": deck_size,
+                "lambda_penalty": lambda_penalty,
+                "fixed_colors": fixed_colors,
+            }
+            
+            # Add runtime limit for genetic algorithm
+            if algorithm == "genetic" and max_runtime_seconds:
+                optimizer_params["max_runtime_seconds"] = max_runtime_seconds
+            
+            result = optimizer.optimize_deck(**optimizer_params)
         else:
             raise ValueError(f"Unknown algorithm: {algorithm}")
 
