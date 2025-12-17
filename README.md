@@ -324,6 +324,17 @@ For issues, questions, or contributions:
 - Check the documentation
 - Review the test suite for examples
 
+## 🖥️ Proxmox LXC One-Liner (Deployment)
+
+Auf dem Proxmox-Host als root im community-scripts-Stil:
+```
+CTID=1999 HOSTNAME=mtg-optimizer REPO_URL="https://github.com/SchmidtPhilipp/03_Magic.git" \
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/SchmidtPhilipp/03_Magic/main/deploy/lxc/proxmox-create.sh)"
+```
+- `REPO_URL` ist Pflicht (Git-URL des Projekts), `REPO_BRANCH` optional (`main`).  
+- Weitere optionale Variablen: `STORAGE` (local-lvm), `DISK_GB` (12), `CORES` (2), `MEMORY_MB` (4096), `SWAP_MB` (512), `BRIDGE` (vmbr0), `NET_IP` (dhcp), `NET_GW` (leer), `FEATURES` (nesting=1).  
+- Das Skript legt einen Debian-12-LXC an, klont das Repo nach `/opt/mtg-optimizer` und startet im Container `deploy/lxc/deploy.sh`.
+
 ---
 
 **Version**: 1.0  

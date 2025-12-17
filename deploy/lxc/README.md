@@ -26,10 +26,10 @@ Proxmox-Host One-Liner (ähnlich community-scripts)
 --------------------------------------------------
 Auf dem Proxmox-Host als root (community-scripts Stil):
 ```
-CTID=1999 HOSTNAME=mtg-optimizer REPO_URL="https://github.com/<owner>/<repo>.git" \
-  bash -c "$(curl -fsSL https://raw.githubusercontent.com/<owner>/<repo>/main/deploy/lxc/proxmox-create.sh)"
+CTID=1999 HOSTNAME=mtg-optimizer REPO_URL="https://github.com/SchmidtPhilipp/03_Magic.git" \
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/SchmidtPhilipp/03_Magic/main/deploy/lxc/proxmox-create.sh)"
 ```
-- `REPO_URL` ist Pflicht (Git-URL deines Projekts). `REPO_BRANCH` optional (`main`).  
+- `REPO_URL` ist Pflicht (Git-URL des Projekts). `REPO_BRANCH` optional (`main`).  
 - Weitere optionale Variablen: `STORAGE` (local-lvm), `DISK_GB` (12), `CORES` (2), `MEMORY_MB` (4096), `SWAP_MB` (512), `BRIDGE` (vmbr0), `NET_IP` (dhcp), `NET_GW` (leer), `FEATURES` (nesting=1).  
 - CT wird mit Debian-12-Template, Nesting=1, DHCP auf vmbr0 erstellt, klont das Repo nach `/opt/mtg-optimizer` und startet innen `deploy/lxc/deploy.sh`.
 

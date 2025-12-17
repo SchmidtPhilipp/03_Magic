@@ -3,8 +3,8 @@
 # Inspired by community-scripts style. Run directly on the Proxmox host as root.
 #
 # Usage (community-scripts style one-liner):
-#   CTID=1999 HOSTNAME=mtg-optimizer REPO_URL="https://github.com/<owner>/<repo>.git" \
-#     bash -c "$(curl -fsSL https://raw.githubusercontent.com/<owner>/<repo>/main/deploy/lxc/proxmox-create.sh)"
+#   CTID=1999 HOSTNAME=mtg-optimizer REPO_URL="https://github.com/SchmidtPhilipp/03_Magic.git" \
+#     bash -c "$(curl -fsSL https://raw.githubusercontent.com/SchmidtPhilipp/03_Magic/main/deploy/lxc/proxmox-create.sh)"
 #
 # Optional env vars:
 #   CTID (1999), HOSTNAME (mtg-optimizer), STORAGE (local-lvm), DISK_GB (12),
