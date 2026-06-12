@@ -36,6 +36,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 import config
 from magic_optimizer.deck_builder import EnhancedDeckBuilder
+from magic_optimizer.collection.routes import collection_bp
 
 
 # Setup logging
@@ -87,6 +88,7 @@ def setup_logging():
 user_logger, optimization_logger, api_logger = setup_logging()
 
 app = Flask(__name__)
+app.register_blueprint(collection_bp)
 app.config["SECRET_KEY"] = config.APP_CONFIG["secret_key"]
 app.config["UPLOAD_FOLDER"] = config.PATHS["upload_folder"]
 app.config["CACHE_FOLDER"] = config.PATHS[
@@ -102,6 +104,10 @@ os.makedirs(app.config["CACHE_FOLDER"], exist_ok=True)
 
 # Initialize the deck builder once to be shared across requests
 deck_builder = EnhancedDeckBuilder()
+
+from magic_optimizer.collection.db import init_db
+
+init_db()
 
 user_logger.info("Logging system initialized")
 user_logger.info(f"Log files: logs/")

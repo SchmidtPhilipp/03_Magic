@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collections — MTG Optimizer</title>
+    <link href="{{ config.LINKS.bootstrap_css }}" rel="stylesheet">
+    <link href="{{ config.LINKS.fontawesome_css }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-dark"
+        style="background: linear-gradient(90deg, {{ config.COLORS.primary_gradient_start }} 0%, {{ config.COLORS.primary_gradient_end }} 100%);">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-hat-wizard"></i> MTG Optimizer
+            </a>
+            <span class="navbar-text text-white-50">Collections</span>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-3">
+        <div class="row g-3">
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <strong>Sammlungen</strong>
+                        <button class="btn btn-sm btn-primary" id="btnNewCollection">
+                            <i class="fas fa-plus"></i> Neu
+                        </button>
+                    </div>
+                    <ul class="list-group list-group-flush" id="collectionList"></ul>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="card shadow-sm" id="detailPanel" style="display:none;">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong id="detailTitle">—</strong>
+                            <span class="badge bg-secondary ms-2" id="detailCount">0</span>
+                        </div>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-success" id="btnOptimize" title="Für Optimizer laden">
+                                <i class="fas fa-magic"></i> Optimieren
+                            </button>
+                            <button class="btn btn-outline-danger" id="btnDeleteCollection">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">CSV importieren</label>
+                                <input type="file" class="form-control form-control-sm" id="csvImport" accept=".csv">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Nach Set filtern</label>
+                                <select class="form-select form-select-sm" id="setFilter">
+                                    <option value="">Alle Sets</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <form class="row g-2 mb-3" id="addCardForm">
+                            <div class="col-md-5">
+                                <input type="text" class="form-control form-control-sm" id="cardName"
+                                    placeholder="Kartenname" required>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control form-control-sm" id="setCode"
+                                    placeholder="Set">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="number" class="form-control form-control-sm" id="cardAmount" value="1"
+                                    min="1">
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-sm btn-outline-primary w-100">
+                                    <i class="fas fa-plus"></i> Hinzufügen
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="table-responsive" style="max-height: 420px; overflow-y: auto;">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Set</th>
+                                        <th>#</th>
+                                        <th>Anz.</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cardTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-secondary" id="emptyDetail">Wähle oder erstelle eine Sammlung.</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/collections.js') }}"></script>
+</body>
+
+</html>

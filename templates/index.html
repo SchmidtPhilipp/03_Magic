@@ -19,11 +19,16 @@
     <nav class="navbar navbar-expand-lg navbar-dark {{ config.COLORS.header_bg }}"
         style="background: linear-gradient(90deg, {{ config.COLORS.primary_gradient_start }} 0%, {{ config.COLORS.primary_gradient_end }} 100%);">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
                 <i class="{{ config.WEB_TEXTS.header_icon }}"></i>
                 <span class="d-none d-sm-inline">{{ config.WEB_TEXTS.header_title }}</span>
                 <span class="d-inline d-sm-none">MTG Optimizer</span>
             </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link text-white" href="{{ url_for('collection.collections_page') }}">
+                    <i class="fas fa-layer-group"></i> Collections
+                </a>
+            </div>
         </div>
     </nav>
     <div class="container-fluid">
