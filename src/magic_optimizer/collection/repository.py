@@ -323,6 +323,169 @@ class CollectionRepository:
                 )
         return pd.DataFrame(rows)
 
+    # --- Table scan sessions ---
+
+    def create_scan_session(
+        self,
+        collection_id: int,
+        user_id: int,
+        image_path: str,
+        detections: list[dict],
+    ) -> dict[str, Any] | None:
+        if not self.get_collection(collection_id, user_id):
+            return None
+        conn = self._conn()
+        try:
+            cur = conn.execute(
+                """
+                INSERT INTO scan_sessions (collection_id, user_id, image_path, status)
+                VALUES (?, ?, ?, 'review')
+                """,
+                (collection_id, user_id, image_path),
+            )
+            session_id = int(cur.lastrowid)
+            for det in detections:
+                conn.execute(
+                    """
+                    INSERT INTO scan_detections (
+                        scan_session_id, bbox_x, bbox_y, bbox_w, bbox_h,
+                        detected_name, scryfall_id, set_code, confidence, status
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        session_id,
+                        det["bbox_x"],
+                        det["bbox_y"],
+                        det["bbox_w"],
+                        det["bbox_h"],
+                        det.get("detected_name"),
+                        det.get("scryfall_id"),
+                        det.get("set_code"),
+                        det.get("confidence"),
+                        det.get("status", "pending"),
+                    ),
+                )
+            conn.commit()
+            return self.get_scan_session(session_id, user_id)
+        finally:
+            conn.close()
+
+    def get_scan_session(
+        self, session_id: int, user_id: int
+    ) -> dict[str, Any] | None:
+        conn = self._conn()
+        try:
+            row = conn.execute(
+                """
+                SELECT s.* FROM scan_sessions s
+                WHERE s.id = ? AND s.user_id = ?
+                """,
+                (session_id, user_id),
+            ).fetchone()
+            if not row:
+                return None
+            session = dict(row)
+            dets = conn.execute(
+                """
+                SELECT * FROM scan_detections
+                WHERE scan_session_id = ?
+                ORDER BY id
+                """,
+                (session_id,),
+            ).fetchall()
+            session["detections"] = [dict(d) for d in dets]
+            return session
+        finally:
+            conn.close()
+
+    def update_detection(
+        self,
+        detection_id: int,
+        user_id: int,
+        *,
+        detected_name: str | None = None,
+        set_code: str | None = None,
+        scryfall_id: str | None = None,
+        status: str | None = None,
+    ) -> dict[str, Any] | None:
+        conn = self._conn()
+        try:
+            row = conn.execute(
+                """
+                SELECT d.* FROM scan_detections d
+                JOIN scan_sessions s ON s.id = d.scan_session_id
+                WHERE d.id = ? AND s.user_id = ?
+                """,
+                (detection_id, user_id),
+            ).fetchone()
+            if not row:
+                return None
+            fields = []
+            values: list[Any] = []
+            if detected_name is not None:
+                fields.append("detected_name = ?")
+                values.append(detected_name.strip())
+            if set_code is not None:
+                fields.append("set_code = ?")
+                values.append(set_code)
+            if scryfall_id is not None:
+                fields.append("scryfall_id = ?")
+                values.append(scryfall_id)
+            if status is not None:
+                fields.append("status = ?")
+                values.append(status)
+            if not fields:
+                return dict(row)
+            values.append(detection_id)
+            conn.execute(
+                f"UPDATE scan_detections SET {', '.join(fields)} WHERE id = ?",
+                values,
+            )
+            conn.commit()
+            updated = conn.execute(
+                "SELECT * FROM scan_detections WHERE id = ?", (detection_id,)
+            ).fetchone()
+            return dict(updated) if updated else None
+        finally:
+            conn.close()
+
+    def commit_scan_session(self, session_id: int, user_id: int) -> int:
+        """Add accepted detections to collection. Returns number of cards added."""
+        session = self.get_scan_session(session_id, user_id)
+        if not session:
+            return 0
+        added = 0
+        collection_id = session["collection_id"]
+        for det in session["detections"]:
+            if det.get("status") != "accepted":
+                continue
+            name = (det.get("detected_name") or "").strip()
+            if not name or name.lower() == "unbekannt":
+                continue
+            self.add_card(
+                collection_id,
+                user_id,
+                card_name=name,
+                set_code=det.get("set_code"),
+                scryfall_id=det.get("scryfall_id"),
+                source="scan",
+            )
+            added += 1
+        conn = self._conn()
+        try:
+            conn.execute(
+                """
+                UPDATE scan_sessions
+                SET status = 'committed', committed_at = datetime('now')
+                WHERE id = ? AND user_id = ?
+                """,
+                (session_id, user_id),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+        return added
+
 
 def _pick_column(df: pd.DataFrame, candidates: tuple[str, ...]) -> str | None:
     for col in candidates:

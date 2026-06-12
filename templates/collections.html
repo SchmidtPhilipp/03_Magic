@@ -52,6 +52,18 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <ul class="nav nav-tabs mb-3" id="detailTabs">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-tab="cards" type="button">Karten</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-tab="scan" type="button">
+                                    <i class="fas fa-camera"></i> Foto-Scan
+                                </button>
+                            </li>
+                        </ul>
+
+                        <div id="tabCards">
                         <div class="row g-2 mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">CSV importieren</label>
@@ -98,6 +110,36 @@
                                 </thead>
                                 <tbody id="cardTable"></tbody>
                             </table>
+                        </div>
+                        </div>
+
+                        <div id="tabScan" style="display:none;">
+                            <p class="text-muted small">
+                                Mehrere Karten fotografieren — erkannte Bereiche werden mit grünem Rahmen
+                                und Namen markiert. Namen korrigieren, annehmen/ablehnen, dann übernehmen.
+                            </p>
+                            <input type="file" class="form-control form-control-sm mb-2" id="scanUpload"
+                                accept="image/*" capture="environment">
+                            <div id="scanPanel" style="display:none;">
+                                <img id="scanOverlay" class="img-fluid rounded border mb-2" alt="Scan overlay">
+                                <div class="table-responsive mb-2" style="max-height: 240px; overflow-y:auto;">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Name</th>
+                                                <th>Set</th>
+                                                <th>Status</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="scanDetections"></tbody>
+                                    </table>
+                                </div>
+                                <button class="btn btn-sm btn-success" id="btnCommitScan">
+                                    <i class="fas fa-check"></i> Auswahl in Sammlung übernehmen
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

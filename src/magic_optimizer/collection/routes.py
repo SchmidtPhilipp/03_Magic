@@ -3,14 +3,20 @@
 from __future__ import annotations
 
 import os
+import uuid
 from io import BytesIO
+from pathlib import Path
 
 import pandas as pd
-from flask import Blueprint, jsonify, render_template, request, session
+from flask import Blueprint, jsonify, render_template, request, send_file, session
+from werkzeug.utils import secure_filename
 
 import config
 from magic_optimizer.collection.auth import current_username
 from magic_optimizer.collection.repository import CollectionRepository
+from magic_optimizer.vision.detect import detect_card_regions
+from magic_optimizer.vision.overlay import render_overlay
+from magic_optimizer.vision.scryfall import lookup_card_name
 
 collection_bp = Blueprint(
     "collection",
@@ -117,6 +123,138 @@ def api_import_csv(collection_id: int):
     except Exception as exc:
         return jsonify({"error": str(exc)}), 400
     return jsonify({"imported": count})
+
+
+def _scan_dir() -> Path:
+    base = Path(config.PATHS.get("upload_folder", "uploads")) / "scans"
+    base.mkdir(parents=True, exist_ok=True)
+    return base
+
+
+@collection_bp.route("/api/<int:collection_id>/scan", methods=["POST"])
+def api_scan_upload(collection_id: int):
+    """Upload table photo, detect card regions, return overlay preview."""
+    if not get_repo().get_collection(collection_id, _user_id()):
+        return jsonify({"error": "collection not found"}), 404
+    if "file" not in request.files:
+        return jsonify({"error": "file required"}), 400
+    file = request.files["file"]
+    if not file or not file.filename:
+        return jsonify({"error": "empty file"}), 400
+
+    session_uuid = uuid.uuid4().hex[:12]
+    scan_folder = _scan_dir() / session_uuid
+    scan_folder.mkdir(parents=True, exist_ok=True)
+    ext = Path(secure_filename(file.filename)).suffix.lower() or ".jpg"
+    original_path = scan_folder / f"original{ext}"
+    overlay_path = scan_folder / "overlay.jpg"
+    file.save(original_path)
+
+    detections = detect_card_regions(str(original_path))
+    scan_session = get_repo().create_scan_session(
+        collection_id,
+        _user_id(),
+        str(original_path),
+        detections,
+    )
+    if not scan_session:
+        return jsonify({"error": "failed to create scan session"}), 500
+
+    overlay_dets = scan_session.get("detections", [])
+    render_overlay(str(original_path), overlay_dets, str(overlay_path))
+
+    return jsonify(
+        {
+            "session_id": scan_session["id"],
+            "detection_count": len(overlay_dets),
+            "overlay_url": f"/collections/scans/{scan_session['id']}/overlay.jpg",
+            "original_url": f"/collections/scans/{scan_session['id']}/original",
+            "detections": overlay_dets,
+        }
+    )
+
+
+@collection_bp.route("/scans/<int:session_id>/overlay.jpg")
+def scan_overlay_image(session_id: int):
+    session_row = get_repo().get_scan_session(session_id, _user_id())
+    if not session_row:
+        return jsonify({"error": "not found"}), 404
+    overlay = Path(session_row["image_path"]).parent / "overlay.jpg"
+    if not overlay.exists():
+        render_overlay(
+            session_row["image_path"],
+            session_row.get("detections", []),
+            str(overlay),
+        )
+    return send_file(overlay, mimetype="image/jpeg")
+
+
+@collection_bp.route("/scans/<int:session_id>/original")
+def scan_original_image(session_id: int):
+    session_row = get_repo().get_scan_session(session_id, _user_id())
+    if not session_row:
+        return jsonify({"error": "not found"}), 404
+    return send_file(session_row["image_path"])
+
+
+@collection_bp.route("/api/scan/<int:session_id>", methods=["GET"])
+def api_get_scan(session_id: int):
+    session_row = get_repo().get_scan_session(session_id, _user_id())
+    if not session_row:
+        return jsonify({"error": "not found"}), 404
+    overlay_path = Path(session_row["image_path"]).parent / "overlay.jpg"
+    if overlay_path.exists():
+        render_overlay(
+            session_row["image_path"],
+            session_row.get("detections", []),
+            str(overlay_path),
+        )
+    return jsonify(
+        {
+            **session_row,
+            "overlay_url": f"/collections/scans/{session_id}/overlay.jpg",
+        }
+    )
+
+
+@collection_bp.route("/api/scan/<int:session_id>/detections/<int:detection_id>", methods=["PATCH"])
+def api_update_detection(session_id: int, detection_id: int):
+    data = request.get_json(silent=True) or {}
+    name = data.get("detected_name")
+    meta = None
+    if name:
+        meta = lookup_card_name(name)
+    det = get_repo().update_detection(
+        detection_id,
+        _user_id(),
+        detected_name=meta["card_name"] if meta else name,
+        set_code=meta.get("set_code") if meta else data.get("set_code"),
+        scryfall_id=meta.get("scryfall_id") if meta else data.get("scryfall_id"),
+        status=data.get("status"),
+    )
+    if not det:
+        return jsonify({"error": "not found"}), 404
+
+    session_row = get_repo().get_scan_session(session_id, _user_id())
+    if session_row:
+        overlay_path = Path(session_row["image_path"]).parent / "overlay.jpg"
+        render_overlay(
+            session_row["image_path"],
+            session_row.get("detections", []),
+            str(overlay_path),
+        )
+    return jsonify(det)
+
+
+@collection_bp.route("/api/scan/<int:session_id>/commit", methods=["POST"])
+def api_commit_scan(session_id: int):
+    added = get_repo().commit_scan_session(session_id, _user_id())
+    if added == 0:
+        session_row = get_repo().get_scan_session(session_id, _user_id())
+        if not session_row:
+            return jsonify({"error": "not found"}), 404
+        return jsonify({"error": "no accepted cards to commit"}), 400
+    return jsonify({"added": added})
 
 
 @collection_bp.route("/api/<int:collection_id>/use-for-optimize", methods=["POST"])
