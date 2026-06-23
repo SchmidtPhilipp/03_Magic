@@ -1,0 +1,4 @@
+# YOLO weights — not in Git
+
+*.pt
+*.onnx

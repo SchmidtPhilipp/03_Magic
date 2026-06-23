@@ -1,4 +1,4 @@
-"""OpenCV-based card region detection (YOLO replacement in Phase 2)."""
+"""Card region detection — YOLO primary, OpenCV fallback, optional OCR."""
 
 from __future__ import annotations
 
@@ -6,18 +6,39 @@ from typing import Any
 
 try:
     import cv2
-    import numpy as np
 except ImportError:  # pragma: no cover
     cv2 = None
-    np = None
+
+from magic_optimizer.vision.ocr import enrich_detections_with_ocr
+from magic_optimizer.vision.yolo import detect_with_yolo, model_available
 
 
 def detect_card_regions(image_path: str) -> list[dict[str, Any]]:
     """
-    Find card-like rectangles in a table photo.
+    Find card bounding boxes in a table photo.
 
-    Returns normalized bboxes (0–1) with placeholder names until OCR/YOLO lands.
+    Order: YOLO (if weights on disk) → OpenCV contours → OCR name enrichment.
     """
+    detections = detect_with_yolo(image_path)
+    if not detections:
+        detections = _detect_opencv_contours(image_path)
+    else:
+        for det in detections:
+            det.setdefault("source", "yolo")
+
+    if detections:
+        detections = enrich_detections_with_ocr(image_path, detections)
+    return detections
+
+
+def detector_status() -> dict[str, str]:
+    """Report which detector backend is active (for health/debug)."""
+    if model_available():
+        return {"backend": "yolo", "model": "loaded"}
+    return {"backend": "opencv", "model": "none"}
+
+
+def _detect_opencv_contours(image_path: str) -> list[dict[str, Any]]:
     if cv2 is None:
         return []
 
@@ -45,7 +66,6 @@ def detect_card_regions(image_path: str) -> list[dict[str, Any]]:
         if area < min_area:
             continue
         aspect = bw / max(bh, 1)
-        # MTG cards ~63×88 mm → portrait aspect ~0.72; allow skew/lighting variance
         if aspect < 0.45 or aspect > 1.05:
             continue
         if bw < width * 0.04 or bh < height * 0.04:
@@ -60,6 +80,7 @@ def detect_card_regions(image_path: str) -> list[dict[str, Any]]:
                 "detected_name": "Unbekannt",
                 "confidence": 0.4,
                 "status": "pending",
+                "source": "opencv",
             }
         )
 
@@ -71,7 +92,6 @@ def detect_card_regions(image_path: str) -> list[dict[str, Any]]:
 def _suppress_overlaps(
     detections: list[dict[str, Any]], iou_threshold: float = 0.45
 ) -> list[dict[str, Any]]:
-    """Drop smaller boxes that heavily overlap a larger one."""
     if not detections:
         return []
 

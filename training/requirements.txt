@@ -1,0 +1,3 @@
+# GPU training (gpu-ml-01 only)
+-r requirements-vision.txt
+pyyaml>=6.0

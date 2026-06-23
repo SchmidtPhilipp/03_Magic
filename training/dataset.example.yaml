@@ -1,0 +1,14 @@
+# MTG card detection dataset (YOLO format)
+# Place under NAS: /mnt/nas/ml/datasets/mtg-cards/
+#
+#   images/train/*.jpg
+#   images/val/*.jpg
+#   labels/train/*.txt   # class x_center y_center w h (normalized)
+#   labels/val/*.txt
+
+path: /mnt/nas/ml/datasets/mtg-cards
+train: images/train
+val: images/val
+
+names:
+  0: mtg_card

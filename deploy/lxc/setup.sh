@@ -42,6 +42,10 @@ python3 -m venv "${VENV_PATH}"
 
 echo "==> Installing Python dependencies"
 "${VENV_PATH}/bin/pip" install --no-cache-dir -r requirements.txt
+if [ -f requirements-vision.txt ]; then
+  echo "==> Installing vision dependencies (YOLO + OCR)"
+  "${VENV_PATH}/bin/pip" install --no-cache-dir -r requirements-vision.txt
+fi
 
 echo "==> Adjusting ownership"
 chown -R "${APP_USER}:${APP_USER}" "${APP_HOME}" /var/log/mtg-optimizer

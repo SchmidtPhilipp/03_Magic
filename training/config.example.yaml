@@ -1,0 +1,9 @@
+# Copy to JOB_DIR/config.yaml when submitting train:mtg-yolo
+
+base_model: yolo11n.pt
+dataset_yaml: /mnt/nas/ml/datasets/mtg-cards/dataset.yaml
+epochs: 80
+imgsz: 640
+device: 0
+project: /data/workspace/training/mtg-yolo
+archive_dir: /mnt/nas/ml/runs/mtg-yolo
