@@ -1,0 +1,12 @@
+# Komodo build-on-host — MTG optimizer on CT 167
+services:
+  mtg-optimizer:
+    build: .
+    image: mtg-optimizer:local
+    container_name: mtg-optimizer
+    restart: unless-stopped
+    ports:
+      - "${MAGIC_PORT:-5050}:5050"
+    environment:
+      PYTHONPATH: /app
+      FLASK_ENV: production

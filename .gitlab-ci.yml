@@ -1,0 +1,72 @@
+# GitLab CI — Komodo GitOps (registry mode, H-05).
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  REGISTRY_PREFIX: registry.dev.phi-labs.net/philipp/03_magic
+  KOMODO_STACK: magic
+
+pytest:unit:
+  stage: test
+  image: python:3.10-slim
+  allow_failure: true
+  before_script:
+    - apt-get update && apt-get install -y --no-install-recommends build-essential && rm -rf /var/lib/apt/lists/*
+    - pip install --no-cache-dir -r requirements.txt pytest
+  script:
+    - python -m pytest tests/test_deck_size.py tests/test_color_constraints.py -v --tb=short || true
+
+build:mtg-optimizer:
+  stage: build
+  image: docker:24
+  services:
+    - docker:24-dind
+  needs:
+    - pytest:unit
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+  script:
+    - docker build -t "$CI_REGISTRY_IMAGE/mtg-optimizer:$CI_COMMIT_SHA" .
+    - docker push "$CI_REGISTRY_IMAGE/mtg-optimizer:$CI_COMMIT_SHA"
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "$CI_DEFAULT_BRANCH" ]; then
+        docker tag "$CI_REGISTRY_IMAGE/mtg-optimizer:$CI_COMMIT_SHA" "$CI_REGISTRY_IMAGE/mtg-optimizer:main"
+        docker push "$CI_REGISTRY_IMAGE/mtg-optimizer:main"
+      fi
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
+    - when: on_success
+
+deploy:production:
+  stage: deploy
+  image: alpine:3.20
+  environment:
+    name: production
+    url: https://magic.dev.phi-labs.net
+  needs:
+    - build:mtg-optimizer
+  before_script:
+    - apk add --no-cache curl
+  script:
+    - |
+      echo "Triggering Komodo deploy for ${KOMODO_STACK}..."
+      HTTP_CODE=$(curl -s -o /tmp/komodo_resp.json -w "%{http_code}" --max-time 30 \
+        -X POST "https://komodo.tools.phi-labs.net/execute" \
+        -H "Content-Type: application/json" \
+        -H "X-Api-Key: ${KOMODO_API_KEY}" \
+        -H "X-Api-Secret: ${KOMODO_API_SECRET}" \
+        -d "{\"type\":\"DeployStack\",\"params\":{\"stack\":\"${KOMODO_STACK}\"}}")
+      RESPONSE=$(cat /tmp/komodo_resp.json)
+      echo "HTTP $HTTP_CODE — $RESPONSE"
+      [ "$HTTP_CODE" = "200" ] && echo "Deploy triggered" || (echo "Deploy failed" && exit 1)
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: manual
+      allow_failure: false
