@@ -10,3 +10,6 @@ services:
     environment:
       PYTHONPATH: /app
       FLASK_ENV: production
+      PORT: "5050"
+      SECRET_KEY: ${SECRET_KEY:-}
+    command: ["python", "web_app.py"]

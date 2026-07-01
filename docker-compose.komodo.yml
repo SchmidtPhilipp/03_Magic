@@ -1,0 +1,16 @@
+# Komodo GitOps — registry images from GitLab CI (philipp/03_Magic).
+# Break-glass: deploy/lxc/deploy.sh + systemd mtg-optimizer.service
+
+services:
+  mtg-optimizer:
+    image: ${REGISTRY_PREFIX:-registry.dev.phi-labs.net/philipp/03_magic}/mtg-optimizer:${IMAGE_TAG:-main}
+    container_name: mtg-optimizer
+    restart: unless-stopped
+    ports:
+      - "${MAGIC_PORT:-5050}:5050"
+    environment:
+      PYTHONPATH: /app
+      FLASK_ENV: production
+      PORT: "5050"
+      SECRET_KEY: ${SECRET_KEY:-}
+    command: ["python", "web_app.py"]
