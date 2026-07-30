@@ -1,3 +1,4 @@
+from magic_optimizer.match_oracle.stub import StubMatchOracle
 from magic_optimizer.match_oracle.types import (
     ForgePlayerAI,
     MatchOracle,
@@ -10,4 +11,5 @@ __all__ = [
     "MatchOracle",
     "MatchResult",
     "PlayerBackend",
+    "StubMatchOracle",
 ]
