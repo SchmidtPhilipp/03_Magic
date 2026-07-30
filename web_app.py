@@ -37,6 +37,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 import config
 from magic_optimizer.deck_builder import EnhancedDeckBuilder
 from magic_optimizer.collection.routes import collection_bp
+from magic_optimizer.deck_picker.api import deck_picker_bp
 
 
 # Setup logging
@@ -89,6 +90,7 @@ user_logger, optimization_logger, api_logger = setup_logging()
 
 app = Flask(__name__)
 app.register_blueprint(collection_bp)
+app.register_blueprint(deck_picker_bp)
 app.config["SECRET_KEY"] = config.APP_CONFIG["secret_key"]
 app.config["UPLOAD_FOLDER"] = config.PATHS["upload_folder"]
 app.config["CACHE_FOLDER"] = config.PATHS[
