@@ -53,3 +53,6 @@ data/cache/
 
 # Static files
 static/card_cache/
+# Git worktrees
+.worktrees/
+.superpowers/
