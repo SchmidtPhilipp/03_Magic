@@ -6,6 +6,8 @@ from magic_optimizer.deck_picker.complete import (
     fill_basics,
 )
 from magic_optimizer.deck_picker.heuristic import HeuristicNextCardPolicy, NextCardPolicy
+from magic_optimizer.deck_picker.missing import missing_cards
+from magic_optimizer.deck_picker.pools import pool_from_card_rows, union_pools
 from magic_optimizer.deck_picker.types import (
     BASIC_LANDS,
     CardPool,
@@ -26,4 +28,7 @@ __all__ = [
     "count_non_basics",
     "fill_basics",
     "legal_candidates",
+    "missing_cards",
+    "pool_from_card_rows",
+    "union_pools",
 ]
