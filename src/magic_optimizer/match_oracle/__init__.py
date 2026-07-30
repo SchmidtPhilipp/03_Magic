@@ -1,3 +1,4 @@
+from magic_optimizer.match_oracle.dck import to_dck
 from magic_optimizer.match_oracle.stub import StubMatchOracle
 from magic_optimizer.match_oracle.types import (
     ForgePlayerAI,
@@ -12,4 +13,5 @@ __all__ = [
     "MatchResult",
     "PlayerBackend",
     "StubMatchOracle",
+    "to_dck",
 ]
