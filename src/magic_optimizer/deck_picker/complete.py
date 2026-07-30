@@ -85,9 +85,15 @@ def complete_deck(
         deck.extend(seed_deck)
 
     while count_non_basics(deck) < constraints.non_basic_target:
-        picks = policy.next_card(pool, deck, constraints, k=1)
+        picks = policy.next_card(pool, deck, constraints, k=50)
         if not picks:
             break
-        deck.append(picks[0].card)
+        pick = next(
+            (scored.card for scored in picks if scored.card.name not in BASIC_LANDS),
+            None,
+        )
+        if pick is None:
+            break
+        deck.append(pick)
 
     return fill_basics(deck, constraints)

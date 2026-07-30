@@ -30,3 +30,17 @@ def test_complete_deck_includes_pins_and_size():
     assert len(deck) == 60
     assert deck[0].name == "Card49" or any(c.name == "Card49" for c in deck)
     assert sum(1 for c in deck if c.name not in BASIC_LANDS) == 40
+
+
+def test_complete_deck_skeleton_skips_basics_despite_higher_rating():
+    pool = CardPool({"Plains": 20, "Shock": 4})
+    ratings = {"Plains": 100.0, "Shock": 1.0}
+    constraints = DeckConstraints(non_basic_target=5)
+    policy = HeuristicNextCardPolicy(ratings)
+    deck = complete_deck(policy, pool, constraints)
+
+    non_basics = [c for c in deck if c.name not in BASIC_LANDS]
+    available_nonbasics = 4
+    assert len(non_basics) == min(constraints.non_basic_target, available_nonbasics)
+    assert all(c.name == "Shock" for c in non_basics)
+    assert sum(1 for c in deck if c.name == "Shock") == 4

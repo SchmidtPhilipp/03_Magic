@@ -96,3 +96,46 @@ def test_complete_reports_missing_vs_owned(client):
     data = resp.get_json()
     missing = {name: qty for name, qty in data["missing"]}
     assert missing.get("Card49", 0) >= 1
+
+
+@pytest.mark.parametrize(
+    "body,content_type",
+    [
+        ("[]", "application/json"),
+        ('"hello"', "application/json"),
+    ],
+)
+def test_non_object_json_body_returns_400(client, body, content_type):
+    resp = client.post(
+        "/api/deck-picker/next-card",
+        data=body,
+        content_type=content_type,
+    )
+    assert resp.status_code == 400
+    assert "object" in resp.get_json()["error"].lower()
+
+
+def test_pool_non_int_value_returns_400(client):
+    resp = client.post(
+        "/api/deck-picker/next-card",
+        json={
+            "pool": {"Shock": "four"},
+            "decklist": [],
+            "ratings": {},
+        },
+    )
+    assert resp.status_code == 400
+    assert "integer" in resp.get_json()["error"].lower()
+
+
+def test_decklist_string_returns_400(client):
+    resp = client.post(
+        "/api/deck-picker/next-card",
+        json={
+            "pool": {"Shock": 4},
+            "decklist": "Shock",
+            "ratings": {},
+        },
+    )
+    assert resp.status_code == 400
+    assert "list" in resp.get_json()["error"].lower()
