@@ -103,6 +103,15 @@ def test_play_games_zero_returns_400(client):
     assert resp.status_code == 400
 
 
+def test_play_games_exceeds_max_returns_400(client):
+    resp = client.post(
+        "/api/match-oracle/play",
+        json={"deck_a": ["Shock"], "deck_b": ["Bolt"], "games": 101},
+    )
+    assert resp.status_code == 400
+    assert "at most 100" in resp.get_json()["error"]
+
+
 def test_play_games_missing_returns_400(client):
     resp = client.post(
         "/api/match-oracle/play",
@@ -226,3 +235,31 @@ def test_play_forge_available_returns_result(client, monkeypatch):
         "winrate_a": 2 / 3,
         "details": "ok",
     }
+
+
+def test_play_forge_config_error_returns_503(client, monkeypatch):
+    monkeypatch.setattr(
+        "magic_optimizer.match_oracle.api.forge_available",
+        lambda **kwargs: True,
+    )
+
+    def raise_config_error(*args, **kwargs):
+        del args, kwargs
+        raise RuntimeError("invalid FORGE_TIMEOUT_SEC: 'bad'")
+
+    monkeypatch.setattr(
+        "magic_optimizer.match_oracle.api.ForgeMatchOracle",
+        raise_config_error,
+    )
+
+    resp = client.post(
+        "/api/match-oracle/play",
+        json={
+            "deck_a": ["Shock"],
+            "deck_b": ["Bolt"],
+            "games": 1,
+            "backend": "forge",
+        },
+    )
+    assert resp.status_code == 503
+    assert "FORGE_TIMEOUT_SEC" in resp.get_json()["error"]

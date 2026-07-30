@@ -54,12 +54,8 @@ def test_forge_match_oracle_play(monkeypatch, tmp_path: Path):
     assert captured["deck_b_name"] == "b"
 
     deck_dir = Path(captured["deck_dir"])
-    assert deck_dir.is_dir()
+    assert not deck_dir.exists()
     assert deck_dir.parent == work_dir
-    assert (deck_dir / "a.dck").read_text().startswith("[metadata]")
-    assert "Shock" in (deck_dir / "a.dck").read_text()
-    assert (deck_dir / "b.dck").read_text().startswith("[metadata]")
-    assert "Bolt" in (deck_dir / "b.dck").read_text()
 
 
 def test_forge_match_oracle_default_player():
@@ -109,7 +105,7 @@ def test_forge_match_oracle_reads_env(monkeypatch, tmp_path: Path):
     assert captured["java"] == "env-java"
     assert captured["jar"] == str(jar)
     assert captured["timeout_sec"] == 99.0
-    assert Path(captured["deck_dir"]).parent == work_dir
+    assert not Path(captured["deck_dir"]).exists()
 
 
 def test_forge_match_oracle_missing_jar_raises():
@@ -141,3 +137,51 @@ def test_forge_match_oracle_default_timeout(monkeypatch, tmp_path: Path):
 
     ForgeMatchOracle(jar=str(jar)).play([CardRef("Shock")], [CardRef("Bolt")], games=1)
     assert captured["timeout_sec"] == 300.0
+
+
+def test_forge_match_oracle_rejects_zero_games(tmp_path: Path):
+    jar = tmp_path / "forge.jar"
+    jar.write_text("fake")
+    oracle = ForgeMatchOracle(jar=str(jar))
+    with pytest.raises(ValueError, match="games must be at least 1"):
+        oracle.play([CardRef("Shock")], [CardRef("Bolt")], games=0)
+
+
+def test_forge_match_oracle_invalid_env_timeout_raises(monkeypatch, tmp_path: Path):
+    jar = tmp_path / "forge.jar"
+    jar.write_text("fake")
+    monkeypatch.setenv("FORGE_TIMEOUT_SEC", "not-a-number")
+    with pytest.raises(RuntimeError, match="invalid FORGE_TIMEOUT_SEC"):
+        ForgeMatchOracle(jar=str(jar))
+
+
+def test_forge_match_oracle_invalid_timeout_param_raises(tmp_path: Path):
+    jar = tmp_path / "forge.jar"
+    jar.write_text("fake")
+    with pytest.raises(RuntimeError, match="invalid timeout_sec"):
+        ForgeMatchOracle(jar=str(jar), timeout_sec="bad")
+
+
+def test_forge_match_oracle_cleans_up_deck_dir_on_error(
+    monkeypatch, tmp_path: Path
+):
+    jar = tmp_path / "forge.jar"
+    jar.write_text("fake")
+    work_dir = tmp_path / "work"
+    work_dir.mkdir()
+    captured: dict = {}
+
+    def failing_run_forge_sim(**kwargs):
+        captured["deck_dir"] = kwargs["deck_dir"]
+        raise RuntimeError("sim failed")
+
+    monkeypatch.setattr(
+        "magic_optimizer.match_oracle.forge.run_forge_sim",
+        failing_run_forge_sim,
+    )
+
+    oracle = ForgeMatchOracle(jar=str(jar), work_dir=str(work_dir))
+    with pytest.raises(RuntimeError, match="sim failed"):
+        oracle.play([CardRef("Shock")], [CardRef("Bolt")], games=1)
+
+    assert not Path(captured["deck_dir"]).exists()

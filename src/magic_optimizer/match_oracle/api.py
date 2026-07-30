@@ -14,6 +14,8 @@ match_oracle_bp = Blueprint(
     url_prefix="/api/match-oracle",
 )
 
+MAX_GAMES = 100
+
 
 def _result_to_json(result: MatchResult) -> dict:
     return {
@@ -60,6 +62,11 @@ def _parse_games(data: dict) -> tuple[int | None, tuple]:
         return None, (jsonify({"error": "games must be an integer"}), 400)
     if games < 1:
         return None, (jsonify({"error": "games must be at least 1"}), 400)
+    if games > MAX_GAMES:
+        return None, (
+            jsonify({"error": f"games must be at most {MAX_GAMES}"}),
+            400,
+        )
     return games, ()
 
 
@@ -97,7 +104,13 @@ def play():
     if backend == "forge":
         if not forge_available():
             return jsonify({"error": "forge backend unavailable"}), 503
-        oracle = ForgeMatchOracle()
+        try:
+            oracle = ForgeMatchOracle()
+        except RuntimeError as exc:
+            msg = str(exc)
+            if "FORGE_JAR" in msg or "FORGE_TIMEOUT_SEC" in msg or "timeout_sec" in msg:
+                return jsonify({"error": msg}), 503
+            raise
     else:
         oracle = StubMatchOracle()
 
