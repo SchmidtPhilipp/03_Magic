@@ -1,3 +1,4 @@
+from magic_optimizer.match_oracle.api import match_oracle_bp
 from magic_optimizer.match_oracle.dck import to_dck
 from magic_optimizer.match_oracle.forge import ForgeMatchOracle
 from magic_optimizer.match_oracle.forge_runner import (
@@ -20,6 +21,7 @@ from magic_optimizer.match_oracle.types import (
 )
 
 __all__ = [
+    "match_oracle_bp",
     "ForgeMatchOracle",
     "ForgeParseError",
     "ForgePlayerAI",
