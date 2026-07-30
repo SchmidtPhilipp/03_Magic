@@ -1,5 +1,10 @@
 # src/magic_optimizer/deck_picker/__init__.py
 from magic_optimizer.deck_picker.candidates import legal_candidates
+from magic_optimizer.deck_picker.complete import (
+    complete_deck,
+    count_non_basics,
+    fill_basics,
+)
 from magic_optimizer.deck_picker.heuristic import HeuristicNextCardPolicy, NextCardPolicy
 from magic_optimizer.deck_picker.types import (
     BASIC_LANDS,
@@ -17,5 +22,8 @@ __all__ = [
     "HeuristicNextCardPolicy",
     "NextCardPolicy",
     "ScoredCard",
+    "complete_deck",
+    "count_non_basics",
+    "fill_basics",
     "legal_candidates",
 ]
