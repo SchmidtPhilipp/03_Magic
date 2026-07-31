@@ -349,8 +349,9 @@ class CollectionRepository:
                     """
                     INSERT INTO scan_detections (
                         scan_session_id, bbox_x, bbox_y, bbox_w, bbox_h,
-                        detected_name, scryfall_id, set_code, confidence, status
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        detected_name, scryfall_id, set_code, collector_number,
+                        confidence, status
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         session_id,
@@ -361,6 +362,7 @@ class CollectionRepository:
                         det.get("detected_name"),
                         det.get("scryfall_id"),
                         det.get("set_code"),
+                        det.get("collector_number"),
                         det.get("confidence"),
                         det.get("status", "pending"),
                     ),
@@ -405,6 +407,7 @@ class CollectionRepository:
         *,
         detected_name: str | None = None,
         set_code: str | None = None,
+        collector_number: str | None = None,
         scryfall_id: str | None = None,
         status: str | None = None,
     ) -> dict[str, Any] | None:
@@ -428,6 +431,9 @@ class CollectionRepository:
             if set_code is not None:
                 fields.append("set_code = ?")
                 values.append(set_code)
+            if collector_number is not None:
+                fields.append("collector_number = ?")
+                values.append(collector_number)
             if scryfall_id is not None:
                 fields.append("scryfall_id = ?")
                 values.append(scryfall_id)
@@ -467,6 +473,7 @@ class CollectionRepository:
                 user_id,
                 card_name=name,
                 set_code=det.get("set_code"),
+                collector_number=det.get("collector_number"),
                 scryfall_id=det.get("scryfall_id"),
                 source="scan",
             )

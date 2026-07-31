@@ -115,13 +115,42 @@
 
                         <div id="tabScan" style="display:none;">
                             <p class="text-muted small">
-                                Mehrere Karten fotografieren — erkannte Bereiche werden mit grünem Rahmen
-                                und Namen markiert. Namen korrigieren, annehmen/ablehnen, dann übernehmen.
+                                Foto hochladen — erkannte Karten als klickbare Rahmen.
+                                Klick öffnet Preview (Scryfall); Accept/Reject auch in der Liste.
                             </p>
                             <input type="file" class="form-control form-control-sm mb-2" id="scanUpload"
                                 accept="image/*" capture="environment">
                             <div id="scanPanel" style="display:none;">
-                                <img id="scanOverlay" class="img-fluid rounded border mb-2" alt="Scan overlay">
+                                <div class="row g-2 mb-2">
+                                    <div class="col-lg-8">
+                                        <div id="scanStage" class="position-relative border rounded overflow-hidden bg-dark">
+                                            <img id="scanOriginal" class="img-fluid w-100 d-block" alt="Scan original">
+                                            <div id="scanBoxes"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div id="scanDetailPanel" class="border rounded p-2 bg-light" style="display:none;">
+                                            <img id="scanDetailImg" class="img-fluid rounded mb-2" alt="Scryfall preview"
+                                                style="max-height:220px;object-fit:contain;width:100%;background:#111;">
+                                            <div class="mb-1">
+                                                <label class="form-label small mb-0">Name</label>
+                                                <input class="form-control form-control-sm" id="scanDetailName">
+                                            </div>
+                                            <div class="mb-1">
+                                                <label class="form-label small mb-0">Set</label>
+                                                <input class="form-control form-control-sm" id="scanDetailSet">
+                                            </div>
+                                            <div class="mb-2 small text-muted" id="scanDetailMeta"></div>
+                                            <div class="d-flex gap-1">
+                                                <button type="button" class="btn btn-sm btn-success flex-fill" id="scanDetailAccept">Accept</button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger flex-fill" id="scanDetailReject">Reject</button>
+                                            </div>
+                                        </div>
+                                        <div id="scanDetailEmpty" class="text-muted small p-2">
+                                            Karte im Bild anklicken oder Zeile in der Liste wählen.
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="table-responsive mb-2" style="max-height: 240px; overflow-y:auto;">
                                     <table class="table table-sm">
                                         <thead>
@@ -129,6 +158,7 @@
                                                 <th>#</th>
                                                 <th>Name</th>
                                                 <th>Set</th>
+                                                <th>#</th>
                                                 <th>Status</th>
                                                 <th></th>
                                             </tr>

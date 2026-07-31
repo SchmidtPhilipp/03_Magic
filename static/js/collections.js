@@ -2,6 +2,15 @@
 (function () {
   let activeId = null;
   let scanSessionId = null;
+  let scanDetections = [];
+  let selectedDetectionId = null;
+  let scanOriginalUrl = null;
+
+  const STATUS_COLORS = {
+    pending: "rgba(230, 170, 40, 0.95)",
+    accepted: "rgba(40, 200, 80, 0.95)",
+    rejected: "rgba(220, 50, 50, 0.95)",
+  };
 
   async function api(path, opts = {}) {
     const res = await fetch(path, {
@@ -16,11 +25,15 @@
   function setupTabs() {
     document.querySelectorAll("#detailTabs .nav-link").forEach((btn) => {
       btn.onclick = () => {
-        document.querySelectorAll("#detailTabs .nav-link").forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll("#detailTabs .nav-link").forEach((b) =>
+          b.classList.remove("active")
+        );
         btn.classList.add("active");
         const tab = btn.dataset.tab;
-        document.getElementById("tabCards").style.display = tab === "cards" ? "block" : "none";
-        document.getElementById("tabScan").style.display = tab === "scan" ? "block" : "none";
+        document.getElementById("tabCards").style.display =
+          tab === "cards" ? "block" : "none";
+        document.getElementById("tabScan").style.display =
+          tab === "scan" ? "block" : "none";
       };
     });
   }
@@ -43,6 +56,8 @@
   async function selectCollection(id) {
     activeId = id;
     scanSessionId = null;
+    scanDetections = [];
+    selectedDetectionId = null;
     document.getElementById("scanPanel").style.display = "none";
     document.getElementById("emptyDetail").style.display = "none";
     document.getElementById("detailPanel").style.display = "block";
@@ -85,56 +100,137 @@
       });
   }
 
-  function renderScanDetections(detections) {
+  function escapeAttr(s) {
+    return String(s || "")
+      .replace(/&/g, "&amp;")
+      .replace(/"/g, "&quot;")
+      .replace(/</g, "&lt;");
+  }
+
+  function renderScanBoxes() {
+    const layer = document.getElementById("scanBoxes");
+    layer.innerHTML = "";
+    scanDetections.forEach((d) => {
+      const box = document.createElement("button");
+      box.type = "button";
+      box.className = "scan-box";
+      box.dataset.id = d.id;
+      const color = STATUS_COLORS[d.status] || STATUS_COLORS.pending;
+      const selected = d.id === selectedDetectionId;
+      Object.assign(box.style, {
+        position: "absolute",
+        left: `${(d.bbox_x || 0) * 100}%`,
+        top: `${(d.bbox_y || 0) * 100}%`,
+        width: `${(d.bbox_w || 0) * 100}%`,
+        height: `${(d.bbox_h || 0) * 100}%`,
+        border: `3px solid ${color}`,
+        background: selected ? "rgba(255,255,255,0.12)" : "transparent",
+        boxShadow: selected ? `0 0 0 2px ${color}` : "none",
+        cursor: "pointer",
+        padding: 0,
+        margin: 0,
+      });
+      box.title = d.detected_name || "?";
+      box.onclick = (e) => {
+        e.preventDefault();
+        openScanDetail(d.id);
+      };
+      layer.appendChild(box);
+    });
+  }
+
+  function openScanDetail(id) {
+    const d = scanDetections.find((x) => x.id === id);
+    if (!d) return;
+    selectedDetectionId = id;
+    document.getElementById("scanDetailPanel").style.display = "block";
+    document.getElementById("scanDetailEmpty").style.display = "none";
+    document.getElementById("scanDetailName").value = d.detected_name || "";
+    document.getElementById("scanDetailSet").value = d.set_code || "";
+    document.getElementById("scanDetailMeta").textContent = d.collector_number
+      ? `Collector #${d.collector_number}`
+      : "";
+    const img = document.getElementById("scanDetailImg");
+    if (d.image_uri) {
+      img.src = d.image_uri;
+      img.style.display = "block";
+    } else {
+      img.removeAttribute("src");
+      img.style.display = "none";
+    }
+    renderScanBoxes();
+    renderScanDetections();
+  }
+
+  function renderScanDetections() {
     const tbody = document.getElementById("scanDetections");
     tbody.innerHTML = "";
-    detections.forEach((d, idx) => {
+    scanDetections.forEach((d, idx) => {
       const tr = document.createElement("tr");
+      if (d.id === selectedDetectionId) tr.classList.add("table-active");
       const statusBadge =
         d.status === "accepted"
           ? '<span class="badge bg-success">OK</span>'
           : d.status === "rejected"
             ? '<span class="badge bg-danger">Nein</span>'
-            : '<span class="badge bg-secondary">?</span>';
+            : '<span class="badge bg-warning text-dark">?</span>';
       tr.innerHTML = `
         <td>${idx + 1}</td>
-        <td><input class="form-control form-control-sm det-name" value="${d.detected_name || ""}"></td>
-        <td><input class="form-control form-control-sm det-set" value="${d.set_code || ""}"></td>
+        <td><input class="form-control form-control-sm det-name" value="${escapeAttr(d.detected_name)}"></td>
+        <td><input class="form-control form-control-sm det-set" value="${escapeAttr(d.set_code)}"></td>
+        <td class="small">${escapeAttr(d.collector_number) || "—"}</td>
         <td>${statusBadge}</td>
         <td>
           <button class="btn btn-sm btn-outline-success btn-acc" title="Annehmen">✓</button>
           <button class="btn btn-sm btn-outline-danger btn-rej" title="Ablehnen">×</button>
         </td>`;
-      tr.querySelector(".btn-acc").onclick = () => updateDetection(d.id, tr, "accepted");
-      tr.querySelector(".btn-rej").onclick = () => updateDetection(d.id, tr, "rejected");
+      tr.onclick = (e) => {
+        if (e.target.closest("button, input")) return;
+        openScanDetail(d.id);
+      };
+      tr.querySelector(".btn-acc").onclick = (e) => {
+        e.stopPropagation();
+        patchDetection(d.id, { status: "accepted", detected_name: tr.querySelector(".det-name").value });
+      };
+      tr.querySelector(".btn-rej").onclick = (e) => {
+        e.stopPropagation();
+        patchDetection(d.id, { status: "rejected" });
+      };
       tr.querySelector(".det-name").onchange = (e) =>
-        updateDetection(d.id, tr, null, e.target.value);
+        patchDetection(d.id, { detected_name: e.target.value });
       tbody.appendChild(tr);
     });
   }
 
-  async function updateDetection(id, row, status, nameOverride) {
-    const body = {};
-    if (status) body.status = status;
-    const nameInput = row.querySelector(".det-name");
-    if (nameOverride !== undefined) body.detected_name = nameOverride;
-    else if (status) body.detected_name = nameInput.value;
-    const setInput = row.querySelector(".det-set");
-    if (setInput.value) body.set_code = setInput.value;
-
+  async function patchDetection(id, body) {
     await api(`/collections/api/scan/${scanSessionId}/detections/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
     await reloadScanSession();
+    if (selectedDetectionId === id) openScanDetail(id);
+  }
+
+  function applyScanPayload(data) {
+    scanDetections = data.detections || [];
+    scanOriginalUrl = data.original_url || scanOriginalUrl;
+    const img = document.getElementById("scanOriginal");
+    if (scanOriginalUrl) {
+      img.src = `${scanOriginalUrl}?t=${Date.now()}`;
+    }
+    renderScanBoxes();
+    renderScanDetections();
+    if (selectedDetectionId) {
+      const still = scanDetections.find((d) => d.id === selectedDetectionId);
+      if (still) openScanDetail(selectedDetectionId);
+    }
   }
 
   async function reloadScanSession() {
     if (!scanSessionId) return;
     const data = await api(`/collections/api/scan/${scanSessionId}`);
-    document.getElementById("scanOverlay").src = `${data.overlay_url}?t=${Date.now()}`;
-    renderScanDetections(data.detections || []);
+    applyScanPayload(data);
   }
 
   async function removeCard(cardId) {
@@ -209,20 +305,47 @@
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Scan failed");
     scanSessionId = data.session_id;
+    selectedDetectionId = null;
     document.getElementById("scanPanel").style.display = "block";
-    document.getElementById("scanOverlay").src = `${data.overlay_url}?t=${Date.now()}`;
-    renderScanDetections(data.detections || []);
+    document.getElementById("scanDetailPanel").style.display = "none";
+    document.getElementById("scanDetailEmpty").style.display = "block";
+    applyScanPayload(data);
     if (!data.detection_count) {
       alert("Keine Karten erkannt — Foto/Licht prüfen oder Karten näher ran.");
     }
     e.target.value = "";
   };
 
+  document.getElementById("scanDetailAccept").onclick = async () => {
+    if (!selectedDetectionId) return;
+    await patchDetection(selectedDetectionId, {
+      status: "accepted",
+      detected_name: document.getElementById("scanDetailName").value,
+      set_code: document.getElementById("scanDetailSet").value || null,
+    });
+  };
+
+  document.getElementById("scanDetailReject").onclick = async () => {
+    if (!selectedDetectionId) return;
+    await patchDetection(selectedDetectionId, { status: "rejected" });
+  };
+
+  document.getElementById("scanDetailName").onchange = async () => {
+    if (!selectedDetectionId) return;
+    await patchDetection(selectedDetectionId, {
+      detected_name: document.getElementById("scanDetailName").value,
+    });
+  };
+
   document.getElementById("btnCommitScan").onclick = async () => {
     if (!scanSessionId) return;
-    const data = await api(`/collections/api/scan/${scanSessionId}/commit`, { method: "POST" });
+    const data = await api(`/collections/api/scan/${scanSessionId}/commit`, {
+      method: "POST",
+    });
     alert(`${data.added} Karte(n) übernommen.`);
     scanSessionId = null;
+    scanDetections = [];
+    selectedDetectionId = null;
     document.getElementById("scanPanel").style.display = "none";
     await refreshDetail();
     await loadCollections();

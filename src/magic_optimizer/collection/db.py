@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS scan_detections (
     detected_name TEXT,
     scryfall_id TEXT,
     set_code TEXT,
+    collector_number TEXT,
     confidence REAL,
     status TEXT NOT NULL DEFAULT 'pending'
 );
@@ -92,6 +93,18 @@ def init_db(db_path: str | None = None) -> None:
     conn = get_connection(db_path)
     try:
         conn.executescript(_SCHEMA)
+        _migrate(conn)
         conn.commit()
     finally:
         conn.close()
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    cols = {
+        row[1]
+        for row in conn.execute("PRAGMA table_info(scan_detections)").fetchall()
+    }
+    if "collector_number" not in cols:
+        conn.execute(
+            "ALTER TABLE scan_detections ADD COLUMN collector_number TEXT"
+        )

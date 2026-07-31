@@ -5,7 +5,13 @@ from pathlib import Path
 
 from PIL import Image
 
-from magic_optimizer.vision.overlay import render_overlay
+from magic_optimizer.vision.overlay import render_overlay, status_color
+
+
+def test_status_colors():
+    assert status_color("pending") == (230, 170, 40)
+    assert status_color("accepted") == (40, 200, 80)
+    assert status_color("rejected") == (220, 50, 50)
 
 
 def test_render_overlay_writes_green_boxes():

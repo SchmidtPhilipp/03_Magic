@@ -51,3 +51,30 @@ def test_scan_session_create_and_commit(repo):
     cards = repo.list_cards(cid, user_id)
     assert len(cards) == 1
     assert cards[0]["card_name"] == "Forest"
+
+
+def test_commit_stores_collector_number(repo):
+    user_id = repo.ensure_user("philipp")
+    coll = repo.create_collection(user_id, "CN Test")
+    session = repo.create_scan_session(
+        coll["id"],
+        user_id,
+        "/tmp/scan.jpg",
+        [
+            {
+                "bbox_x": 0.1,
+                "bbox_y": 0.1,
+                "bbox_w": 0.2,
+                "bbox_h": 0.3,
+                "detected_name": "Lightning Bolt",
+                "set_code": "M21",
+                "collector_number": "162",
+                "scryfall_id": "abc",
+                "status": "accepted",
+            },
+        ],
+    )
+    assert session["detections"][0]["collector_number"] == "162"
+    repo.commit_scan_session(session["id"], user_id)
+    cards = repo.list_cards(coll["id"], user_id)
+    assert cards[0]["collector_number"] == "162"

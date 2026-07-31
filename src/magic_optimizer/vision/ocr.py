@@ -89,7 +89,9 @@ def enrich_detections_with_ocr(
         if meta:
             det["detected_name"] = meta["card_name"]
             det["set_code"] = meta.get("set_code")
+            det["collector_number"] = meta.get("collector_number")
             det["scryfall_id"] = meta.get("scryfall_id")
+            det["image_uri"] = meta.get("image_uri")
             det["confidence"] = max(float(det.get("confidence") or 0), 0.55)
         else:
             det["detected_name"] = title

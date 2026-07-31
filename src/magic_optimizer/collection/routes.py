@@ -16,7 +16,11 @@ from magic_optimizer.collection.auth import current_username
 from magic_optimizer.collection.repository import CollectionRepository
 from magic_optimizer.vision.detect import detect_card_regions
 from magic_optimizer.vision.overlay import render_overlay
-from magic_optimizer.vision.scryfall import lookup_card_name
+from magic_optimizer.vision.scryfall import (
+    attach_image_uri,
+    enrich_detections_payload,
+    lookup_card_name,
+)
 
 collection_bp = Blueprint(
     "collection",
@@ -160,7 +164,7 @@ def api_scan_upload(collection_id: int):
     if not scan_session:
         return jsonify({"error": "failed to create scan session"}), 500
 
-    overlay_dets = scan_session.get("detections", [])
+    overlay_dets = enrich_detections_payload(scan_session.get("detections", []))
     render_overlay(str(original_path), overlay_dets, str(overlay_path))
 
     return jsonify(
@@ -202,17 +206,20 @@ def api_get_scan(session_id: int):
     session_row = get_repo().get_scan_session(session_id, _user_id())
     if not session_row:
         return jsonify({"error": "not found"}), 404
+    detections = enrich_detections_payload(session_row.get("detections", []))
+    session_row = {**session_row, "detections": detections}
     overlay_path = Path(session_row["image_path"]).parent / "overlay.jpg"
     if overlay_path.exists():
         render_overlay(
             session_row["image_path"],
-            session_row.get("detections", []),
+            detections,
             str(overlay_path),
         )
     return jsonify(
         {
             **session_row,
             "overlay_url": f"/collections/scans/{session_id}/overlay.jpg",
+            "original_url": f"/collections/scans/{session_id}/original",
         }
     )
 
@@ -229,6 +236,9 @@ def api_update_detection(session_id: int, detection_id: int):
         _user_id(),
         detected_name=meta["card_name"] if meta else name,
         set_code=meta.get("set_code") if meta else data.get("set_code"),
+        collector_number=(
+            meta.get("collector_number") if meta else data.get("collector_number")
+        ),
         scryfall_id=meta.get("scryfall_id") if meta else data.get("scryfall_id"),
         status=data.get("status"),
     )
@@ -238,12 +248,13 @@ def api_update_detection(session_id: int, detection_id: int):
     session_row = get_repo().get_scan_session(session_id, _user_id())
     if session_row:
         overlay_path = Path(session_row["image_path"]).parent / "overlay.jpg"
+        dets = enrich_detections_payload(session_row.get("detections", []))
         render_overlay(
             session_row["image_path"],
-            session_row.get("detections", []),
+            dets,
             str(overlay_path),
         )
-    return jsonify(det)
+    return jsonify(attach_image_uri(det))
 
 
 @collection_bp.route("/api/scan/<int:session_id>/commit", methods=["POST"])

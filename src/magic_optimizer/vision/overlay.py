@@ -1,4 +1,4 @@
-"""Draw review overlays (green boxes + card names)."""
+"""Draw review overlays (status-colored boxes + card names)."""
 
 from __future__ import annotations
 
@@ -7,6 +7,17 @@ from typing import Any
 
 from PIL import Image, ImageDraw, ImageFont
 
+_STATUS_COLORS = {
+    "pending": (230, 170, 40),
+    "accepted": (40, 200, 80),
+    "rejected": (220, 50, 50),
+}
+
+
+def status_color(status: str) -> tuple[int, int, int]:
+    """RGB outline/fill color for a detection status."""
+    return _STATUS_COLORS.get(status, _STATUS_COLORS["pending"])
+
 
 def render_overlay(
     image_path: str,
@@ -14,9 +25,9 @@ def render_overlay(
     output_path: str,
 ) -> str:
     """
-    Render green bounding boxes and labels onto the scan image.
+    Render status-colored bounding boxes and labels onto the scan image.
 
-    Rejected detections are drawn in red. Returns output_path.
+    Returns output_path.
     """
     img = Image.open(image_path).convert("RGB")
     draw = ImageDraw.Draw(img)
@@ -25,7 +36,7 @@ def render_overlay(
 
     for det in detections:
         status = det.get("status", "pending")
-        color = (220, 50, 50) if status == "rejected" else (40, 200, 80)
+        color = status_color(status)
         x1 = det["bbox_x"] * width
         y1 = det["bbox_y"] * height
         x2 = x1 + det["bbox_w"] * width
