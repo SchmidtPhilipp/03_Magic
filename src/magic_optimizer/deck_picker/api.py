@@ -3,11 +3,14 @@ from __future__ import annotations
 
 from flask import Blueprint, jsonify, request
 
-from magic_optimizer.deck_picker.complete import complete_deck
+from magic_optimizer.deck_picker.complete import (
+    complete_deck,
+    complete_deck_with_trajectory,
+)
 from magic_optimizer.deck_picker.heuristic import HeuristicNextCardPolicy
 from magic_optimizer.deck_picker.missing import missing_cards
+from magic_optimizer.deck_picker.modify import apply_swap, propose_swaps
 from magic_optimizer.deck_picker.types import CardPool, CardRef, DeckConstraints
-
 deck_picker_bp = Blueprint(
     "deck_picker",
     __name__,
@@ -149,7 +152,14 @@ def complete():
         return err
 
     policy = HeuristicNextCardPolicy(ratings)
-    deck = complete_deck(policy, pool, constraints, seed_deck=decklist)
+    want_trajectory = bool(data.get("trajectory", False))
+    if want_trajectory:
+        deck, steps = complete_deck_with_trajectory(
+            policy, pool, constraints, seed_deck=decklist
+        )
+    else:
+        deck = complete_deck(policy, pool, constraints, seed_deck=decklist)
+        steps = []
 
     owned_raw = data.get("owned")
     if isinstance(owned_raw, dict):
@@ -167,4 +177,81 @@ def complete():
     else:
         missing = []
 
-    return jsonify({"deck": [card.name for card in deck], "missing": missing})
+    payload: dict = {
+        "deck": [card.name for card in deck],
+        "missing": missing,
+    }
+    if want_trajectory:
+        payload["trajectory"] = [
+            {
+                "action": step.action,
+                "card": step.card.name,
+                "score": step.score,
+                "index": step.index,
+                "alternatives": [
+                    {"name": a.card.name, "score": a.score} for a in step.alternatives
+                ],
+            }
+            for step in steps
+        ]
+    return jsonify(payload)
+
+
+@deck_picker_bp.route("/modify", methods=["POST"])
+def modify():
+    """Propose (and optionally apply) swaps for an existing decklist."""
+    data, err = _parse_body()
+    if data is None:
+        return err
+
+    pool, err = _parse_pool(data)
+    if pool is None:
+        return err
+    decklist, err = _parse_decklist(data)
+    if decklist is None:
+        return err
+    if not decklist:
+        return jsonify({"error": "decklist required"}), 400
+    constraints, err = _parse_constraints(data)
+    if constraints is None:
+        return err
+    ratings, err = _parse_ratings(data)
+    if ratings is None:
+        return err
+
+    try:
+        k = int(data.get("k", 5))
+    except (TypeError, ValueError):
+        return jsonify({"error": "k must be an integer"}), 400
+
+    policy = HeuristicNextCardPolicy(ratings)
+    swaps = propose_swaps(policy, pool, decklist, constraints, k=k)
+    payload: dict = {
+        "swaps": [
+            {
+                "remove": s.remove.name,
+                "add": s.add.name,
+                "score_delta": s.score_delta,
+                "remove_score": s.remove_score,
+                "add_score": s.add_score,
+            }
+            for s in swaps
+        ]
+    }
+
+    if data.get("apply") and swaps:
+        try:
+            n = int(data.get("apply_count", 1))
+        except (TypeError, ValueError):
+            return jsonify({"error": "apply_count must be an integer"}), 400
+        updated = list(decklist)
+        applied = []
+        for proposal in swaps[: max(0, n)]:
+            updated = apply_swap(updated, proposal)
+            applied.append(
+                {"remove": proposal.remove.name, "add": proposal.add.name}
+            )
+        payload["deck"] = [c.name for c in updated]
+        payload["applied"] = applied
+
+    return jsonify(payload)

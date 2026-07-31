@@ -7,6 +7,7 @@ from magic_optimizer.deck_picker.types import (
     CardPool,
     CardRef,
     DeckConstraints,
+    DeckStep,
 )
 
 _WUBRG_ORDER: tuple[str, ...] = ("W", "U", "B", "R", "G")
@@ -73,6 +74,90 @@ def fill_basics(
     return deck
 
 
+def complete_deck_with_trajectory(
+    policy: HeuristicNextCardPolicy,
+    pool: CardPool,
+    constraints: DeckConstraints,
+    *,
+    seed_deck: list[CardRef] | None = None,
+    alt_k: int = 3,
+) -> tuple[list[CardRef], list[DeckStep]]:
+    """Build a deck and record every pin/seed/add/fill_basics step."""
+    deck: list[CardRef] = []
+    steps: list[DeckStep] = []
+
+    for name in constraints.pinned:
+        card = CardRef(name)
+        deck.append(card)
+        steps.append(
+            DeckStep(action="pin", card=card, score=0.0, alternatives=(), index=len(deck))
+        )
+
+    if seed_deck:
+        for card in seed_deck:
+            deck.append(card)
+            steps.append(
+                DeckStep(
+                    action="seed",
+                    card=card,
+                    score=0.0,
+                    alternatives=(),
+                    index=len(deck),
+                )
+            )
+
+    while count_non_basics(deck) < constraints.non_basic_target:
+        picks = policy.next_card(pool, deck, constraints, k=50)
+        if not picks:
+            break
+        non_basic_picks = [s for s in picks if s.card.name not in BASIC_LANDS]
+        if not non_basic_picks:
+            break
+        chosen = non_basic_picks[0]
+        alts = tuple(non_basic_picks[1 : 1 + max(0, alt_k)])
+        deck.append(chosen.card)
+        steps.append(
+            DeckStep(
+                action="add",
+                card=chosen.card,
+                score=chosen.score,
+                alternatives=alts,
+                index=len(deck),
+            )
+        )
+
+    before_basics = len(deck)
+    deck = fill_basics(deck, constraints)
+    for card in deck[before_basics:]:
+        steps.append(
+            DeckStep(
+                action="fill_basics",
+                card=card,
+                score=0.0,
+                alternatives=(),
+                index=0,  # filled after; set below
+            )
+        )
+    # Fix indices for fill_basics steps
+    fixed: list[DeckStep] = []
+    size = before_basics
+    for step in steps:
+        if step.action == "fill_basics":
+            size += 1
+            fixed.append(
+                DeckStep(
+                    action=step.action,
+                    card=step.card,
+                    score=step.score,
+                    alternatives=step.alternatives,
+                    index=size,
+                )
+            )
+        else:
+            fixed.append(step)
+    return deck, fixed
+
+
 def complete_deck(
     policy: HeuristicNextCardPolicy,
     pool: CardPool,
@@ -80,20 +165,7 @@ def complete_deck(
     *,
     seed_deck: list[CardRef] | None = None,
 ) -> list[CardRef]:
-    deck: list[CardRef] = [CardRef(name) for name in constraints.pinned]
-    if seed_deck:
-        deck.extend(seed_deck)
-
-    while count_non_basics(deck) < constraints.non_basic_target:
-        picks = policy.next_card(pool, deck, constraints, k=50)
-        if not picks:
-            break
-        pick = next(
-            (scored.card for scored in picks if scored.card.name not in BASIC_LANDS),
-            None,
-        )
-        if pick is None:
-            break
-        deck.append(pick)
-
-    return fill_basics(deck, constraints)
+    deck, _ = complete_deck_with_trajectory(
+        policy, pool, constraints, seed_deck=seed_deck
+    )
+    return deck

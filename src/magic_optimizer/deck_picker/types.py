@@ -39,3 +39,25 @@ class CardPool:
 class ScoredCard:
     card: CardRef
     score: float
+
+
+@dataclass(frozen=True)
+class DeckStep:
+    """One step in a deck-building trajectory."""
+
+    action: str  # "pin" | "seed" | "add" | "fill_basics"
+    card: CardRef
+    score: float = 0.0
+    alternatives: tuple[ScoredCard, ...] = ()
+    index: int = 0  # deck size after this step
+
+
+@dataclass(frozen=True)
+class SwapProposal:
+    """Suggest removing one card and adding another."""
+
+    remove: CardRef
+    add: CardRef
+    score_delta: float
+    remove_score: float
+    add_score: float
