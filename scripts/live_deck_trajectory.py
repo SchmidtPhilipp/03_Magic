@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
-"""Live view: build from repo collection with trajectory, then modify the deck.
+"""Build / modify decks with trajectory and resumable Deck-RL checkpoints.
 
 Usage:
-  PYTHONPATH=src python3 scripts/live_deck_trajectory.py
-  PYTHONPATH=src python3 scripts/live_deck_trajectory.py --collection data/collections/FinalFantasy.csv
+  # Fresh run, write checkpoint after each modify step
+  PYTHONPATH=src python3 scripts/live_deck_trajectory.py \\
+    --checkpoint runs/deck_rl.json --modify-steps 3
+
+  # Resume deck RL loop from checkpoint (more swap iterations)
+  PYTHONPATH=src python3 scripts/live_deck_trajectory.py \\
+    --resume runs/deck_rl.json --modify-steps 5
 """
 from __future__ import annotations
 
@@ -15,24 +20,27 @@ import time
 from collections import Counter
 from pathlib import Path
 
-# Prefer loading without package __init__ if numpy missing — use normal import when possible.
 try:
     from magic_optimizer.deck_picker import (
         BASIC_LANDS,
         CardRef,
         DeckConstraints,
+        DeckRLState,
         HeuristicNextCardPolicy,
         apply_swap,
         complete_deck_with_trajectory,
+        load_checkpoint,
         pool_from_card_rows,
         propose_swaps,
+        save_checkpoint,
+        steps_to_dicts,
     )
 except ModuleNotFoundError:
     print("Run with PYTHONPATH=src and Python 3.11+", file=sys.stderr)
     raise
 
 
-def pause(msg: str, sec: float = 0.12) -> None:
+def pause(msg: str, sec: float = 0.08) -> None:
     print(msg, flush=True)
     time.sleep(sec)
 
@@ -49,6 +57,40 @@ def load_collection(path: Path) -> list[dict]:
     return out
 
 
+def run_modify_loop(
+    state: DeckRLState,
+    *,
+    steps: int,
+    checkpoint_path: Path | None,
+) -> DeckRLState:
+    policy = HeuristicNextCardPolicy(state.ratings)
+    pool = state.card_pool()
+    for i in range(max(0, steps)):
+        swaps = propose_swaps(policy, pool, state.deck, state.constraints, k=5)
+        if not swaps:
+            pause(f"  iter {state.iteration}: keine weiteren positiven Swaps — stop")
+            break
+        best = swaps[0]
+        pause(
+            f"  iter {state.iteration}: − {best.remove.name} + {best.add.name} "
+            f"(Δ={best.score_delta:+.1f})"
+        )
+        state.deck = apply_swap(state.deck, best)
+        state.trajectory.append(
+            {
+                "action": "swap",
+                "remove": best.remove.name,
+                "add": best.add.name,
+                "score_delta": best.score_delta,
+            }
+        )
+        state.iteration += 1
+        if checkpoint_path:
+            save_checkpoint(checkpoint_path, state)
+            pause(f"     💾 checkpoint → {checkpoint_path} (iteration={state.iteration})")
+    return state
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -56,8 +98,40 @@ def main() -> int:
         type=Path,
         default=Path("data/collections/collection_278079_69871_1751833200.csv"),
     )
-    parser.add_argument("--seed-deck", type=Path, help="Optional text file: one card name per line")
+    parser.add_argument("--seed-deck", type=Path, help="Optional seed deck (one name/line)")
+    parser.add_argument(
+        "--checkpoint",
+        type=Path,
+        default=Path("runs/deck_rl_checkpoint.json"),
+        help="Where to write/update Deck-RL state",
+    )
+    parser.add_argument(
+        "--resume",
+        type=Path,
+        help="Resume from this checkpoint (skips fresh build)",
+    )
+    parser.add_argument(
+        "--modify-steps",
+        type=int,
+        default=3,
+        help="How many swap iterations of the deck RL loop to run",
+    )
     args = parser.parse_args()
+
+    if args.resume:
+        pause(f"\n▶️  Resume Deck-RL from {args.resume}")
+        state = load_checkpoint(args.resume)
+        pause(
+            f"   deck={len(state.deck)} cards  iteration={state.iteration}  "
+            f"pool={len(state.pool)}"
+        )
+        # Write back to the resumed file unless --checkpoint was set explicitly
+        # to something other than the default.
+        default_ckpt = Path("runs/deck_rl_checkpoint.json")
+        ckpt = args.resume if args.checkpoint == default_ckpt else args.checkpoint
+        state = run_modify_loop(state, steps=args.modify_steps, checkpoint_path=ckpt)
+        pause(f"\n✅ Resumed to iteration={state.iteration}  saved {ckpt}\n")
+        return 0
 
     pause(f"\n📁 Collection: {args.collection}")
     rows = load_collection(args.collection)
@@ -78,7 +152,7 @@ def main() -> int:
             for line in args.seed_deck.read_text(encoding="utf-8").splitlines()
             if line.strip() and not line.strip().startswith("#")
         ]
-        pause(f"🌱 Seed deck: {len(seed)} cards from {args.seed_deck}")
+        pause(f"🌱 Seed deck: {len(seed)} cards")
 
     pause("\n=== Trajektorie (build) ===")
     deck, steps = complete_deck_with_trajectory(
@@ -86,45 +160,41 @@ def main() -> int:
     )
     for step in steps:
         if step.action == "fill_basics":
-            continue  # summarize basics at end
-        alts = ""
-        if step.alternatives:
-            alts = "  | alt: " + ", ".join(
-                f"{a.card.name}({a.score:.1f})" for a in step.alternatives
-            )
+            continue
         pause(
             f"  [{step.index:02d}] {step.action:12} {step.card.name:<36} "
-            f"score={step.score:5.2f}{alts}",
-            0.05,
+            f"score={step.score:5.2f}",
+            0.03,
         )
     basics = sum(1 for c in deck if c.name in BASIC_LANDS)
-    pause(f"  … + {basics} basic lands → Deck size {len(deck)}")
+    pause(f"  … + {basics} basics → {len(deck)} cards")
 
-    pause("\n=== Fertiges Deck (Counts) ===")
-    for name, cnt in Counter(c.name for c in deck).most_common(12):
-        pause(f"  {cnt}× {name}", 0.04)
+    state = DeckRLState(
+        deck=deck,
+        pool=dict(pool.available),
+        constraints=constraints,
+        ratings=ratings,
+        iteration=0,
+        trajectory=steps_to_dicts(steps),
+        meta={"collection": str(args.collection)},
+    )
+    save_checkpoint(args.checkpoint, state)
+    pause(f"\n💾 Initial checkpoint → {args.checkpoint}")
 
-    pause("\n=== Modify: Swap-Vorschläge ===")
-    swaps = propose_swaps(policy, pool, deck, constraints, k=5)
-    if not swaps:
-        pause("  (keine positiven Swaps)")
-    for i, s in enumerate(swaps, 1):
-        pause(
-            f"  {i}. − {s.remove.name} ({s.remove_score:.1f})  "
-            f"+ {s.add.name} ({s.add_score:.1f})  Δ={s.score_delta:+.1f}",
-            0.1,
-        )
+    pause("\n=== Deck-RL modify loop ===")
+    state = run_modify_loop(
+        state, steps=args.modify_steps, checkpoint_path=args.checkpoint
+    )
 
-    if swaps:
-        pause("\n=== Apply besten Swap ===")
-        before = Counter(c.name for c in deck)
-        deck = apply_swap(deck, swaps[0])
-        after = Counter(c.name for c in deck)
-        pause(f"  entfernt: {swaps[0].remove.name} ({before[swaps[0].remove.name]}→{after[swaps[0].remove.name]})")
-        pause(f"  hinzu:    {swaps[0].add.name} ({before[swaps[0].add.name]}→{after[swaps[0].add.name]})")
+    pause("\n=== Deck counts ===")
+    for name, cnt in Counter(c.name for c in state.deck).most_common(10):
+        pause(f"  {cnt}× {name}", 0.03)
 
-    pause("\n✅ Fertig. API: POST /api/deck-picker/complete {trajectory:true}")
-    pause("         POST /api/deck-picker/modify  {decklist, pool, apply:true}\n")
+    pause(
+        f"\n✅ Done. Resume later with:\n"
+        f"   PYTHONPATH=src python3 scripts/live_deck_trajectory.py "
+        f"--resume {args.checkpoint} --modify-steps 5\n"
+    )
     return 0
 
 

@@ -1,5 +1,13 @@
 # src/magic_optimizer/deck_picker/__init__.py
 from magic_optimizer.deck_picker.candidates import legal_candidates
+from magic_optimizer.deck_picker.checkpoint import (
+    DeckRLState,
+    load_checkpoint,
+    save_checkpoint,
+    state_from_dict,
+    state_to_dict,
+    steps_to_dicts,
+)
 from magic_optimizer.deck_picker.complete import (
     complete_deck,
     complete_deck_with_trajectory,
@@ -25,6 +33,7 @@ __all__ = [
     "CardPool",
     "CardRef",
     "DeckConstraints",
+    "DeckRLState",
     "DeckStep",
     "HeuristicNextCardPolicy",
     "NextCardPolicy",
@@ -36,8 +45,13 @@ __all__ = [
     "count_non_basics",
     "fill_basics",
     "legal_candidates",
+    "load_checkpoint",
     "missing_cards",
     "pool_from_card_rows",
     "propose_swaps",
+    "save_checkpoint",
+    "state_from_dict",
+    "state_to_dict",
+    "steps_to_dicts",
     "union_pools",
 ]

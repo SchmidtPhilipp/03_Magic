@@ -3,6 +3,11 @@ from __future__ import annotations
 
 from flask import Blueprint, jsonify, request
 
+from magic_optimizer.deck_picker.checkpoint import (
+    DeckRLState,
+    state_from_dict,
+    state_to_dict,
+)
 from magic_optimizer.deck_picker.complete import (
     complete_deck,
     complete_deck_with_trajectory,
@@ -194,6 +199,17 @@ def complete():
             }
             for step in steps
         ]
+        payload["checkpoint"] = state_to_dict(
+            DeckRLState(
+                deck=deck,
+                pool=dict(pool.available),
+                constraints=constraints,
+                ratings=ratings,
+                iteration=0,
+                trajectory=payload["trajectory"],
+                meta={"source": "complete"},
+            )
+        )
     return jsonify(payload)
 
 
@@ -254,4 +270,74 @@ def modify():
         payload["deck"] = [c.name for c in updated]
         payload["applied"] = applied
 
+    return jsonify(payload)
+
+
+@deck_picker_bp.route("/resume", methods=["POST"])
+def resume():
+    """
+    Resume deck RL loop from a checkpoint body.
+
+    Body: {"checkpoint": {...}, "apply": true, "apply_count": 1, "k": 5}
+    Returns updated checkpoint + swaps/applied.
+    """
+    data = request.get_json(silent=True)
+    if data is None or not isinstance(data, dict):
+        return jsonify({"error": "invalid JSON object"}), 400
+    raw = data.get("checkpoint")
+    if not isinstance(raw, dict):
+        return jsonify({"error": "checkpoint object required"}), 400
+    try:
+        state = state_from_dict(raw)
+    except (ValueError, TypeError, KeyError) as exc:
+        return jsonify({"error": f"invalid checkpoint: {exc}"}), 400
+
+    try:
+        k = int(data.get("k", 5))
+    except (TypeError, ValueError):
+        return jsonify({"error": "k must be an integer"}), 400
+
+    policy = HeuristicNextCardPolicy(state.ratings)
+    pool = state.card_pool()
+    swaps = propose_swaps(policy, pool, state.deck, state.constraints, k=k)
+    payload: dict = {
+        "swaps": [
+            {
+                "remove": s.remove.name,
+                "add": s.add.name,
+                "score_delta": s.score_delta,
+                "remove_score": s.remove_score,
+                "add_score": s.add_score,
+            }
+            for s in swaps
+        ],
+        "iteration": state.iteration,
+    }
+
+    if data.get("apply") and swaps:
+        try:
+            n = int(data.get("apply_count", 1))
+        except (TypeError, ValueError):
+            return jsonify({"error": "apply_count must be an integer"}), 400
+        updated = list(state.deck)
+        applied = []
+        for proposal in swaps[: max(0, n)]:
+            updated = apply_swap(updated, proposal)
+            applied.append(
+                {"remove": proposal.remove.name, "add": proposal.add.name}
+            )
+            state.trajectory.append(
+                {
+                    "action": "swap",
+                    "remove": proposal.remove.name,
+                    "add": proposal.add.name,
+                    "score_delta": proposal.score_delta,
+                }
+            )
+        state.deck = updated
+        state.iteration += len(applied)
+        payload["applied"] = applied
+
+    payload["checkpoint"] = state_to_dict(state)
+    payload["deck"] = [c.name for c in state.deck]
     return jsonify(payload)

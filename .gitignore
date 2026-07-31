@@ -57,3 +57,6 @@ static/card_cache/
 # Git worktrees
 .worktrees/
 .superpowers/
+
+# Deck RL checkpoints
+runs/
