@@ -34,6 +34,15 @@ def test_parse_score_on_wins_line():
     assert parse_forge_sim_output(text) == (2, 2, 4)
 
 
+def test_parse_real_forge_match_result_line():
+    text = (
+        "Game Outcome: Ai(1)-oracle_a has won because all opponents have lost\n"
+        "Match Result: Ai(1)-oracle_a: 1 Ai(2)-oracle_b: 0 \n"
+        "Game Result: Game 1 ended in 1352 ms. Ai(1)-oracle_a has won!\n"
+    )
+    assert parse_forge_sim_output(text) == (1, 0, 1)
+
+
 def test_parse_raises_on_unparsable():
     with pytest.raises(ForgeParseError):
         parse_forge_sim_output("no useful output here")
@@ -43,18 +52,19 @@ def test_build_forge_sim_command():
     cmd = build_forge_sim_command(
         java="java",
         jar="/opt/forge.jar",
-        deck_a="/tmp/a.dck",
-        deck_b="/tmp/b.dck",
+        deck_a="deck_a",
+        deck_b="deck_b",
         games=10,
     )
     assert cmd == [
         "java",
+        "-Xmx2048m",
         "-jar",
         "/opt/forge.jar",
         "sim",
         "-d",
-        "/tmp/a.dck",
-        "/tmp/b.dck",
+        "deck_a",
+        "deck_b",
         "-n",
         "10",
         "-q",
@@ -106,8 +116,8 @@ def test_run_forge_sim_success(monkeypatch):
     assert captured["cmd"] == build_forge_sim_command(
         java="java",
         jar="/forge.jar",
-        deck_a="/decks/a.dck",
-        deck_b="/decks/b.dck",
+        deck_a="a",
+        deck_b="b",
         games=4,
     )
     assert captured["kwargs"]["timeout"] == 30.0

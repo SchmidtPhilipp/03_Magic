@@ -60,3 +60,14 @@ static/card_cache/
 
 # Deck RL checkpoints
 runs/
+
+# YOLO weights & training runs
+*.pt
+!models/mtg_card/best.pt
+runs/
+data/yolo_mtg_card/
+yolov8s-world.pt
+yolo11n.pt
+
+# Local Forge paths
+config/forge.env

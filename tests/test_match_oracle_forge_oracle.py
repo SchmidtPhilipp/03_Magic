@@ -50,12 +50,12 @@ def test_forge_match_oracle_play(monkeypatch, tmp_path: Path):
     assert captured["jar"] == str(jar)
     assert captured["games"] == 3
     assert captured["timeout_sec"] == 42.0
-    assert captured["deck_a_name"] == "a"
-    assert captured["deck_b_name"] == "b"
-
-    deck_dir = Path(captured["deck_dir"])
-    assert not deck_dir.exists()
-    assert deck_dir.parent == work_dir
+    assert captured["deck_a_name"].startswith("mo_")
+    assert captured["deck_a_name"].endswith("_a")
+    assert captured["deck_b_name"].endswith("_b")
+    assert Path(captured["deck_dir"]) == work_dir
+    # ephemeral .dck files removed; constructed dir itself remains
+    assert list(work_dir.glob("mo_*.dck")) == []
 
 
 def test_forge_match_oracle_default_player():
@@ -105,7 +105,8 @@ def test_forge_match_oracle_reads_env(monkeypatch, tmp_path: Path):
     assert captured["java"] == "env-java"
     assert captured["jar"] == str(jar)
     assert captured["timeout_sec"] == 99.0
-    assert not Path(captured["deck_dir"]).exists()
+    assert Path(captured["deck_dir"]) == work_dir
+    assert list(work_dir.glob("mo_*.dck")) == []
 
 
 def test_forge_match_oracle_missing_jar_raises():
@@ -184,4 +185,5 @@ def test_forge_match_oracle_cleans_up_deck_dir_on_error(
     with pytest.raises(RuntimeError, match="sim failed"):
         oracle.play([CardRef("Shock")], [CardRef("Bolt")], games=1)
 
-    assert not Path(captured["deck_dir"]).exists()
+    assert Path(captured["deck_dir"]) == work_dir
+    assert list(work_dir.glob("mo_*.dck")) == []
