@@ -1,24 +1,25 @@
 #!/usr/bin/env python3
-"""Build / modify decks with trajectory and resumable Deck-RL checkpoints.
+"""Build / modify decks with trajectory, color-aware lands, resumable checkpoints.
+
+NOTE: This loop optimizes a *heuristic rating*, not Forge winrate. Lands follow
+mana pips from Scryfall when available — still not a global optimum.
 
 Usage:
-  # Fresh run, write checkpoint after each modify step
-  PYTHONPATH=src python3 scripts/live_deck_trajectory.py \\
-    --checkpoint runs/deck_rl.json --modify-steps 3
-
-  # Resume deck RL loop from checkpoint (more swap iterations)
-  PYTHONPATH=src python3 scripts/live_deck_trajectory.py \\
-    --resume runs/deck_rl.json --modify-steps 5
+  PYTHONPATH=src python3 scripts/live_deck_trajectory.py --checkpoint runs/deck_rl.json
+  PYTHONPATH=src python3 scripts/live_deck_trajectory.py --resume runs/deck_rl.json
 """
 from __future__ import annotations
 
 import argparse
 import csv
 import hashlib
+import json
 import sys
 import time
 from collections import Counter
 from pathlib import Path
+
+import requests
 
 try:
     from magic_optimizer.deck_picker import (
@@ -35,12 +36,14 @@ try:
         save_checkpoint,
         steps_to_dicts,
     )
+    from magic_optimizer.deck_picker.complete import refill_basics
+    from magic_optimizer.deck_picker.mana import estimate_deck_color_pips
 except ModuleNotFoundError:
     print("Run with PYTHONPATH=src and Python 3.11+", file=sys.stderr)
     raise
 
 
-def pause(msg: str, sec: float = 0.08) -> None:
+def pause(msg: str, sec: float = 0.05) -> None:
     print(msg, flush=True)
     time.sleep(sec)
 
@@ -57,15 +60,62 @@ def load_collection(path: Path) -> list[dict]:
     return out
 
 
+class ScryfallCache:
+    def __init__(self, path: Path) -> None:
+        self.path = path
+        self._data: dict[str, dict] = {}
+        if path.exists():
+            try:
+                self._data = json.loads(path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                self._data = {}
+
+    def get(self, name: str) -> dict | None:
+        if name in self._data:
+            return self._data[name] or None
+        try:
+            r = requests.get(
+                "https://api.scryfall.com/cards/named",
+                params={"fuzzy": name},
+                timeout=15,
+                headers={
+                    "User-Agent": "phi-labs-magic-optimizer/0.1 (deck-picker land fill)",
+                    "Accept": "application/json",
+                },
+            )
+            time.sleep(0.08)  # be nice to Scryfall
+            if r.status_code == 200:
+                payload = r.json()
+                slim = {
+                    "mana_cost": payload.get("mana_cost"),
+                    "color_identity": payload.get("color_identity"),
+                    "colors": payload.get("colors"),
+                    "card_faces": [
+                        {"mana_cost": f.get("mana_cost")}
+                        for f in (payload.get("card_faces") or [])
+                    ]
+                    or None,
+                }
+                self._data[name] = slim
+            else:
+                self._data[name] = {}
+        except requests.RequestException:
+            self._data[name] = {}
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_text(json.dumps(self._data), encoding="utf-8")
+        return self._data[name] or None
+
+
 def run_modify_loop(
     state: DeckRLState,
     *,
     steps: int,
     checkpoint_path: Path | None,
+    card_info,
 ) -> DeckRLState:
     policy = HeuristicNextCardPolicy(state.ratings)
     pool = state.card_pool()
-    for i in range(max(0, steps)):
+    for _ in range(max(0, steps)):
         swaps = propose_swaps(policy, pool, state.deck, state.constraints, k=5)
         if not swaps:
             pause(f"  iter {state.iteration}: keine weiteren positiven Swaps — stop")
@@ -76,12 +126,17 @@ def run_modify_loop(
             f"(Δ={best.score_delta:+.1f})"
         )
         state.deck = apply_swap(state.deck, best)
+        # Rebuild mana base after each swap
+        pips = estimate_deck_color_pips(state.deck, card_info=card_info)
+        state.deck = refill_basics(state.deck, state.constraints, color_pips=pips)
+        pause(f"     mana pips {pips} → basics refreshed")
         state.trajectory.append(
             {
                 "action": "swap",
                 "remove": best.remove.name,
                 "add": best.add.name,
                 "score_delta": best.score_delta,
+                "color_pips": pips,
             }
         )
         state.iteration += 1
@@ -98,53 +153,59 @@ def main() -> int:
         type=Path,
         default=Path("data/collections/collection_278079_69871_1751833200.csv"),
     )
-    parser.add_argument("--seed-deck", type=Path, help="Optional seed deck (one name/line)")
+    parser.add_argument("--seed-deck", type=Path)
     parser.add_argument(
         "--checkpoint",
         type=Path,
         default=Path("runs/deck_rl_checkpoint.json"),
-        help="Where to write/update Deck-RL state",
     )
+    parser.add_argument("--resume", type=Path)
+    parser.add_argument("--modify-steps", type=int, default=5)
     parser.add_argument(
-        "--resume",
+        "--scryfall-cache",
         type=Path,
-        help="Resume from this checkpoint (skips fresh build)",
-    )
-    parser.add_argument(
-        "--modify-steps",
-        type=int,
-        default=3,
-        help="How many swap iterations of the deck RL loop to run",
+        default=Path("runs/scryfall_cache.json"),
     )
     args = parser.parse_args()
 
+    scry = ScryfallCache(args.scryfall_cache)
+    pause(
+        "⚠️  Heuristik-Loop (kein Forge-Winrate). Lands folgen Scryfall-Pips."
+    )
+
     if args.resume:
-        pause(f"\n▶️  Resume Deck-RL from {args.resume}")
+        pause(f"\n▶️  Resume from {args.resume}")
         state = load_checkpoint(args.resume)
-        pause(
-            f"   deck={len(state.deck)} cards  iteration={state.iteration}  "
-            f"pool={len(state.pool)}"
-        )
-        # Write back to the resumed file unless --checkpoint was set explicitly
-        # to something other than the default.
         default_ckpt = Path("runs/deck_rl_checkpoint.json")
         ckpt = args.resume if args.checkpoint == default_ckpt else args.checkpoint
-        state = run_modify_loop(state, steps=args.modify_steps, checkpoint_path=ckpt)
-        pause(f"\n✅ Resumed to iteration={state.iteration}  saved {ckpt}\n")
+        state = run_modify_loop(
+            state,
+            steps=args.modify_steps,
+            checkpoint_path=ckpt,
+            card_info=scry.get,
+        )
+        pause(f"\n✅ iteration={state.iteration}  saved {ckpt}\n")
+        _print_deck(state.deck)
         return 0
 
     pause(f"\n📁 Collection: {args.collection}")
     rows = load_collection(args.collection)
     pool = pool_from_card_rows(rows)
-    pause(f"   → {len(pool.available)} unique cards")
+    pause(f"   → {len(pool.available)} unique")
 
     ratings = {
         n: (int(hashlib.sha256(n.encode()).hexdigest()[:8], 16) % 1000) / 100.0
         for n in pool.available
     }
+    # Prefetch scryfall for pool (rate-limited)
+    pause("🔎 Scryfall color/mana lookup for pool…")
+    for i, name in enumerate(sorted(pool.available)):
+        scry.get(name)
+        if (i + 1) % 50 == 0:
+            pause(f"   … {i+1}/{len(pool.available)}")
+
     policy = HeuristicNextCardPolicy(ratings)
     constraints = DeckConstraints(non_basic_target=40)
-
     seed: list[CardRef] = []
     if args.seed_deck and args.seed_deck.exists():
         seed = [
@@ -152,22 +213,21 @@ def main() -> int:
             for line in args.seed_deck.read_text(encoding="utf-8").splitlines()
             if line.strip() and not line.strip().startswith("#")
         ]
-        pause(f"🌱 Seed deck: {len(seed)} cards")
+        pause(f"🌱 Seed: {len(seed)} cards")
 
-    pause("\n=== Trajektorie (build) ===")
+    pause("\n=== Build + color-aware basics ===")
     deck, steps = complete_deck_with_trajectory(
-        policy, pool, constraints, seed_deck=seed or None, alt_k=2
+        policy,
+        pool,
+        constraints,
+        seed_deck=seed or None,
+        alt_k=2,
+        card_info=scry.get,
     )
-    for step in steps:
-        if step.action == "fill_basics":
-            continue
-        pause(
-            f"  [{step.index:02d}] {step.action:12} {step.card.name:<36} "
-            f"score={step.score:5.2f}",
-            0.03,
-        )
-    basics = sum(1 for c in deck if c.name in BASIC_LANDS)
-    pause(f"  … + {basics} basics → {len(deck)} cards")
+    pips = estimate_deck_color_pips(deck, card_info=scry.get)
+    pause(f"   color pips: {pips}")
+    basics = Counter(c.name for c in deck if c.name in BASIC_LANDS)
+    pause(f"   basics: {dict(basics)}")
 
     state = DeckRLState(
         deck=deck,
@@ -176,26 +236,36 @@ def main() -> int:
         ratings=ratings,
         iteration=0,
         trajectory=steps_to_dicts(steps),
-        meta={"collection": str(args.collection)},
+        meta={"collection": str(args.collection), "color_pips": pips},
     )
     save_checkpoint(args.checkpoint, state)
-    pause(f"\n💾 Initial checkpoint → {args.checkpoint}")
+    pause(f"💾 {args.checkpoint}")
 
-    pause("\n=== Deck-RL modify loop ===")
+    pause("\n=== Modify loop (refills basics each swap) ===")
     state = run_modify_loop(
-        state, steps=args.modify_steps, checkpoint_path=args.checkpoint
+        state,
+        steps=args.modify_steps,
+        checkpoint_path=args.checkpoint,
+        card_info=scry.get,
     )
-
-    pause("\n=== Deck counts ===")
-    for name, cnt in Counter(c.name for c in state.deck).most_common(10):
-        pause(f"  {cnt}× {name}", 0.03)
-
+    _print_deck(state.deck)
     pause(
-        f"\n✅ Done. Resume later with:\n"
-        f"   PYTHONPATH=src python3 scripts/live_deck_trajectory.py "
+        f"\nResume:\n  PYTHONPATH=src python3 scripts/live_deck_trajectory.py "
         f"--resume {args.checkpoint} --modify-steps 5\n"
     )
     return 0
+
+
+def _print_deck(deck: list[CardRef]) -> None:
+    counts = Counter(c.name for c in deck)
+    pause("\n=== Resulting deck ===")
+    for n, c in counts.most_common():
+        if n not in BASIC_LANDS:
+            pause(f"  {c} {n}", 0.01)
+    pause("")
+    for n in ("Plains", "Island", "Swamp", "Mountain", "Forest"):
+        if counts.get(n):
+            pause(f"  {counts[n]} {n}", 0.01)
 
 
 if __name__ == "__main__":

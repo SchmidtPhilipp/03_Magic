@@ -1,6 +1,8 @@
 # src/magic_optimizer/deck_picker/complete.py
 from __future__ import annotations
 
+from typing import Callable
+
 from magic_optimizer.deck_picker.heuristic import HeuristicNextCardPolicy
 from magic_optimizer.deck_picker.types import (
     BASIC_LANDS,
@@ -30,25 +32,29 @@ def _equal_split_counts(lands_needed: int) -> dict[str, int]:
 def _proportional_split_counts(
     lands_needed: int, color_pips: dict[str, int]
 ) -> dict[str, int]:
+    """Only allocate basics to colors with positive weight (no forced 5-color)."""
     weights = {color: max(0, color_pips.get(color, 0)) for color in _WUBRG_ORDER}
-    total = sum(weights.values())
-    if total <= 0:
+    active = [c for c in _WUBRG_ORDER if weights[c] > 0]
+    if not active:
         return _equal_split_counts(lands_needed)
 
-    raw = {color: lands_needed * weights[color] / total for color in _WUBRG_ORDER}
-    counts = {color: int(raw[color]) for color in _WUBRG_ORDER}
+    total = sum(weights[c] for c in active)
+    raw = {color: lands_needed * weights[color] / total for color in active}
+    counts = {color: int(raw[color]) for color in active}
     assigned = sum(counts.values())
     remainder = lands_needed - assigned
 
     fractional = sorted(
-        _WUBRG_ORDER,
+        active,
         key=lambda color: (raw[color] - counts[color], -_WUBRG_ORDER.index(color)),
         reverse=True,
     )
     for color in fractional[:remainder]:
         counts[color] += 1
 
-    return {_COLOR_TO_LAND[color]: counts[color] for color in _WUBRG_ORDER}
+    return {
+        _COLOR_TO_LAND[color]: counts.get(color, 0) for color in _WUBRG_ORDER if color in counts
+    }
 
 
 def _land_counts(lands_needed: int, color_pips: dict[str, int] | None) -> dict[str, int]:
@@ -62,6 +68,7 @@ def fill_basics(
     constraints: DeckConstraints,
     color_pips: dict[str, int] | None = None,
 ) -> list[CardRef]:
+    """Append basics. With color_pips, only colors with weight > 0 get lands."""
     deck = list(decklist)
     lands_needed = constraints.deck_size - len(deck)
     if lands_needed <= 0:
@@ -69,9 +76,20 @@ def fill_basics(
 
     counts = _land_counts(lands_needed, color_pips)
     for land in _WUBRG_LANDS:
-        for _ in range(counts[land]):
+        for _ in range(counts.get(land, 0)):
             deck.append(CardRef(land))
     return deck
+
+
+def refill_basics(
+    decklist: list[CardRef],
+    constraints: DeckConstraints,
+    color_pips: dict[str, int] | None = None,
+) -> list[CardRef]:
+    """Strip existing basics and refill from color_pips."""
+    from magic_optimizer.deck_picker.mana import strip_basics
+
+    return fill_basics(strip_basics(decklist), constraints, color_pips=color_pips)
 
 
 def complete_deck_with_trajectory(
@@ -81,8 +99,14 @@ def complete_deck_with_trajectory(
     *,
     seed_deck: list[CardRef] | None = None,
     alt_k: int = 3,
+    color_pips: dict[str, int] | None = None,
+    card_info: Callable[[str], dict | None] | None = None,
 ) -> tuple[list[CardRef], list[DeckStep]]:
-    """Build a deck and record every pin/seed/add/fill_basics step."""
+    """Build a deck and record every pin/seed/add/fill_basics step.
+
+    Prefer color_pips or card_info (Scryfall-like) so basics match the mana base.
+    Without either, falls back to equal WUBRG (legacy — usually wrong for real play).
+    """
     deck: list[CardRef] = []
     steps: list[DeckStep] = []
 
@@ -126,8 +150,14 @@ def complete_deck_with_trajectory(
             )
         )
 
+    resolved_pips = color_pips
+    if resolved_pips is None and card_info is not None:
+        from magic_optimizer.deck_picker.mana import estimate_deck_color_pips
+
+        resolved_pips = estimate_deck_color_pips(deck, card_info=card_info)
+
     before_basics = len(deck)
-    deck = fill_basics(deck, constraints)
+    deck = fill_basics(deck, constraints, color_pips=resolved_pips)
     for card in deck[before_basics:]:
         steps.append(
             DeckStep(
@@ -164,8 +194,15 @@ def complete_deck(
     constraints: DeckConstraints,
     *,
     seed_deck: list[CardRef] | None = None,
+    color_pips: dict[str, int] | None = None,
+    card_info: Callable[[str], dict | None] | None = None,
 ) -> list[CardRef]:
     deck, _ = complete_deck_with_trajectory(
-        policy, pool, constraints, seed_deck=seed_deck
+        policy,
+        pool,
+        constraints,
+        seed_deck=seed_deck,
+        color_pips=color_pips,
+        card_info=card_info,
     )
     return deck
