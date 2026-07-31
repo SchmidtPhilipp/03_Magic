@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Callable
 
-from magic_optimizer.deck_picker.heuristic import HeuristicNextCardPolicy
+from magic_optimizer.deck_picker.heuristic import NextCardPolicy
 from magic_optimizer.deck_picker.types import (
     BASIC_LANDS,
     CardPool,
@@ -93,7 +93,7 @@ def refill_basics(
 
 
 def complete_deck_with_trajectory(
-    policy: HeuristicNextCardPolicy,
+    policy: NextCardPolicy,
     pool: CardPool,
     constraints: DeckConstraints,
     *,
@@ -189,7 +189,7 @@ def complete_deck_with_trajectory(
 
 
 def complete_deck(
-    policy: HeuristicNextCardPolicy,
+    policy: NextCardPolicy,
     pool: CardPool,
     constraints: DeckConstraints,
     *,
