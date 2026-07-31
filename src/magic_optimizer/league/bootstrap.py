@@ -19,11 +19,6 @@ def deck_from_policy(
     seed_deck: list[CardRef] | None = None,
 ) -> list[str]:
     """Build a full deck via complete_deck; return card names."""
-    if not isinstance(policy, HeuristicNextCardPolicy):
-        # complete_deck currently typed for HeuristicNextCardPolicy
-        policy = HeuristicNextCardPolicy(
-            getattr(policy, "_ratings", None) or {}
-        )
     deck = complete_deck(policy, pool, constraints, seed_deck=seed_deck)
     return [c.name for c in deck]
 

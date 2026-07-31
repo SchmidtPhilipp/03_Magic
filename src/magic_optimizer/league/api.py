@@ -7,22 +7,28 @@ from typing import Any
 from flask import Blueprint, jsonify, request
 
 from magic_optimizer.deck_picker.heuristic import HeuristicNextCardPolicy
+from magic_optimizer.deck_picker.trade import trade_report
 from magic_optimizer.deck_picker.types import CardPool, DeckConstraints
+from magic_optimizer.exporters.name_list import to_arena_text, to_copy_paste
 from magic_optimizer.league.bootstrap import deck_from_policy, seed_league_from_pool
 from magic_optimizer.league.job import OptimizationJob
+from magic_optimizer.league.progress import snapshot_progress
 from magic_optimizer.league.stop_policy import WinrateThresholdStop
 from magic_optimizer.league.store import League
+from magic_optimizer.league.types import JobState
 from magic_optimizer.match_oracle.health import forge_available
 from magic_optimizer.match_oracle.stub import StubMatchOracle
 
 league_bp = Blueprint("league", __name__, url_prefix="/api/league")
 
 _LEAGUE: League | None = None
+_LAST_JOB_STATE: JobState | None = None
 
 
 def reset_league() -> None:
-    global _LEAGUE
+    global _LEAGUE, _LAST_JOB_STATE
     _LEAGUE = None
+    _LAST_JOB_STATE = None
 
 
 def _get_league() -> League:
@@ -167,7 +173,54 @@ def challenge():
         summary = job.challenge(list(deck_raw), deck_id=data.get("deck_id"))
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 400
+    global _LAST_JOB_STATE
+    _LAST_JOB_STATE = job.state
     return jsonify(summary)
+
+
+@league_bp.route("/progress", methods=["GET"])
+def progress():
+    league = _get_league()
+    return jsonify(snapshot_progress(_LAST_JOB_STATE, league).to_dict())
+
+
+@league_bp.route("/trade-report", methods=["POST"])
+def trade_report_endpoint():
+    data, err = _parse_body()
+    if data is None:
+        return err
+    deck = data.get("deck")
+    owned_raw = data.get("owned")
+    if not isinstance(deck, list) or not all(isinstance(x, str) for x in deck):
+        return jsonify({"error": "deck must be a list of strings"}), 400
+    if not isinstance(owned_raw, dict):
+        return jsonify({"error": "owned must be an object"}), 400
+    available: dict[str, int] = {}
+    for name, qty in owned_raw.items():
+        try:
+            available[str(name)] = int(qty)
+        except (TypeError, ValueError):
+            return jsonify({"error": f"owned quantity for {name!r} must be an integer"}), 400
+    return jsonify(trade_report(list(deck), CardPool(available)))
+
+
+@league_bp.route("/export", methods=["POST"])
+def export_deck():
+    data, err = _parse_body()
+    if data is None:
+        return err
+    deck = data.get("deck")
+    fmt = str(data.get("format", "arena"))
+    if not isinstance(deck, list) or not all(isinstance(x, str) for x in deck):
+        return jsonify({"error": "deck must be a list of strings"}), 400
+    title = str(data.get("title", ""))
+    if fmt == "arena":
+        text = to_arena_text(list(deck), title=title)
+    elif fmt == "copy_paste":
+        text = to_copy_paste(list(deck))
+    else:
+        return jsonify({"error": "format must be 'arena' or 'copy_paste'"}), 400
+    return jsonify({"text": text, "format": fmt})
 
 
 @league_bp.route("/standings", methods=["GET"])
@@ -228,6 +281,8 @@ def run():
         seed=seed,
     )
     state = job.run_until_stop(build, max_challenges=max_challenges)
+    global _LAST_JOB_STATE
+    _LAST_JOB_STATE = state
     return jsonify(
         {
             "job_state": {
