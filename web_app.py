@@ -38,6 +38,7 @@ import config
 from magic_optimizer.deck_builder import EnhancedDeckBuilder
 from magic_optimizer.collection.routes import collection_bp
 from magic_optimizer.deck_picker.api import deck_picker_bp
+from magic_optimizer.dreamer.api import dreamer_bp
 from magic_optimizer.league.api import league_bp
 from magic_optimizer.match_oracle.api import match_oracle_bp
 
@@ -95,6 +96,7 @@ app.register_blueprint(collection_bp)
 app.register_blueprint(deck_picker_bp)
 app.register_blueprint(match_oracle_bp)
 app.register_blueprint(league_bp)
+app.register_blueprint(dreamer_bp)
 app.config["SECRET_KEY"] = config.APP_CONFIG["secret_key"]
 app.config["UPLOAD_FOLDER"] = config.PATHS["upload_folder"]
 app.config["CACHE_FOLDER"] = config.PATHS[
