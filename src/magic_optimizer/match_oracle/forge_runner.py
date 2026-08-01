@@ -23,20 +23,22 @@ class ForgeParseError(Exception):
 
 
 def parse_forge_sim_output(text: str) -> tuple[int, int, int]:
-    for line in text.splitlines():
+    # Prefer the last RESULT / Match Result line — multi-game sims print
+    # running scores after each game.
+    for line in reversed(text.splitlines()):
         match = _RESULT_LINE.search(line)
         if match:
             wins_a, wins_b, games = (int(match.group(i)) for i in range(1, 4))
             return wins_a, wins_b, games
 
-    for line in text.splitlines():
+    for line in reversed(text.splitlines()):
         match = _MATCH_RESULT_LINE.search(line)
         if match:
             wins_a = int(match.group(1))
             wins_b = int(match.group(2))
             return wins_a, wins_b, wins_a + wins_b
 
-    for line in text.splitlines():
+    for line in reversed(text.splitlines()):
         lower = line.lower()
         if "result" not in lower and "wins" not in lower:
             continue

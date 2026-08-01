@@ -43,6 +43,15 @@ def test_parse_real_forge_match_result_line():
     assert parse_forge_sim_output(text) == (1, 0, 1)
 
 
+def test_parse_uses_last_match_result_for_multi_game():
+    text = (
+        "Match Result: Ai(1)-a: 1 Ai(2)-b: 0 \n"
+        "Match Result: Ai(1)-a: 1 Ai(2)-b: 1 \n"
+        "Match Result: Ai(1)-a: 2 Ai(2)-b: 1 \n"
+    )
+    assert parse_forge_sim_output(text) == (2, 1, 3)
+
+
 def test_parse_raises_on_unparsable():
     with pytest.raises(ForgeParseError):
         parse_forge_sim_output("no useful output here")
