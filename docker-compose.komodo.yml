@@ -1,9 +1,9 @@
-# Komodo GitOps — registry images from GitLab CI (philipp/03_Magic).
+# Komodo GitOps — registry images from GitLab CI (phi-labs/03_Magic).
 # Break-glass: deploy/lxc/deploy.sh + systemd mtg-optimizer.service
 
 services:
   mtg-optimizer:
-    image: ${REGISTRY_PREFIX:-registry.dev.phi-labs.net/philipp/03_magic}/mtg-optimizer:${IMAGE_TAG:-main}
+    image: ${REGISTRY_PREFIX:-registry.dev.phi-labs.net/phi-labs/03_magic}/mtg-optimizer:${IMAGE_TAG:-main}
     container_name: mtg-optimizer
     restart: unless-stopped
     ports:
