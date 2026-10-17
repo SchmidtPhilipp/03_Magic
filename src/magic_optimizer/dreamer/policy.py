@@ -19,10 +19,16 @@ class DreamerNextCardPolicy:
         opponents: list[list[str]],
         *,
         fallback_ratings: dict[str, float] | None = None,
+        synergy=None,
+        synergy_scale: float = 0.1,
     ) -> None:
         self.world_model = world_model
         self.opponents = [list(o) for o in opponents]
-        self._fallback = HeuristicNextCardPolicy(fallback_ratings or {})
+        self._fallback = HeuristicNextCardPolicy(
+            fallback_ratings or {},
+            synergy=synergy,
+            synergy_scale=synergy_scale,
+        )
 
     def next_card(
         self,

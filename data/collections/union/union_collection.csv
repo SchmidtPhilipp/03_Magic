@@ -1,0 +1,1348 @@
+amount,card_name,set_code,collector_number,scryfall_id,language,scan_hits,csv_amount,sources
+2,Abrade,INR,139,fee393c7-1868-4d11-93c3-3d143e0c8dd9,en,0,2,manabox_full
+1,Absolute Virtue,FIN,212,aa192912-c9ee-403f-8a46-a338c9edb4b9,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:38_IMG_6263-55d184c2-30ed-4fff-9a0b-32720cc31272
+1,Abzan Advantage,,,,en,1,0,scan_batch_verify:10_IMG_6230-872b5d31-6471-4bda-b181-670ad4bfbd83
+1,Abzan Beastmaster,,,,en,1,0,scan_batch_verify:04_IMG_6224-8dd1ffb5-0c2e-4d49-b2e1-00db237fe563
+1,Abzan Devotee,TDM,68,,de,1,1,moxfield_main;scan_batch_new:18_IMG_6198-5ba79bca-45b1-4687-981e-428d37d4d6f7
+1,Abzan Kin-Guard,,,,en,1,0,scan_batch_verify:04_IMG_6224-8dd1ffb5-0c2e-4d49-b2e1-00db237fe563
+1,Abzan Skycaptain,,,,en,1,0,scan_batch_verify:08_IMG_6228-00285551-40d4-4e59-8dd4-cac2458ba14d
+1,Acidic Slime,,,,en,1,0,scan_batch_verify:50_IMG_6279-0f435247-4092-460a-8854-020c2cfa349d
+1,Adelbert Steiner,,,,en,1,0,scan_batch_verify:11_IMG_6231-da8c0a0e-0fbd-4118-92c6-2bf59341a6bd
+1,Adventurer's Airship,FIN,252,0a1d6dcd-bd41-4f57-a35b-6613811fe4d4,en,0,1,manabox_full
+2,Adventurer's Inn,FIN,271,f0da2ee1-986e-4cbf-92eb-d96fdb572ca5,en,0,2,manabox_fin;manabox_full;moxfield_main
+1,Aerith Rescue Mission,FIN,5,3123d16c-e1e6-4659-a7a3-2ec6efc6bf08,en,1,1,manabox_fin;manabox_full;moxfield_main;scan_batch_verify:12_IMG_6232-37988df5-605b-4f54-b71d-604ed0defce6
+1,Aether Syphon,,,,en,1,0,scan_batch_verify:24_IMG_6247-7f3afa84-ca45-4d8a-b4be-868198a33022
+1,Aetherize,FDN,151,1e5530fc-0291-4a17-b048-c5d24e6f51d8,en,0,1,manabox_full;moxfield_main
+1,Aetherplasm,,,,en,1,0,scan_batch_verify:29_IMG_6252-3b85773c-1ce2-4c19-9a6b-74cac1bfc8ef
+1,Affectionate Indrik,FDN,211,,de,1,1,moxfield_main;scan_batch_new:34_IMG_6214-c3c575e2-f7ab-4e34-8965-75f865ec67a8
+1,Agate Assault,,,,en,1,0,scan_batch_new:12_IMG_6192-d32f1f4d-7253-4b8a-b176-b33dc70b57d9
+1,Agate-Blade Assassin,,,,en,1,0,scan_batch_new:27_IMG_6207-8b165030-3e7c-445b-86dc-d7035e1d3305
+1,Agency Outfitter,,,,en,1,0,scan_batch_verify:34_IMG_6258-6ebcd3e4-874c-497d-a921-ac847c809b20
+1,Aim High,,,,en,1,0,scan_batch_new:39_IMG_6219-1f79c5e6-f833-477a-a5c1-4ef042311f8a
+1,Ainok Guide,,,,en,1,0,scan_batch_new:35_IMG_6215-9e0108e8-e960-41ca-aa6d-a5667630b68b
+1,Airship Crash,FIN,171,ec91c4e4-711f-464d-bc83-e6813f4fdcdb,en,1,1,manabox_fin;moxfield_main;scan_batch_new:35_IMG_6215-9e0108e8-e960-41ca-aa6d-a5667630b68b
+1,Ajani's Pridemate,FDN,135,,de,0,1,moxfield_main
+1,Alesha's Vanguard,,,,en,1,0,scan_batch_new:22_IMG_6202-a1770e44-0189-4daf-a3aa-604fd5d07b43
+1,Alley Assailant,,,,en,1,0,scan_batch_new:30_IMG_6210-e5661c8c-75d3-44f7-8e54-53d174d015fc
+1,"Alpharael, Dreaming Acolyte",,,,en,1,0,scan_batch_verify:39_IMG_6264-ae737c6e-f416-4cf0-91e2-d4cb68421f49
+1,"Alquist Proft, Master Sleuth",,,,en,1,0,scan_batch_verify:44_IMG_6270-db5a3e7c-d577-45ee-a5a8-d028d34fa4eb
+1,Ambush Krotiq,,,,en,1,0,scan_batch_new:35_IMG_6215-9e0108e8-e960-41ca-aa6d-a5667630b68b
+1,Ambush Wolf,TDM,98,,de,1,1,moxfield_main;scan_batch_new:33_IMG_6213-b86acb01-446a-49bf-90b7-00c9d619c9f9
+1,Amorphous Axe,CMR,295,2de53345-5809-4704-bd60-682b0c3c3999,en,0,1,manabox_full
+5,Ancestral Anger,SOS,106,6c5a93d6-d4ab-4062-bb3c-1b5330bf15ad,en,0,5,manabox_full
+1,Ancestral Vengeance,,,,en,1,0,scan_batch_new:22_IMG_6202-a1770e44-0189-4daf-a3aa-604fd5d07b43
+1,Angel of Deliverance,,,,en,1,0,scan_batch_verify:49_IMG_6278-627251f1-2752-4138-b6c9-167a6925d12d
+1,Annex Sentry,SCH,7,,de,0,1,moxfield_main
+1,Annul,EOE,46,4feeebea-aa55-4599-ab5a-4e41a54d0dfd,en,0,1,manabox_full
+1,Answered Prayers,,,,en,1,0,scan_batch_verify:20_IMG_6242-b6055471-0d05-4dfe-ba33-29b36abef028
+1,Anthropede,,,,en,1,0,scan_batch_new:38_IMG_6218-e1cacfd6-66a9-4ea9-a9f5-29b5e0813464
+2,Anticipate,PRM,58267,87f7a3f3-517a-4f7a-bb28-94f11790b598,en,0,2,manabox_full;moxfield_main
+1,Apothecary Geist,,,,en,1,0,scan_batch_verify:14_IMG_6236-cff53d5e-0179-41ca-bee7-dc4eb076d2d8
+1,Apothecary Stomper,FDN,99,,de,1,1,moxfield_main;scan_batch_new:34_IMG_6214-c3c575e2-f7ab-4e34-8965-75f865ec67a8
+1,"Appa, Aang's Companion",,,,en,1,0,scan_batch_new:26_IMG_6206-b2d96958-3956-4933-835f-e81ef1042d5f
+1,Arashin War Beast,,,,en,1,0,scan_batch_new:32_IMG_6212-71b631fc-6504-4a4a-8d9a-1c9cc152d36f
+1,Arboreal Grazer,,,,en,1,0,scan_batch_verify:05_IMG_6225-a3dfd386-3a00-449e-8641-aa213d285184
+1,Archdruid's Charm,MKM,151,5caae5ae-845f-42c2-b1ae-956df2739433,en,0,1,manabox_full
+1,Armasaur Guide,,,,en,1,0,scan_batch_verify:09_IMG_6229-828683ca-23bb-49ba-9e0a-a6d15348d81b
+1,Artful Takedown,GRN,151,4c9e8f24-af62-4d13-bfed-a8b3294b64c3,en,0,1,manabox_grn_sealed_2026-09-11
+1,Arwen Undómiel,LTR,194,c544e301-13b4-4dec-b65c-d54809bb7736,en,0,1,manabox_full
+1,Arwen's Gift,LTR,39,30e1ec49-ad4f-4623-aeeb-dba07d6e6251,en,0,1,manabox_full
+1,"Arwen, Mortal Queen",LTR,193,547f92d4-cd1d-4ca7-a6e2-6473b4d3c832,en,0,1,manabox_full
+1,Ascendant Dustspeaker,SOS,8,de3de40b-a7ac-455e-add2-4e451b602d17,en,0,1,manabox_full
+1,"Ashe, Princess of Dalmasca",,,,en,1,0,scan_batch_verify:12_IMG_6232-37988df5-605b-4f54-b71d-604ed0defce6
+1,Assert Perfection,,,,en,1,0,scan_batch_verify:03_IMG_6223-343934b7-6073-4aa3-89fe-bcc430b907ec
+1,Astral Drift,,,,en,1,0,scan_batch_verify:49_IMG_6278-627251f1-2752-4138-b6c9-167a6925d12d
+1,Augur of Bolas,,,,en,1,0,scan_batch_verify:33_IMG_6256-adec6557-f2d8-4c10-878e-d08351133126
+1,Auntie's Sentence,,,,en,1,0,scan_batch_new:29_IMG_6209-234acd48-8658-4dc0-bd6a-944298e578a3
+1,Auroral Procession,TDM,,,de,0,1,moxfield_main
+1,Avacynian Priest,,,,en,1,0,scan_batch_verify:15_IMG_6237-614140eb-1167-49c5-bafa-6f612fa2727c
+1,Aven Surveyor,,,,en,1,0,scan_batch_verify:31_IMG_6254-8a7c6234-1b1c-4fdd-8764-8d52d43eebdf
+1,Awaken the Honored Dead,TDM,170,,de,0,1,moxfield_main
+3,Axgard Cavalry,FDN,189,,de,1,3,moxfield_main;scan_batch_new:04_IMG_6184-e08f1971-4128-495b-96b0-0f6342285a51
+1,Azorius Arrester,,,,en,1,0,scan_batch_verify:16_IMG_6238-4af0f02d-b57c-4563-9dc6-cfe57206c857
+2,Back on Track,DFT,76,884c0032-9c62-4028-a55f-6a3da2545654,en,0,2,manabox_full
+1,Bad Wolf Bay,,,,en,1,0,scan_batch_verify:51_IMG_6280-a1f72b4a-8cc9-402f-a40d-f8cc61dfd927
+1,Bake into a Pie,FDN,169,,de,1,1,moxfield_main;scan_batch_new:20_IMG_6200-97cd2180-ab71-42e5-b7b5-a2ef46922d44
+1,Bakersbane Duo,,,,en,1,0,scan_batch_verify:01_IMG_6221-73835ff0-57da-4138-a93e-c455aa9422c7
+1,Balamb T-Rexaur,FIN,173,e5857b1b-73bc-458e-b26b-7ed8bef785f3,en,0,1,manabox_fin;moxfield_main
+1,Balemurk Leech,,,,en,1,0,scan_batch_new:24_IMG_6204-88633bc6-6a4c-49fe-8c84-479705f6931e
+1,"Balmor, Battlemage Captain",,,,en,1,0,scan_batch_verify:43_IMG_6268-108d245d-d986-4b3f-a589-1cdf605cbf0b
+1,Balustrade Spy,,,,en,1,0,scan_batch_new:28_IMG_6208-f035ade7-1840-4fed-808c-0881696e83cb
+1,Banish from Edoras,LTR,1,a4410076-e1fe-45f3-a0ca-a91ab0133ff4,en,0,1,manabox_full
+1,Banner of Kinship,FDN,127,,de,1,1,moxfield_main;scan_batch_verify:45_IMG_6272-f8e30397-7287-4938-be79-787f2a543249
+1,Barbed Servitor,,,,en,1,0,scan_batch_new:31_IMG_6211-ce0a5906-12e4-4dba-a98e-081b8786fb9b
+1,Bard the Bowman,HOB,145,0b84e232-428c-424a-848c-ef95debc6e50,en,0,1,manabox_hob_2026-08-14
+3,Bard's Bow,FIN,174,2ac03e90-1e16-453f-88e4-a0448db73403,en,1,3,manabox_fin;manabox_full;moxfield_main;scan_batch_new:35_IMG_6215-9e0108e8-e960-41ca-aa6d-a5667630b68b
+3,Barging Sergeant,GRN,92,52a54ebc-008a-4180-a023-2e1d5318780c,en,0,3,manabox_grn_sealed_2026-09-11
+1,Barret Wallace,FIN,129,1a504dff-5857-4a61-ab99-616d5df7cf5a,en,1,1,manabox_fin;manabox_full;moxfield_main;scan_batch_new:07_IMG_6187-cdda7eb9-4da2-402e-b1a7-10938c1460f3
+1,Bashful Beastie,,,,en,1,0,scan_batch_new:38_IMG_6218-e1cacfd6-66a9-4ea9-a9f5-29b5e0813464
+1,Basilica Stalker,,,,en,1,0,scan_batch_new:30_IMG_6210-e5661c8c-75d3-44f7-8e54-53d174d015fc
+1,Bathe in Dragonfire,,,,en,1,0,scan_batch_new:12_IMG_6192-d32f1f4d-7253-4b8a-b176-b33dc70b57d9
+1,Battle-Scarred Goblin,LTR,115,b91859de-1983-4c9c-a9e6-289c7dba1eb4,en,0,1,manabox_full
+1,Battleground Geist,,,,en,1,0,scan_batch_verify:26_IMG_6249-7ed5f34a-6890-4445-9691-a1681a35c27a
+1,Beamsaw Prospector,,,,en,1,0,scan_batch_new:20_IMG_6200-97cd2180-ab71-42e5-b7b5-a2ef46922d44
+1,Beamsplitter Mage,GRN,155,8f1801f2-ea6e-4196-858e-2afc456cf6a0,en,0,1,manabox_grn_sealed_2026-09-11
+1,Beast-Kin Ranger,FDN,100,,de,0,1,moxfield_main
+1,Bellowing Crier,,,,en,1,0,scan_batch_verify:26_IMG_6249-7ed5f34a-6890-4445-9691-a1681a35c27a
+1,"Beorn, Reluctant Host // Till and Tend",HOB,118,804589b7-3ef9-473d-97cc-c61a2d41f70d,en,0,1,manabox_hob_2026-08-14
+1,Bestial Menace,MIC,134,,de,1,1,moxfield_main;scan_batch_verify:55_IMG_6284-e44f4196-ce7e-414c-8393-375fb3be6cce
+1,Bewildering Blizzard,TDM,,,de,1,1,moxfield_main;scan_batch_verify:22_IMG_6244-c165a09a-cd2e-422a-818d-ccd5fd9a0c16
+1,Bewitching Leechcraft,LTR,41,b612452e-b8a8-4a5a-82a8-01fd463cfc77,en,0,1,manabox_full
+1,"Beza, the Bounding Spring",,,,en,1,0,scan_batch_verify:12_IMG_6232-37988df5-605b-4f54-b71d-604ed0defce6
+1,Biblioplex Tomekeeper,SOS,247,bf2efdd9-d2b4-4bea-a5b9-dbb2eee4dfba,en,0,1,manabox_full
+1,"Bilbo Baggins, Burglar // Take a Glance",HOB,34,6a109b3e-9f5b-4625-abb7-6b992c10530b,en,0,1,manabox_hob_2026-08-14
+1,"Bilbo, Thief in the Night",HOB,33,484c7f83-8339-4ae1-8350-68ce1f7d05a3,en,0,1,manabox_hob_2026-08-14
+1,"Bill Ferny, Bree Swindler",LTR,42,20ac63cb-fa4d-4340-8062-1029c8bd5ec8,en,0,1,manabox_full
+1,Bill the Pony,LTR,3,9ac68519-ed7f-4f38-9549-c02975f88eed,en,0,1,manabox_full
+1,Billowing Shriekmass,FDN,56,7b3587a9-0667-4d53-807b-c437bcb1d7b3,en,0,1,manabox_full;moxfield_main
+1,Biosynthic Burst,,,,en,1,0,scan_batch_verify:05_IMG_6225-a3dfd386-3a00-449e-8641-aa213d285184
+1,Birthday Escape,LTR,43,42db2313-b13d-4292-bef2-bf86f989d32f,en,0,1,manabox_full
+1,Bishop of Rebirth,PRM,65662,,de,1,1,moxfield_main;scan_batch_verify:49_IMG_6278-627251f1-2752-4138-b6c9-167a6925d12d
+1,Bite Down on Crime,,,,en,1,0,scan_batch_verify:04_IMG_6224-8dd1ffb5-0c2e-4d49-b2e1-00db237fe563
+1,Bitter Triumph,SOA,26,db465858-0593-4850-8f1d-400fe230a18d,en,0,1,manabox_full
+1,Black Mage's Rod,FIN,90,35e8f140-055f-4fc7-a765-fb030d828214,en,0,1,manabox_full
+1,Blackblade Reforged,,,,en,1,0,scan_batch_verify:56_IMG_6285-a530aa0a-f58f-418f-a9be-98198cd6b0ca
+1,Blacksmith's Talent,,,,en,1,0,scan_batch_new:12_IMG_6192-d32f1f4d-7253-4b8a-b176-b33dc70b57d9
+1,Blade Juggler,,,,en,1,0,scan_batch_new:28_IMG_6208-f035ade7-1840-4fed-808c-0881696e83cb
+1,Bladebrand,,,,en,1,0,scan_batch_new:20_IMG_6200-97cd2180-ab71-42e5-b7b5-a2ef46922d44
+1,Blazing Rootwalla,,,,en,1,0,scan_batch_new:17_IMG_6197-65f5c3a4-dd32-451f-a384-4ccfe3f221d3
+1,Blight Herder,,,,en,1,0,scan_batch_verify:54_IMG_6283-ed93fb0b-1255-479f-aab1-4bdb59b731d9
+1,Blighted Blackthorn,,,,en,1,0,scan_batch_new:29_IMG_6209-234acd48-8658-4dc0-bd6a-944298e578a3
+1,Blitzball,FIN,254,92f4ad73-42bf-45c0-8bb6-0b44043c81ef,en,0,1,manabox_full
+1,Blizzard,,,,en,1,0,scan_batch_verify:35_IMG_6259-284672fb-70ed-4836-9fe2-acf12b3659ff
+1,Blood Crypt,,,,en,0,1,user_confirmed
+1,Blood Mist,,,,en,1,0,scan_batch_new:11_IMG_6191-ff86ab3f-bd67-4188-8215-96dc6178f9c1
+1,Bloodfell Caves,,,,en,1,0,scan_batch_verify:60_IMG_6289-3f0f8434-f590-4df3-a9bd-b4fb78dc89d0
+1,Bloodfire Enforcers,,,,en,1,0,scan_batch_new:17_IMG_6197-65f5c3a4-dd32-451f-a384-4ccfe3f221d3
+1,Bloodmad Vampire,,,,en,1,0,scan_batch_new:11_IMG_6191-ff86ab3f-bd67-4188-8215-96dc6178f9c1
+1,Blooming Stinger,,,,en,1,0,scan_batch_new:37_IMG_6217-ee1fbfb6-48e8-48ff-8b45-0f11b72c9227
+1,Blossoming Defense,,,,en,1,0,scan_batch_verify:02_IMG_6222-135748dc-d131-455f-aa30-6315b944318d
+1,Blossoming Sands,TDM,,,de,1,1,moxfield_main;scan_batch_verify:59_IMG_6288-a8cd3a2d-4cad-40ec-a30d-340ff40d0541
+1,Bogardan Dragonheart,MH1,120,feb81f44-8f22-4d28-a452-a50bef69a3e3,en,0,1,manabox_full
+1,Boggart Mischief,,,,en,1,0,scan_batch_new:29_IMG_6209-234acd48-8658-4dc0-bd6a-944298e578a3
+1,Boggart Prankster,,,,en,1,0,scan_batch_new:29_IMG_6209-234acd48-8658-4dc0-bd6a-944298e578a3
+1,Bogwater Lumaret,SOS,177,7a42f51a-3377-47bb-b6fb-c0515bf1dcfb,en,0,1,manabox_full
+1,Bombard,EOE,129,29492df8-3077-4ded-a6e2-51d3bd4669b4,en,0,1,manabox_full
+1,Bonebind Orator,,,,en,1,0,scan_batch_new:25_IMG_6205-ab56973a-5db8-4b26-8996-5988faefcc4d
+1,Boros Elite,,,,en,1,0,scan_batch_verify:12_IMG_6232-37988df5-605b-4f54-b71d-604ed0defce6
+1,Boros Locket,GRN,236,c61204b7-02c2-41be-8841-0b261798de7a,en,0,1,manabox_grn_sealed_2026-09-11
+1,Borrowed Hostility,,,,en,1,0,scan_batch_new:12_IMG_6192-d32f1f4d-7253-4b8a-b176-b33dc70b57d9
+1,Bothersome Noisemaker,HOB,89,cb25b11a-6bf5-4a9a-b60f-d4dcac3816d6,en,0,1,manabox_hob_2026-08-14
+1,Boulderborn Dragon,TDM,,,de,1,1,moxfield_main;scan_batch_verify:45_IMG_6272-f8e30397-7287-4938-be79-787f2a543249
+1,Bound by Moonsilver,,,,en,1,0,scan_batch_verify:14_IMG_6236-cff53d5e-0179-41ca-bee7-dc4eb076d2d8
+1,Bramble Wurm,INR,187,7ed00113-a0d7-4825-b066-f911a1ffb900,en,0,1,manabox_full
+1,Brambleback Brute,,,,en,1,0,scan_batch_new:15_IMG_6195-33c42953-e002-4500-8c11-6bb49b35fff8
+1,Brandywine Farmer,LTR,155,1c24b5fa-506d-4eaf-881b-bc282c74a16c,en,0,1,manabox_full
+1,Brass's Bounty,,,,en,1,0,scan_batch_new:17_IMG_6197-65f5c3a4-dd32-451f-a384-4ccfe3f221d3
+1,Brave-Kin Duo,,,,en,1,0,scan_batch_verify:15_IMG_6237-614140eb-1167-49c5-bafa-6f612fa2727c
+1,Breaching Dragonstorm,TDM,,,de,1,1,moxfield_main;scan_batch_new:06_IMG_6186-0ba58fba-c7e2-4967-bd41-69c4b6c59dc4
+1,Breaking of the Fellowship,LTR,117,130f60d0-4fac-4e4e-a938-58f3b96e5335,en,0,1,manabox_full
+1,Brightblade Stoat,,,,en,1,0,scan_batch_verify:12_IMG_6232-37988df5-605b-4f54-b71d-604ed0defce6
+1,Bristlebane Outrider,,,,en,1,0,scan_batch_verify:03_IMG_6223-343934b7-6073-4aa3-89fe-bcc430b907ec
+1,Broadcast Rambler,,,,en,1,0,scan_batch_verify:13_IMG_6233-ff7c62ac-84e6-4766-b69e-095a13ba3535
+2,Bulk Up,FDN,80,977dcc50-da10-4281-b522-9240c1204f5d,en,0,2,manabox_full
+2,Burn Bright,,,,en,2,0,scan_batch_new:02_IMG_6182-b851c886-39af-4e6f-a97b-cbb0c4947b4e;scan_batch_new:16_IMG_6196-9a65f2bf-edfa-49f3-bf0a-528a9a2ec49a
+1,Burning Curiosity,,,,en,1,0,scan_batch_new:14_IMG_6194-7c723314-c4d4-4ef8-a193-46592baba740
+2,Burning Prophet,,,,en,2,0,scan_batch_new:02_IMG_6182-b851c886-39af-4e6f-a97b-cbb0c4947b4e;scan_batch_new:16_IMG_6196-9a65f2bf-edfa-49f3-bf0a-528a9a2ec49a
+1,Burning Sun's Avatar,,,,en,1,0,scan_batch_verify:52_IMG_6281-1f3a884d-1d86-4901-86d1-f57d7d1a8e75
+1,Burning-Tree Vandal,,,,en,1,0,scan_batch_new:13_IMG_6193-38ea6484-48b7-425d-b01a-7cf282c80218
+1,Burrog Banemaker,SOS,75,3e4f9d23-1a17-4188-ac91-f8ddea46a1c4,en,0,1,manabox_full
+1,Burst Lightning,FDN,192,aec5d380-d354-4750-931a-6c91853e2edc,en,0,1,manabox_full;moxfield_main
+1,Bushwhack,FDN,215,,de,1,1,moxfield_main;scan_batch_new:33_IMG_6213-b86acb01-446a-49bf-90b7-00c9d619c9f9
+1,Cache Grab,,,,en,1,0,scan_batch_new:40_IMG_6220-842c5ac9-507a-4709-be54-1941df198536
+1,Cached Defenses,,,,en,1,0,scan_batch_verify:03_IMG_6223-343934b7-6073-4aa3-89fe-bcc430b907ec
+1,Cackling Counterpart,,,,en,1,0,scan_batch_verify:29_IMG_6252-3b85773c-1ce2-4c19-9a6b-74cac1bfc8ef
+1,Cackling Slasher,,,,en,1,0,scan_batch_new:24_IMG_6204-88633bc6-6a4c-49fe-8c84-479705f6931e
+1,"Caduceus, Staff of Hermes",ACR,2,,de,1,1,moxfield_main;scan_batch_verify:46_IMG_6273-b332dc1f-9110-44bf-94b6-957997f77b39
+1,Call the Mountain Chocobo,FIN,131,b2e1986c-2852-4843-bdc4-eddb727ba3d4,en,0,1,manabox_fin;moxfield_main
+1,Cantankerous Keepers,HOB,122,fae46a70-a6d3-4584-859d-6c7425fb1508,en,0,1,manabox_hob_2026-08-14
+1,Captain's Hook,,,,en,1,0,scan_batch_verify:46_IMG_6273-b332dc1f-9110-44bf-94b6-957997f77b39
+1,Cargo Ship,FIN,47,932b865c-bfe7-4bb7-82e9-2403cf0e0522,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:23_IMG_6245-8e617f07-1540-479a-b5b3-fcaf0a05bdad
+1,Carom,,,,en,1,0,scan_batch_verify:17_IMG_6239-ec1d80af-fb12-4c58-b852-61a1a4e108b5
+1,Case of the Burning Masks,,,,en,1,0,scan_batch_new:09_IMG_6189-1864ee91-25bd-4824-abf5-fffa505a5fa7
+1,Case of the Filched Falcon,,,,en,1,0,scan_batch_verify:34_IMG_6258-6ebcd3e4-874c-497d-a921-ac847c809b20
+1,Case of the Gorgon's Kiss,,,,en,1,0,scan_batch_new:30_IMG_6210-e5661c8c-75d3-44f7-8e54-53d174d015fc
+1,Case of the Pilfered Proof,,,,en,1,0,scan_batch_verify:19_IMG_6241-b763c53d-d83b-4d03-9127-1176cb5b4c98
+1,Case of the Trampled Garden,,,,en,1,0,scan_batch_verify:04_IMG_6224-8dd1ffb5-0c2e-4d49-b2e1-00db237fe563
+2,Cast into the Fire,LTR,118,2ef878cb-27b6-47d8-ad11-bd20529b0e7e,en,0,2,manabox_full
+1,Cat Collector,FDN,4,,de,1,1,moxfield_main;scan_batch_verify:10_IMG_6230-872b5d31-6471-4bda-b181-670ad4bfbd83
+1,Cathar Commando,,,,en,1,0,scan_batch_verify:10_IMG_6230-872b5d31-6471-4bda-b181-670ad4bfbd83
+1,Champion of Dusan,TDM,,,de,1,1,moxfield_main;scan_batch_new:32_IMG_6212-71b631fc-6504-4a4a-8d9a-1c9cc152d36f
+2,Chance-Met Elves,LTR,157,0aa57431-39e2-4152-8a30-1c1e8faef153,en,0,2,manabox_full
+1,"Chandra, Heart of Fire",M21,135,,de,1,1,moxfield_main;scan_batch_verify:55_IMG_6284-e44f4196-ce7e-414c-8393-375fb3be6cce
+1,Changeling Wayfinder,,,,en,1,0,scan_batch_new:29_IMG_6209-234acd48-8658-4dc0-bd6a-944298e578a3
+1,Channel Harm,,,,en,1,0,scan_batch_verify:08_IMG_6228-00285551-40d4-4e59-8dd4-cac2458ba14d
+1,Charging Strifeknight,SOS,110,9940d992-1ba1-40ec-9b93-17d773452c4b,en,0,1,manabox_full
+2,Cheerful Osteomancer // Raise Dead,SOS,76,3c34660c-25e3-4ff5-9b2b-5554ded2bcc3,en,0,2,manabox_full
+1,Chelonian Tackle,SOS,142,a82a4d8c-4105-4923-85a2-ef58241f725c,en,0,1,manabox_full
+1,Child of Night,GRN,65,afebf1a5-eb9a-48c6-a26a-55b75408992b,en,0,1,manabox_grn_sealed_2026-09-11
+1,Chitinous Graspling,,,,en,1,0,scan_batch_verify:43_IMG_6268-108d245d-d986-4b3f-a589-1cdf605cbf0b
+1,Chocobo Kick,FIN,178,ff8c8be0-8223-499c-8704-cb68e0a42ce2,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:02_IMG_6222-135748dc-d131-455f-aa30-6315b944318d
+1,Chocobo Racetrack,FIN,179,1565813b-6912-42f4-bae0-22136a2d6a92,en,0,1,manabox_fin;manabox_full;moxfield_main
+1,Chomping Changeling,,,,en,1,0,scan_batch_new:34_IMG_6214-c3c575e2-f7ab-4e34-8965-75f865ec67a8
+1,Chrome Companion,,,,en,1,0,scan_batch_verify:47_IMG_6274-cae39d65-cdb4-4ac3-bc7f-5613e1afc0f9
+1,Circle of Power,FIN,92,c969bd0f-f174-4e2f-b95c-c9ccd5d0b8ba,en,0,1,manabox_full
+1,Cirith Ungol Patrol,LTR,80,7cd03837-37cc-4f6c-8e22-e3b0ff635462,en,0,1,manabox_full
+1,Civic Saber,,,,en,1,0,scan_batch_verify:46_IMG_6273-b332dc1f-9110-44bf-94b6-957997f77b39
+1,Clammy Prowler,,,,en,1,0,scan_batch_verify:25_IMG_6248-a3cfe378-01e6-487d-adcb-9d0a58abc194
+1,Clamorous Ironclad,DFT,117,4701da52-b9c8-4ce9-9d57-53e10899f19d,en,0,1,manabox_full
+2,Cloudbound Moogle,FIN,11,7387bca7-f496-45da-a0ac-6be049303a8f,en,0,2,manabox_full
+1,Cloudfin Raptor,,,,en,1,0,scan_batch_verify:28_IMG_6251-8cc612a1-49fc-416b-897b-01ef6698258e
+1,Cloudform,,,,en,1,0,scan_batch_verify:31_IMG_6254-8a7c6234-1b1c-4fdd-8764-8d52d43eebdf
+1,Cloudsculpt Technician,,,,en,1,0,scan_batch_verify:24_IMG_6247-7f3afa84-ca45-4d8a-b4be-868198a33022
+1,Coeurl,FIN,12,7604b534-5480-42fa-bc36-bbae730f8582,en,1,1,manabox_fin;manabox_full;moxfield_main;scan_batch_verify:11_IMG_6231-da8c0a0e-0fbd-4118-92c6-2bf59341a6bd
+1,Collateral Damage,,,,en,1,0,scan_batch_new:15_IMG_6195-33c42953-e002-4500-8c11-6bb49b35fff8
+1,Collected Conjuring,MH1,196,ba1d0ac1-e805-4213-a46e-cf124680d082,en,0,1,manabox_full
+3,Combat Tutorial,FIN,48,ec195607-ac30-4931-acfd-f9d8ac8b047f,en,1,3,manabox_fin;manabox_full;moxfield_main;scan_batch_verify:62_IMG_6291-b03872e5-03b1-4b01-96d7-7059437b7cd6
+1,Commander's Sphere,MIC,159,,de,1,1,moxfield_main;scan_batch_verify:55_IMG_6284-e44f4196-ce7e-414c-8393-375fb3be6cce
+1,Conclave Equenaut,,,,en,1,0,scan_batch_verify:16_IMG_6238-4af0f02d-b57c-4563-9dc6-cfe57206c857
+1,Conclave Guildmage,GRN,162,279e551d-3ac3-48d5-9822-1d05159c8905,en,0,1,manabox_grn_sealed_2026-09-11
+1,Conclave Tribunal,GRN,56,f53b1b90-5bc6-4111-9083-4501ed92d39a,en,1,1,manabox_grn_sealed_2026-09-11;scan_batch_verify:49_IMG_6278-627251f1-2752-4138-b6c9-167a6925d12d
+1,Conduct Electricity,,,,en,1,0,scan_batch_new:12_IMG_6192-d32f1f4d-7253-4b8a-b176-b33dc70b57d9
+1,Confusticate and Bebother,HOB,35,9de48690-e5ae-495a-addf-305f1db7ec21,en,0,1,manabox_hob_2026-08-14
+1,Connecting the Dots,,,,en,1,0,scan_batch_new:05_IMG_6185-2737bbe3-3dea-4847-9ccc-01dcbd6baa10
+1,Connive // Concoct,MKC,203,d7481287-fce9-4ef0-a3a8-7801c9eb3fa8,en,0,1,manabox_full
+1,Consider,TDC,148,ff6f3824-3670-46e1-af43-0db405726084,en,0,1,manabox_full
+1,Convenient Target,,,,en,1,0,scan_batch_new:05_IMG_6185-2737bbe3-3dea-4847-9ccc-01dcbd6baa10
+1,Coordinated Maneuver,TDM,,,de,1,1,moxfield_main;scan_batch_verify:08_IMG_6228-00285551-40d4-4e59-8dd4-cac2458ba14d
+1,Coral Sword,FIN,134,13e81e32-7246-46b9-872e-cde77cedd197,en,1,1,manabox_fin;manabox_full;moxfield_main;scan_batch_new:07_IMG_6187-cdda7eb9-4da2-402e-b1a7-10938c1460f3
+1,Cornered by Black Mages,FIN,93,688fcf8a-0a44-416a-8086-83acf9a6fe69,en,0,1,manabox_full
+1,Corpseberry Cultivator,,,,en,1,0,scan_batch_verify:40_IMG_6265-7e00a747-f650-4061-802c-7fd3490c8854
+1,Corroding Dragonstorm,TDM,,,de,1,1,moxfield_main;scan_batch_new:18_IMG_6198-5ba79bca-45b1-4687-981e-428d37d4d6f7
+1,Coruscation Mage,BLB,131,dc2c1de0-6233-469a-be72-a050b97d2c8f,en,0,1,manabox_full
+1,Counterspell,DSC,4,e1e48b21-1a4f-4708-a4b4-e2e296df924c,en,0,1,manabox_fin;manabox_full;moxfield_main
+1,Courageous Goblin,TDM,,,de,1,1,moxfield_main;scan_batch_new:04_IMG_6184-e08f1971-4128-495b-96b0-0f6342285a51
+1,Crackling Cyclops,FDN,83,,de,1,1,moxfield_main;scan_batch_new:05_IMG_6185-2737bbe3-3dea-4847-9ccc-01dcbd6baa10
+1,Craterhoof Behemoth,TDM,138,276f5cee-a501-4658-bd4d-7a044bf1ccbc,en,0,1,manabox_full;moxfield_main
+4,Crawl from the Cellar,INR,102,79563dd1-640c-4ebd-a347-0b71439b79d3,en,0,4,manabox_full
+1,Crossroads Village,FIN,276,64db46d4-f91f-49cc-971c-b8e19f0c4ea9,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:60_IMG_6289-3f0f8434-f590-4df3-a9bd-b4fb78dc89d0
+3,Crucible of Worlds,,,,en,3,0,scan_batch_verify:54_IMG_6283-ed93fb0b-1255-479f-aab1-4bdb59b731d9;scan_batch_verify:56_IMG_6285-a530aa0a-f58f-418f-a9be-98198cd6b0ca;scan_batch_verify:57_IMG_6286-21f3329d-9682-433b-853e-04971b747279
+1,Crude Bent Blade,HOB,63,fa8fd3c4-bd00-485d-80b1-2b67f5786fce,en,0,1,manabox_hob_2026-08-14
+1,Crumb and Get It,,,,en,1,0,scan_batch_verify:15_IMG_6237-614140eb-1167-49c5-bafa-6f612fa2727c
+1,Crumbling Vestige,,,,en,1,0,scan_batch_verify:57_IMG_6286-21f3329d-9682-433b-853e-04971b747279
+1,Crux of Fate,,,,en,1,0,scan_batch_verify:62_IMG_6291-b03872e5-03b1-4b01-96d7-7059437b7cd6
+1,Cryptid Inspector,,,,en,1,0,scan_batch_new:38_IMG_6218-e1cacfd6-66a9-4ea9-a9f5-29b5e0813464
+1,Cuboid Colony,SOS,183,6384d135-7780-4d75-9e95-71bce506948e,en,0,1,manabox_full
+1,Cultivate,PW23,6,96701694-eeff-42de-b1c7-84420ba0c198,en,0,1,manabox_full;moxfield_main
+1,Cultivator Colossus,INR,190,426ed66e-41b3-4e44-90a2-697aafaa8c5c,en,0,1,manabox_full
+1,Cunning Evasion,,,,en,1,0,scan_batch_verify:35_IMG_6259-284672fb-70ed-4836-9fe2-acf12b3659ff
+1,Cunning Strike,,,,en,1,0,scan_batch_verify:39_IMG_6264-ae737c6e-f416-4cf0-91e2-d4cb68421f49
+1,Daggerfang Duo,,,,en,1,0,scan_batch_new:27_IMG_6207-8b165030-3e7c-445b-86dc-d7035e1d3305
+1,Dark Endurance,,,,en,1,0,scan_batch_new:20_IMG_6200-97cd2180-ab71-42e5-b7b5-a2ef46922d44
+1,Darkblade Agent,GRN,164,f0b610c5-61e5-43df-a87b-3eaaa915402b,en,0,1,manabox_grn_sealed_2026-09-11
+1,Darkness Descends,,,,en,1,0,scan_batch_new:29_IMG_6209-234acd48-8658-4dc0-bd6a-944298e578a3
+3,Dave Humpherys Bio,WC03,dh0a,2b490cfc-3a5a-4045-a53f-3395f61bb7a1,en,0,3,manabox_full
+1,Dawn's Light Archer,,,,en,1,0,scan_batch_verify:03_IMG_6223-343934b7-6073-4aa3-89fe-bcc430b907ec
+1,Dawnhand Eulogist,,,,en,1,0,scan_batch_new:29_IMG_6209-234acd48-8658-4dc0-bd6a-944298e578a3
+1,Dazzling Angel,FDN,9,,de,1,1,moxfield_main;scan_batch_verify:09_IMG_6229-828683ca-23bb-49ba-9e0a-a6d15348d81b
+2,Deadly Allure,,,,en,2,0,scan_batch_new:03_IMG_6183-e6de9672-7af7-4784-980f-6c4138f19ddb;scan_batch_new:26_IMG_6206-b2d96958-3956-4933-835f-e81ef1042d5f
+1,Deathless Pilot,,,,en,1,0,scan_batch_new:23_IMG_6203-374f2f39-9c6f-43af-80c8-ebda5171a44b
+2,Deceive the Messenger,LTR,47,b2984bc6-7c12-46e4-8dd3-b23e29a7a7ec,en,0,2,manabox_full
+1,Decode Transmissions,,,,en,1,0,scan_batch_new:22_IMG_6202-a1770e44-0189-4daf-a3aa-604fd5d07b43
+1,Deduce,,,,en,1,0,scan_batch_verify:34_IMG_6258-6ebcd3e4-874c-497d-a921-ac847c809b20
+1,Defenestrated Phantom,,,,en,1,0,scan_batch_verify:18_IMG_6240-48edf433-7e53-418b-bb0e-ec5a821a950e
+1,Defiant Bloodlord,C21,142,,de,1,1,moxfield_main;scan_batch_verify:55_IMG_6284-e44f4196-ce7e-414c-8393-375fb3be6cce
+1,Defiant Ogre,,,,en,1,0,scan_batch_new:11_IMG_6191-ff86ab3f-bd67-4188-8215-96dc6178f9c1
+1,Delivery Moogle,FIN,15,f58840dc-c641-4092-8b67-9c0d449af715,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:12_IMG_6232-37988df5-605b-4f54-b71d-604ed0defce6
+4,"Delphia, Undecided",,,,en,4,0,scan_batch_verify:50_IMG_6279-0f435247-4092-460a-8854-020c2cfa349d;scan_batch_verify:51_IMG_6280-a1f72b4a-8cc9-402f-a40d-f8cc61dfd927;scan_batch_verify:53_IMG_6282-0a6ca069-1a51-455a-adfe-2ee756e1bf9b;scan_batch_verify:64_IMG_6293-30484a92-bd22-465d-b353-308984032416
+1,Delta Bloodflies,TDM,,,de,1,1,moxfield_main;scan_batch_new:18_IMG_6198-5ba79bca-45b1-4687-981e-428d37d4d6f7
+1,Delver of Secrets // Insectile Aberration,INR,60,6904ea20-e504-47da-95a0-08739fdde260,en,0,1,manabox_full
+1,Demonmail Hauberk,,,,en,1,0,scan_batch_verify:48_IMG_6276-592ee27c-93ae-454a-90b1-83638b75086d
+1,Deputy of Acquittals,,,,en,1,0,scan_batch_verify:41_IMG_6266-e8f9dd56-201b-4e7d-a48c-3b25c77123ce
+1,Desecrated Tomb,,,,en,1,0,scan_batch_verify:57_IMG_6286-21f3329d-9682-433b-853e-04971b747279
+1,Detention Chariot,,,,en,1,0,scan_batch_verify:13_IMG_6233-ff7c62ac-84e6-4766-b69e-095a13ba3535
+1,Devious Cover-Up,GRN,35,21ac6b0a-b1a5-439d-b65e-5f04e1826c80,en,0,1,manabox_grn_sealed_2026-09-11
+1,Diabolic Edict,,,,en,1,0,scan_batch_verify:62_IMG_6291-b03872e5-03b1-4b01-96d7-7059437b7cd6
+2,Diamond Weapon,FIN,183,6ce7f494-2a19-4b11-94d4-fc5e5a7068bd,en,0,2,manabox_full
+2,Dig Through Time,SOC,195,020939d6-72f0-4aa0-9ac2-d16cc896cd7f,en,0,2,manabox_full
+1,Dire Downdraft,,,,en,1,0,scan_batch_verify:27_IMG_6250-8b3336f5-f00b-4be6-90d4-7a1fc0766b5e
+1,Dirgur Island Dragon // Skimming Strike,TDM,40,b1d21a9a-6b0c-4fbc-a427-81be885d326b,en,0,1,manabox_full;moxfield_main
+1,Disa the Restless,M3C,1,c976edeb-0fa1-4647-a16c-870d8a3c30c6,en,0,1,manabox_full
+1,Disdainful Stroke,GRN,37,0193dfa3-8409-44be-b4be-6c3cad42d4a4,en,0,1,manabox_grn_sealed_2026-09-11
+1,Disinformation Campaign,GRN,208,d34ea8c4-03b1-415f-80e1-7c3cf6933685,en,0,1,manabox_grn_sealed_2026-09-11
+1,Dismal Backwater,,,,en,1,0,scan_batch_verify:61_IMG_6290-53519a68-befd-4445-8205-2ab59a906767
+1,Dispelling Exhale,TDM,41,1c9af3f1-711e-42ae-803a-1100eba3fb13,en,0,1,manabox_full;moxfield_main
+1,Disruptor of Currents,,,,en,1,0,scan_batch_verify:30_IMG_6253-939c1dfe-e6a4-471d-a94a-c4bbb3218a0c
+1,Disturbing Mirth,,,,en,1,0,scan_batch_verify:39_IMG_6264-ae737c6e-f416-4cf0-91e2-d4cb68421f49
+1,Diversion Specialist,,,,en,1,0,scan_batch_new:09_IMG_6189-1864ee91-25bd-4824-abf5-fffa505a5fa7
+1,Divert Disaster,,,,en,1,0,scan_batch_verify:32_IMG_6255-f7599c07-2d48-4394-bd01-dd489d9b40f6
+1,Dominating Vampire,,,,en,1,0,scan_batch_new:17_IMG_6197-65f5c3a4-dd32-451f-a384-4ccfe3f221d3
+1,Doomsday Excruciator,DSK,94,542c89b6-48c6-4fcb-8a4c-b5ed2fa1d384,en,0,1,manabox_full
+1,"Doran, Besieged by Time",,,,en,1,0,scan_batch_verify:37_IMG_6262-1c6a60a3-6307-4ea5-ab9e-68d04f86c120
+1,Douser of Lights,GRN,70,7c554be7-6fd4-4642-aaa0-2781d9c388e4,en,0,1,manabox_grn_sealed_2026-09-11
+1,Downsize,,,,en,1,0,scan_batch_verify:28_IMG_6251-8cc612a1-49fc-416b-897b-01ef6698258e
+1,Dragon Bell Monk,,,,en,1,0,scan_batch_verify:10_IMG_6230-872b5d31-6471-4bda-b181-670ad4bfbd83
+2,Dragon's Prey,TDM,79,7a6004ff-4180-4332-8b51-960f8c7521d9,en,0,2,manabox_full;moxfield_main
+1,Dragonback Assault,TDM,179,d54cc838-d79d-433a-99fb-d6e4d1c1431d,en,0,1,manabox_full;moxfield_main
+1,Dragonsguard Elite,,,,en,1,0,scan_batch_new:40_IMG_6220-842c5ac9-507a-4709-be54-1941df198536
+1,Dragonstorm Globe,TDM,,,de,0,1,moxfield_main
+1,Dragoon's Wyvern,FIN,49,d92bce20-308e-4841-aaf8-8e20698292e7,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:23_IMG_6245-8e617f07-1540-479a-b5b3-fcaf0a05bdad
+1,Dramatic Accusation,,,,en,1,0,scan_batch_verify:34_IMG_6258-6ebcd3e4-874c-497d-a921-ac847c809b20
+1,Dreadmalkin,,,,en,1,0,scan_batch_new:28_IMG_6208-f035ade7-1840-4fed-808c-0881696e83cb
+1,Dreamdew Entrancer,BLB,211,26bd6b0d-8606-4a37-8be3-a852f1a8e99c,en,0,1,manabox_full
+1,Dreams of Laguna,FIN,50,ba752243-2727-4b8a-8e21-e70becfd4ff3,en,0,1,manabox_fin;manabox_full;moxfield_main
+1,Dregscape Sliver,,,,en,1,0,scan_batch_verify:65_IMG_6294-0b5641cf-4577-4164-a143-00262b667705
+1,Drift of Phantasms,,,,en,1,0,scan_batch_verify:27_IMG_6250-8b3336f5-f00b-4be6-90d4-7a1fc0766b5e
+1,Drill Too Deep,,,,en,1,0,scan_batch_new:11_IMG_6191-ff86ab3f-bd67-4188-8215-96dc6178f9c1
+1,Drudge Beetle,,,,en,1,0,scan_batch_verify:01_IMG_6221-73835ff0-57da-4138-a93e-c455aa9422c7
+1,Due Diligence,,,,en,1,0,scan_batch_verify:18_IMG_6240-48edf433-7e53-418b-bb0e-ec5a821a950e
+1,Duel for Dominance,,,,en,1,0,scan_batch_new:39_IMG_6219-1f79c5e6-f833-477a-a5c1-4ef042311f8a
+2,Duel Tactics,SOS,112,8f3a1675-0cc7-4dfd-a12e-4740a2cf81e8,en,0,2,manabox_full
+1,Dusyut Earthcarver,TDM,,,de,1,1,moxfield_main;scan_batch_new:32_IMG_6212-71b631fc-6504-4a4a-8d9a-1c9cc152d36f
+1,Dwarven Castle Guard,FIN,18,e17c0d27-e88d-4ba9-acbb-3f916cee3d7e,en,1,1,manabox_fin;manabox_full;moxfield_main;scan_batch_verify:08_IMG_6228-00285551-40d4-4e59-8dd4-cac2458ba14d
+1,Dwarven Provisioner,HOB,9,1f9a61a1-454e-4d5b-a6dd-1a79fe9dedf3,en,0,1,manabox_hob_2026-08-14
+1,Dwarven Shortsword,HOB,10,f2341cf3-4d2c-4a4f-9aea-8834104a8910,en,0,1,manabox_hob_2026-08-14
+1,Dwynen's Elite,FDN,218,89d94c28-ea2e-4a3d-935f-6b2d9f2efc7a,en,0,1,manabox_full
+1,Dynamite Diver,,,,en,1,0,scan_batch_new:08_IMG_6188-cbdb97f9-1f19-4d81-b280-55d59390eedb
+1,Dúnedain Blade,LTR,6,3d5f92bf-e4e7-487a-834c-964fdd6ad674,en,0,1,manabox_full
+1,Eager Trufflesnout,FDN,102,,de,1,1,moxfield_main;scan_batch_new:33_IMG_6213-b86acb01-446a-49bf-90b7-00c9d619c9f9
+1,Eagles of the North,LTR,7,c1bd3bc0-77bd-40fe-b4f1-835a04cb6e41,en,0,1,manabox_full
+1,Earl of Squirrel,,,,en,1,0,scan_batch_verify:50_IMG_6279-0f435247-4092-460a-8854-020c2cfa349d
+1,East-Mark Cavalier,LTR,9,9be412c0-45d4-4856-a8cf-63a5a822dc5c,en,0,1,manabox_full
+1,Echoing Echo,,,,en,1,0,scan_batch_new:05_IMG_6185-2737bbe3-3dea-4847-9ccc-01dcbd6baa10
+1,"Eden, Seat of the Sanctum",FIN,277,e28eac1e-adc7-4f8d-b206-bef09ba07d38,en,0,1,manabox_fin;manabox_full;moxfield_main
+1,Edge Rover,,,,en,1,0,scan_batch_new:37_IMG_6217-ee1fbfb6-48e8-48ff-8b45-0f11b72c9227
+2,Efflorescence,SOS,144,79b9ace7-eceb-4f97-9ee7-d5ee3e0b3515,en,0,2,manabox_full
+1,Elder Auntie,,,,en,1,0,scan_batch_new:14_IMG_6194-7c723314-c4d4-4ef8-a193-46592baba740
+2,Elder Brain,,,,en,2,0,scan_batch_new:03_IMG_6183-e6de9672-7af7-4784-980f-6c4138f19ddb;scan_batch_new:26_IMG_6206-b2d96958-3956-4933-835f-e81ef1042d5f
+2,Elemental Mascot,SOS,185,c507eb1c-48e9-4d28-bb2d-71f2a9df9ab0,en,0,2,manabox_full
+1,Elementalist Adept,FDN,36,,de,1,1,moxfield_main;scan_batch_verify:22_IMG_6244-c165a09a-cd2e-422a-818d-ccd5fd9a0c16
+1,Elfsworn Giant,FDN,103,,de,1,1,moxfield_main;scan_batch_new:34_IMG_6214-c3c575e2-f7ab-4e34-8965-75f865ec67a8
+1,Eliminate,,,,en,1,0,scan_batch_new:23_IMG_6203-374f2f39-9c6f-43af-80c8-ebda5171a44b
+1,Elite Scaleguard,,,,en,1,0,scan_batch_verify:10_IMG_6230-872b5d31-6471-4bda-b181-670ad4bfbd83
+1,Elven Farsight,LTR,161,73d135b2-d2b8-499c-84d9-824370c19ccc,en,0,1,manabox_full
+1,Elvenking's Harper,HOB,38,9c50656d-c74a-4e90-9ef7-afa237682516,en,0,1,manabox_hob_2026-08-14
+1,Elvish Fury,,,,en,1,0,scan_batch_verify:06_IMG_6226-e5abc442-2a29-457a-8634-89e1c41c8116
+1,Elvish Regrower,FDN,104,,de,1,1,moxfield_main;scan_batch_verify:01_IMG_6221-73835ff0-57da-4138-a93e-c455aa9422c7
+1,Elvish Rejuvenator,PM19,180,,de,1,1,moxfield_main;scan_batch_verify:50_IMG_6279-0f435247-4092-460a-8854-020c2cfa349d
+1,Emberheart Challenger,BLB,133,0035082e-bb86-4f95-be48-ffc87fe5286d,en,0,1,manabox_full
+1,Embermouth Sentinel,TDM,,,de,1,1,moxfield_main;scan_batch_verify:45_IMG_6272-f8e30397-7287-4938-be79-787f2a543249
+2,Embrace the Paradox,SOS,186,c0cf5e0f-3668-46f2-850d-d91a538e8ead,en,0,2,manabox_full
+1,"Emil, Vastlands Roamer",SOS,146,3654416d-8558-4af2-9e10-18dbc8f2b376,en,0,1,manabox_full
+1,Enchanted River's Grasp,HOB,39,ad40a4b9-9fab-49c1-8e9f-6e0776966833,en,0,1,manabox_hob_2026-08-14
+1,Encroaching Dragonstorm,TDM,142,4ddd4477-f8c9-4d05-9177-f8344ba8f40b,en,0,1,manabox_full
+1,Endbringer,PRM,59667,,de,0,1,moxfield_main
+1,Endrider Catalyzer,,,,en,1,0,scan_batch_new:08_IMG_6188-cbdb97f9-1f19-4d81-b280-55d59390eedb
+1,Enduring Vitality,,,,en,1,0,scan_batch_verify:05_IMG_6225-a3dfd386-3a00-449e-8641-aa213d285184
+1,Engine Rat,,,,en,1,0,scan_batch_new:23_IMG_6203-374f2f39-9c6f-43af-80c8-ebda5171a44b
+1,Enhanced Awareness,,,,en,1,0,scan_batch_verify:32_IMG_6255-f7599c07-2d48-4394-bd01-dd489d9b40f6
+2,Errand-Rider of Gondor,LTR,11,d3f990e7-54a3-4893-8510-645b2065447b,en,0,2,manabox_full
+1,Erratic Apparition,,,,en,1,0,scan_batch_verify:25_IMG_6248-a3cfe378-01e6-487d-adcb-9d0a58abc194
+1,Ertai's Scorn,,,,en,1,0,scan_batch_verify:33_IMG_6256-adec6557-f2d8-4c10-878e-d08351133126
+1,Erudite Wizard,FDN,37,,de,1,1,moxfield_main;scan_batch_verify:22_IMG_6244-c165a09a-cd2e-422a-818d-ccd5fd9a0c16
+1,Escape Tunnel,,,,en,1,0,scan_batch_verify:61_IMG_6290-53519a68-befd-4445-8205-2ab59a906767
+1,Esgaroth Garrison,HOB,13,573f67b0-6ce8-4857-a703-4a5728640736,en,0,1,manabox_hob_2026-08-14
+1,Essence Anchor,TDM,,,de,1,1,moxfield_main;scan_batch_verify:21_IMG_6243-fb5fe512-3b51-4087-aef2-9c95f5a33225
+1,Essence Extraction,,,,en,1,0,scan_batch_verify:52_IMG_6281-1f3a884d-1d86-4901-86d1-f57d7d1a8e75
+1,Essence Flux,,,,en,1,0,scan_batch_verify:29_IMG_6252-3b85773c-1ce2-4c19-9a6b-74cac1bfc8ef
+1,Essenceknit Scholar,SOS,187,2a3cba55-3fae-4d45-ae03-4d662ec13718,en,0,1,manabox_full
+1,Ether,FIN,53,896ee6e9-15a9-4974-b576-50f4759fac38,en,0,1,manabox_full
+1,"Etrata, the Silencer",GRN,170,fa36b142-e67e-49da-9080-c5994e275266,en,0,1,manabox_grn_sealed_2026-09-11
+2,Eumidian Terrabotanist,EOE,180,64fb2981-86ed-478a-89cd-c6bb078a5bc7,en,0,2,manabox_full
+1,Eusocial Engineering,EOE,181,011bd7d8-6d60-482a-91b7-d3f0aad13b71,en,0,1,manabox_full
+1,Everdream,,,,en,1,0,scan_batch_verify:35_IMG_6259-284672fb-70ed-4836-9fe2-acf12b3659ff
+1,Evershrike's Gift,,,,en,1,0,scan_batch_verify:17_IMG_6239-ec1d80af-fb12-4c58-b852-61a1a4e108b5
+1,Evil Reawakened,FIN,98,eb98cbc3-749c-44f4-974c-00be1286d69e,en,0,1,manabox_fin;manabox_full;moxfield_main
+3,Evolving Wilds,FDN,262,e3056678-4ef0-4847-af08-df218ef5fb2b,en,0,3,manabox_full;moxfield_main
+1,Exalted Angel,,,,en,1,0,scan_batch_verify:49_IMG_6278-627251f1-2752-4138-b6c9-167a6925d12d
+1,Excavating Anurid,,,,en,1,0,scan_batch_verify:06_IMG_6226-e5abc442-2a29-457a-8634-89e1c41c8116
+1,"Exdeath, Void Warlock // Neo Exdeath, Dimension's End",FIN,220,1b4bab87-4000-461d-8b58-d34928fee305,en,0,1,manabox_full
+1,Exemplar of Light,FDN,11,,de,0,1,moxfield_main
+1,Expansion // Explosion,GRN,224,e0644c92-4d67-475e-8c8e-0e2c493682fb,en,0,1,manabox_grn_sealed_2026-09-11
+1,Expel the Interlopers,,,,en,1,0,scan_batch_verify:49_IMG_6278-627251f1-2752-4138-b6c9-167a6925d12d
+1,Explosive Prodigy,,,,en,1,0,scan_batch_new:14_IMG_6194-7c723314-c4d4-4ef8-a193-46592baba740
+1,Expose the Culprit,,,,en,1,0,scan_batch_new:09_IMG_6189-1864ee91-25bd-4824-abf5-fffa505a5fa7
+1,Expressive Firedancer,SOS,114,259b8c45-6241-4206-a34e-34c7f401f47b,en,0,1,manabox_full
+1,Extract a Confession,,,,en,1,0,scan_batch_new:30_IMG_6210-e5661c8c-75d3-44f7-8e54-53d174d015fc
+1,Eyekite,,,,en,1,0,scan_batch_verify:35_IMG_6259-284672fb-70ed-4836-9fe2-acf12b3659ff
+1,Eyes Everywhere,,,,en,1,0,scan_batch_verify:28_IMG_6251-8cc612a1-49fc-416b-897b-01ef6698258e
+1,Eyes in the Skies,,,,en,1,0,scan_batch_verify:17_IMG_6239-ec1d80af-fb12-4c58-b852-61a1a4e108b5
+1,Faith's Fetters,,,,en,1,0,scan_batch_verify:17_IMG_6239-ec1d80af-fb12-4c58-b852-61a1a4e108b5
+2,Faithless Looting,SOC,244,fc019ffa-4461-4f3d-ab8d-e4d20e77ca0c,en,0,2,manabox_full
+1,Fanatical Firebrand,TDM,,,de,1,1,moxfield_main;scan_batch_new:04_IMG_6184-e08f1971-4128-495b-96b0-0f6342285a51
+1,"Fang, Fearless l'Cie",FIN,99,f73a5cbb-905f-4b99-8d23-9d1b6bd47ee8,en,0,1,manabox_full
+1,Fascination,,,,en,1,0,scan_batch_verify:32_IMG_6255-f7599c07-2d48-4394-bd01-dd489d9b40f6
+1,Fear of Being Hunted,DSK,134,a0a5e716-68c1-4fa0-aa08-5b08114e08d8,en,0,1,manabox_full
+1,Fear of Exposure,,,,en,1,0,scan_batch_new:38_IMG_6218-e1cacfd6-66a9-4ea9-a9f5-29b5e0813464
+1,Fearless Swashbuckler,,,,en,1,0,scan_batch_verify:44_IMG_6270-db5a3e7c-d577-45ee-a5a8-d028d34fa4eb
+1,Feed the Cycle,,,,en,1,0,scan_batch_new:25_IMG_6205-ab56973a-5db8-4b26-8996-5988faefcc4d
+1,Feed the Flames,,,,en,1,0,scan_batch_new:14_IMG_6194-7c723314-c4d4-4ef8-a193-46592baba740
+1,"Felisa, Fang of Silverquill",,,,en,1,0,scan_batch_verify:37_IMG_6262-1c6a60a3-6307-4ea5-ab9e-68d04f86c120
+3,Fell,BLB,95,c96ac326-de44-470b-a592-a4c2a052c091,en,0,3,manabox_full
+1,Fell Stinger,PRM,95323,,de,1,1,moxfield_main;scan_batch_verify:51_IMG_6280-a1f72b4a-8cc9-402f-a40d-f8cc61dfd927
+1,Fellwar Stone,SLD,7062,77089d27-c883-41eb-b1ce-77881ba1127c,en,0,1,manabox_full
+1,Felonious Rage,,,,en,1,0,scan_batch_new:05_IMG_6185-2737bbe3-3dea-4847-9ccc-01dcbd6baa10
+1,Feral Deathgorger // Dusk Sight,TDM,80,,de,1,1,moxfield_main;scan_batch_new:18_IMG_6198-5ba79bca-45b1-4687-981e-428d37d4d6f7
+1,Fierce Invocation,,,,en,1,0,scan_batch_new:15_IMG_6195-33c42953-e002-4500-8c11-6bb49b35fff8
+1,Fiery Annihilation,FDN,86,54fe00aa-d284-48f9-b5a2-1bd4c5fa8e58,en,0,1,manabox_full;moxfield_main
+1,Fiery Inscription,LTR,126,8c321159-43e5-40fc-9f0c-4ecc4f6cfd20,en,0,1,manabox_full
+2,Fiery Temper,,,,en,2,0,scan_batch_new:02_IMG_6182-b851c886-39af-4e6f-a97b-cbb0c4947b4e;scan_batch_new:16_IMG_6196-9a65f2bf-edfa-49f3-bf0a-528a9a2ec49a
+1,Fight On!,FIN,100,e1b0739a-dcc4-4034-96d7-69e551b2f36b,en,0,1,manabox_full
+1,Firdoch Core,,,,en,1,0,scan_batch_verify:48_IMG_6276-592ee27c-93ae-454a-90b1-83638b75086d
+1,Fire of Orthanc,LTR,127,9b5871c5-bb94-4803-93ba-cd1a630b00d6,en,0,1,manabox_full
+1,Firebolt,MH1,122,882b8f98-ee51-4c94-a3eb-c79eb2b50d78,en,0,1,manabox_full
+1,Firebrand Archer,FDN,196,fe0312f1-4c98-4b7f-8a34-0059ea80edef,en,0,1,manabox_full;moxfield_main
+1,Firemind's Research,,,,en,1,0,scan_batch_verify:44_IMG_6270-db5a3e7c-d577-45ee-a5a8-d028d34fa4eb
+1,"Firion, Wild Rose Warrior",FIN,137,98366937-d15b-4a66-b9f6-878d50b63871,en,1,1,manabox_fin;moxfield_main;scan_batch_new:07_IMG_6187-cdda7eb9-4da2-402e-b1a7-10938c1460f3
+1,First-Sphere Gargantua,,,,en,1,0,scan_batch_new:31_IMG_6211-ce0a5906-12e4-4dba-a98e-081b8786fb9b
+2,Fists of Flame,CMM,223,6b34af88-bc4e-4ca8-8662-7dc4050c62c5,en,0,2,manabox_full
+1,Flame Slash,SCH,1,,de,0,1,moxfield_main
+1,Flamehold Grappler,TDM,,,de,0,1,moxfield_main
+1,Flamewake Phoenix,FDN,198,,de,1,1,moxfield_main;scan_batch_new:04_IMG_6184-e08f1971-4128-495b-96b0-0f6342285a51
+1,Flawless Forgery,,,,en,1,0,scan_batch_new:03_IMG_6183-e6de9672-7af7-4784-980f-6c4138f19ddb
+1,Flaying Tendrils,,,,en,1,0,scan_batch_verify:51_IMG_6280-a1f72b4a-8cc9-402f-a40d-f8cc61dfd927
+1,Fleeting Flight,FDN,13,,de,0,1,moxfield_main
+1,Flesh Burrower,,,,en,1,0,scan_batch_new:38_IMG_6218-e1cacfd6-66a9-4ea9-a9f5-29b5e0813464
+1,Flotsam // Jetsam,,,,en,1,0,scan_batch_verify:44_IMG_6270-db5a3e7c-d577-45ee-a5a8-d028d34fa4eb
+1,Flow of Knowledge,BRO,381,6de8324f-07ee-4dd1-9547-1a1cfb361ff5,en,0,1,manabox_full
+1,Flow State,SOS,49,47d6093b-b1b6-4956-8bfd-02cce899f832,en,0,1,manabox_full
+1,Flowering of the White Tree,LTR,15,2203b2cd-48e5-471a-85fe-dc81012e5d61,en,0,1,manabox_full
+1,Foray of Orcs,LTR,128,5fea0c66-c776-4dc7-a235-f3822521cacd,en,0,1,manabox_full
+1,Forbidden Alchemy,TDC,152,04def7e3-10e4-4733-8c19-8fa6e4469086,en,0,1,manabox_full
+1,Forced Landing,,,,en,1,0,scan_batch_verify:01_IMG_6221-73835ff0-57da-4138-a93e-c455aa9422c7
+11,Forest,MIR,347,be72862d-d71e-4b18-98a6-59019399f631,en,0,11,manabox_fin;manabox_full;moxfield_main
+1,Formless Nurturing,,,,en,1,0,scan_batch_verify:03_IMG_6223-343934b7-6073-4aa3-89fe-bcc430b907ec
+1,Fortress Kin-Guard,TDM,,,de,0,1,moxfield_main
+1,Forum of Amity,SOS,256,1de6c6cc-0c55-4997-8623-d7f796bd9ab8,en,0,1,manabox_full
+1,Fractalize,SOS,51,e3c3b19b-01b6-4f5a-b428-513b778c5d89,en,0,1,manabox_full
+4,Frantic Inventory,M21,50,8f14abb0-0e9f-448e-85d7-6cb71f756c56,en,0,4,manabox_full
+1,Frenzied Baloth,EOE,183,c72d85e9-a0bc-4f73-8d73-c58843577f4e,en,0,1,manabox_full
+1,Friendly Fire,,,,en,1,0,scan_batch_new:15_IMG_6195-33c42953-e002-4500-8c11-6bb49b35fff8
+1,Front Porch Sentries,HOB,67,07bfc803-e11b-47ab-9f25-0ace7e174200,en,0,1,manabox_hob_2026-08-14
+1,Frontier Mastodon,,,,en,1,0,scan_batch_new:36_IMG_6216-56d8d611-6cb7-446e-a581-23fe53fe83e4
+1,Frost Walker,,,,en,1,0,scan_batch_verify:31_IMG_6254-8a7c6234-1b1c-4fdd-8764-8d52d43eebdf
+1,Fruit of the First Tree,,,,en,1,0,scan_batch_new:38_IMG_6218-e1cacfd6-66a9-4ea9-a9f5-29b5e0813464
+1,Fuel the Flames,,,,en,1,0,scan_batch_new:08_IMG_6188-cbdb97f9-1f19-4d81-b280-55d59390eedb
+1,Full Bore,EOE,135,cfee64ef-d22d-4024-bc65-59cbd1731d1c,en,0,1,manabox_full
+1,Fíli the Pathfinder,HOB,14,b02142f3-5e55-40dc-a02c-9113fb7d763c,en,0,1,manabox_hob_2026-08-14
+1,Gaius van Baelsar,,,,en,1,0,scan_batch_new:21_IMG_6201-1750c780-235d-4dc0-a7e6-075920794b93
+1,Galactic Wayfarer,,,,en,1,0,scan_batch_new:37_IMG_6217-ee1fbfb6-48e8-48ff-8b45-0f11b72c9227
+1,Galadhrim Bow,LTR,167,9df34f21-798f-440d-8b09-ec5b5c0b8c12,en,0,1,manabox_full
+1,Galadriel of Lothlórien,LTR,321,a971745b-5d5c-46bb-95ca-329b6ee7ed75,en,0,1,manabox_full
+1,Galewind Moose,,,,en,1,0,scan_batch_new:40_IMG_6220-842c5ac9-507a-4709-be54-1941df198536
+1,"Galion, Elvenking's Butler",HOB,125,985bd676-58c4-42c7-a570-1b413e9aa94c,en,0,1,manabox_hob_2026-08-14
+1,Gallant Fowlknight,,,,en,1,0,scan_batch_verify:17_IMG_6239-ec1d80af-fb12-4c58-b852-61a1a4e108b5
+1,Galuf's Final Act,FIN,186,0ce05634-6c01-4941-a135-904cb4e33ac4,en,0,1,manabox_full
+1,Galvanize,,,,en,1,0,scan_batch_new:06_IMG_6186-0ba58fba-c7e2-4967-bd41-69c4b6c59dc4
+1,Garrison Sergeant,GRN,172,2bd957a1-a354-48e9-80ad-66e49aa845fc,en,0,1,manabox_grn_sealed_2026-09-11
+1,Gastal Raider,,,,en,1,0,scan_batch_new:31_IMG_6211-ce0a5906-12e4-4dba-a98e-081b8786fb9b
+1,Gate Colossus,,,,en,1,0,scan_batch_verify:46_IMG_6273-b332dc1f-9110-44bf-94b6-957997f77b39
+1,Gather Courage,,,,en,1,0,scan_batch_verify:02_IMG_6222-135748dc-d131-455f-aa30-6315b944318d
+1,Gather the Townsfolk,,,,en,1,0,scan_batch_verify:09_IMG_6229-828683ca-23bb-49ba-9e0a-a6d15348d81b
+1,Gathering of Darkness,HOB,68,2ce066be-e5ad-4b93-8245-1b5018990d03,en,0,1,manabox_hob_2026-08-14
+1,Gathering Stone,ECL,257,81dfbfe1-143a-4637-b683-a34cfc51993d,en,0,1,manabox_full
+1,"Gavi, Nest Warden",C20,7,80bc07d5-bdbb-4a6d-8958-0c172ea80245,en,0,1,manabox_full
+1,Gearbane Orangutan,,,,en,1,0,scan_batch_new:06_IMG_6186-0ba58fba-c7e2-4967-bd41-69c4b6c59dc4
+1,Gearseeker Serpent,,,,en,1,0,scan_batch_verify:24_IMG_6247-7f3afa84-ca45-4d8a-b4be-868198a33022
+2,Geistlight Snare,,,,en,2,0,scan_batch_verify:26_IMG_6249-7ed5f34a-6890-4445-9691-a1681a35c27a;scan_batch_verify:34_IMG_6258-6ebcd3e4-874c-497d-a921-ac847c809b20
+1,Gene Pollinator,,,,en,1,0,scan_batch_verify:05_IMG_6225-a3dfd386-3a00-449e-8641-aa213d285184
+1,Genesis Wave,FDN,221,,de,1,1,moxfield_main;scan_batch_new:34_IMG_6214-c3c575e2-f7ab-4e34-8965-75f865ec67a8
+1,Geomancer's Gambit,MH1,125,23b67031-76b8-4511-a6dc-433d9450496e,en,0,1,manabox_full
+1,Ghostly Prison,SPG,19,d0ae5ac7-4cd9-40d7-b3a7-e7d493f2bf7a,en,0,1,manabox_full
+1,Ghoultree,INR,198,9c99fe73-5fe1-4fcb-8099-73c4a6fd0d35,en,0,1,manabox_full
+1,Giant Growth,FDN,223,62652aa9-57e7-42a7-8f2f-62e9a6aefb16,en,0,1,manabox_full;moxfield_main
+1,Giant's Boulder,HOB,173,ce254758-c928-4b43-a952-13fac1845668,en,0,1,manabox_hob_2026-08-14
+1,Gigantoad,FIN,187,bc10d648-4053-460f-bc52-9c20477bf6de,en,1,1,manabox_fin;moxfield_main;scan_batch_new:35_IMG_6215-9e0108e8-e960-41ca-aa6d-a5667630b68b
+1,Gilded Ghoda,,,,en,1,0,scan_batch_new:08_IMG_6188-cbdb97f9-1f19-4d81-b280-55d59390eedb
+1,Gilded Light,,,,en,1,0,scan_batch_verify:20_IMG_6242-b6055471-0d05-4dfe-ba33-29b36abef028
+2,Gimli's Axe,LTR,130,d8999b6c-e501-48d0-ae51-a35b96f996ec,en,0,2,manabox_full
+2,Gisa's Bidding,,,,en,2,0,scan_batch_new:03_IMG_6183-e6de9672-7af7-4784-980f-6c4138f19ddb;scan_batch_new:26_IMG_6206-b2d96958-3956-4933-835f-e81ef1042d5f
+1,Gleaming Barrier,FDN,252,,de,1,1,moxfield_main;scan_batch_verify:45_IMG_6272-f8e30397-7287-4938-be79-787f2a543249
+1,Gleaming Geardrake,,,,en,1,0,scan_batch_new:01_IMG_6181-9283dbc4-e689-448b-a464-a09ce79b59a9
+1,Glen Elendra's Answer,,,,en,1,0,scan_batch_verify:31_IMG_6254-8a7c6234-1b1c-4fdd-8764-8d52d43eebdf
+1,Glidedive Duo,,,,en,1,0,scan_batch_new:27_IMG_6207-8b165030-3e7c-445b-86dc-d7035e1d3305
+1,"Glorfindel, Dauntless Rescuer",LTR,171,baf7a546-8a8b-4396-ab64-9a5b9abffe79,en,0,1,manabox_full
+1,Glorious Decay,SOS,150,a335f396-1004-4fee-842a-a35ff6ba17f2,en,0,1,manabox_full
+1,Glorious Gale,LTR,51,6e1057de-5710-415c-9a51-1d8bd86021a3,en,0,1,manabox_full
+1,Glóin the Mighty // Easy Pickings,HOB,99,5793b8eb-2fc5-454d-8fa2-20346fef167a,en,0,1,manabox_hob_2026-08-14
+1,"Glóin, Dwarf Emissary",LTR,132,868a2aa7-bcaf-409b-8802-d00ee1f2ae77,en,0,1,manabox_full
+1,Gnarlbark Elm,,,,en,1,0,scan_batch_new:29_IMG_6209-234acd48-8658-4dc0-bd6a-944298e578a3
+1,Gnarled Professor,,,,en,1,0,scan_batch_new:33_IMG_6213-b86acb01-446a-49bf-90b7-00c9d619c9f9
+1,Gnashing of Teeth,HOB,69,5d485d70-c7b9-40a4-9089-5e7f1c2b9213,en,0,1,manabox_hob_2026-08-14
+1,Goblin Boarders,FDN,87,,de,1,1,moxfield_main;scan_batch_new:04_IMG_6184-e08f1971-4128-495b-96b0-0f6342285a51
+1,Goblin Champion,MH1,127,9543660a-6797-4719-bbe7-ff6e40709599,en,0,1,manabox_full
+1,Goblin Electromancer,OTC,228,71808155-db49-4027-a2fc-76f53475ac05,en,0,1,manabox_full;manabox_grn_sealed_2026-09-11
+1,Goblin Fireleaper,LTR,133,ec120dae-8c40-4053-9341-1f7774464634,en,0,1,manabox_full
+1,Goblin Glasswright // Craft with Pride,SOS,117,c85c5f06-dd31-4e2c-97be-2f64d65069ea,en,0,1,manabox_full
+2,Goblin Heelcutter,,,,en,2,0,scan_batch_new:15_IMG_6195-33c42953-e002-4500-8c11-6bb49b35fff8;scan_batch_new:17_IMG_6197-65f5c3a4-dd32-451f-a384-4ccfe3f221d3
+1,Goblin Maskmaker,,,,en,1,0,scan_batch_new:05_IMG_6185-2737bbe3-3dea-4847-9ccc-01dcbd6baa10
+2,Goblin Oriflamme,FDN,539,0259e4d8-849b-468e-a902-aa1d7f2d5b6a,en,0,2,manabox_full
+1,Goblin Plate Mail,HOB,157,cb982607-da37-4894-91a5-cf6307d4d703,en,0,1,manabox_hob_2026-08-14
+1,Goblin Surprise,FDN,200,527dd5d4-5f72-40bb-8a9d-1f5ac3f81e2e,en,0,1,manabox_full;moxfield_main
+1,Goblin War Party,MH1,131,2b4155d1-0a87-4d2c-a1a0-06b2553eaae4,en,0,1,manabox_full
+1,Goblin-town Flunkies,HOB,100,ccff7382-8609-494c-aeee-cd1436456dd0,en,0,1,manabox_hob_2026-08-14
+1,Goldmeadow Nomad,,,,en,1,0,scan_batch_verify:17_IMG_6239-ec1d80af-fb12-4c58-b852-61a1a4e108b5
+1,Goldvein Pick,FDN,253,a241317d-2277-467e-a8f9-aa71c944e244,en,1,1,manabox_full;moxfield_main;scan_batch_verify:45_IMG_6272-f8e30397-7287-4938-be79-787f2a543249
+1,Golgari Raiders,GRN,130,37284ba8-441c-4cf6-95c6-6a0f52e6d36d,en,0,1,manabox_grn_sealed_2026-09-11
+1,Golgari Thug,RVR,76,6a8c5d3b-71b4-4e99-82e9-dfc0b98698b0,en,0,1,manabox_full
+1,Gollum the Abandoned,HOB,72,50d91ef3-6f5d-4255-8d47-be731b5dad30,en,0,1,manabox_hob_2026-08-14
+1,"Gollum, Patient Plotter",LTR,309,a881aa61-fc7c-4ffb-a129-f75be8b2e498,en,0,1,manabox_full
+1,"Gollum, Silent Slinker // Meager Meal",HOB,71,6cfaa182-3fec-4907-8814-b4d29c33cec3,en,0,1,manabox_hob_2026-08-14
+1,"Gongaga, Reactor Town",FIN,280,7beccfa6-3e4b-4460-954e-870cb39e462d,en,0,1,manabox_full
+1,Gorbag of Minas Morgul,LTR,86,58aafdb6-1c8c-4fc4-a52e-3e601be7fb0c,en,0,1,manabox_full
+1,Gorehorn Raider,FDN,89,,de,1,1,moxfield_main;scan_batch_new:04_IMG_6184-e08f1971-4128-495b-96b0-0f6342285a51
+1,Gran Pulse Ochu,FIN,189,4dced21f-478c-4500-9484-af5864dea5cc,en,0,1,manabox_full
+1,Gravblade Heavy,,,,en,1,0,scan_batch_new:20_IMG_6200-97cd2180-ab71-42e5-b7b5-a2ef46922d44
+1,Grave Strength,,,,en,1,0,scan_batch_new:24_IMG_6204-88633bc6-6a4c-49fe-8c84-479705f6931e
+1,Gravelgill Scoundrel,,,,en,1,0,scan_batch_verify:30_IMG_6253-939c1dfe-e6a4-471d-a94a-c4bbb3218a0c
+1,Gravkill,EOE,103,cfa6c57f-a193-48cc-9764-d8348548a111,en,0,1,manabox_full
+1,Great Fierce Bee,HOB,73,9d9ef88f-d208-4788-9553-cd672b3be1fe,en,0,1,manabox_hob_2026-08-14
+1,Great Hall of the Biblioplex,SOS,257,42d92674-2664-411c-b9c5-b04da7c845f4,en,0,1,manabox_full
+1,Great Ugly-Looking Goblin // Clap! Snap!,HOB,223,7f63f810-15a8-4bec-bd39-dbca453bcc1e,en,0,1,manabox_hob_2026-08-14
+1,Great-Horn Krushok,,,,en,1,0,scan_batch_verify:10_IMG_6230-872b5d31-6471-4bda-b181-670ad4bfbd83
+1,Greater Forgeling,,,,en,1,0,scan_batch_new:13_IMG_6193-38ea6484-48b7-425d-b01a-7cf282c80218
+1,Greater Mossdog,,,,en,1,0,scan_batch_verify:02_IMG_6222-135748dc-d131-455f-aa30-6315b944318d
+1,Green Sun's Twilight,ONE,284,32c79dbc-0b75-4ffb-bc17-42cfe3cbd7e4,en,0,1,manabox_full
+1,Greenhouse // Rickety Gazebo,,,,en,1,0,scan_batch_new:38_IMG_6218-e1cacfd6-66a9-4ea9-a9f5-29b5e0813464
+1,Grim Contest,,,,en,1,0,scan_batch_verify:43_IMG_6268-108d245d-d986-4b3f-a589-1cdf605cbf0b
+1,Griselbrand,INR,381,d06b486e-14c5-4368-b4e6-7b942f400b25,en,0,1,manabox_full
+1,Grizzled Angler // Grisly Anglerfish,,,,en,1,0,scan_batch_verify:26_IMG_6249-7ed5f34a-6890-4445-9691-a1681a35c27a
+1,Group Project,SOS,17,e8abc1eb-6225-4b18-8502-b5324b818aed,en,0,1,manabox_full
+2,Grow from the Ashes,FDN,225,42525f8a-aee7-4811-8f05-471b559c2c4a,en,0,2,manabox_full;moxfield_main
+1,Gryff's Boon,,,,en,1,0,scan_batch_verify:14_IMG_6236-cff53d5e-0179-41ca-bee7-dc4eb076d2d8
+2,"Guadosalam, Farplane Gateway",FIN,281,dfcbc131-fd50-4908-b539-c8e52bb70c58,en,0,2,manabox_fin;moxfield_main
+1,Guardian of Pilgrims,,,,en,1,0,scan_batch_verify:15_IMG_6237-614140eb-1167-49c5-bafa-6f612fa2727c
+2,Guardian of the Halls,HOB,127,4265caec-8c28-44cd-8e6b-90b5af926d3c,en,0,2,manabox_hob_2026-08-14
+2,Gurmag Angler,UMA,102,cedd44eb-f381-46e1-bcb0-88416b4ce33d,en,0,2,manabox_full
+1,Gutless Plunderer,FDN,60,,de,1,1,moxfield_main;scan_batch_new:19_IMG_6199-7c7b5fcb-a151-435e-8e51-8679738b0502
+1,Gutsplitter Gang,,,,en,1,0,scan_batch_new:29_IMG_6209-234acd48-8658-4dc0-bd6a-944298e578a3
+3,Guttersnipe,RVR,110,48eeb13e-26f8-4fc7-8850-d38790317ea4,en,0,3,manabox_full
+1,Gwaihir the Windlord,LTR,210,1a42c951-1146-4f49-a690-7d385962b191,en,0,1,manabox_full
+1,"Gyrus, Waker of Corpses",,,,en,1,0,scan_batch_verify:37_IMG_6262-1c6a60a3-6307-4ea5-ab9e-68d04f86c120
+2,Gysahl Greens,FIN,190,020dee17-d85b-44c4-9faa-b1ef977956f4,en,0,2,manabox_full
+1,Haazda Vigilante,,,,en,1,0,scan_batch_verify:18_IMG_6240-48edf433-7e53-418b-bb0e-ec5a821a950e
+1,Hand That Feeds,,,,en,1,0,scan_batch_new:09_IMG_6189-1864ee91-25bd-4824-abf5-fffa505a5fa7
+1,Haradrim Spearmaster,LTR,135,6050cf98-cdce-4825-9ab8-2294a2b63faf,en,0,1,manabox_full
+1,Harmonious Grovestrider,,,,en,1,0,scan_batch_new:37_IMG_6217-ee1fbfb6-48e8-48ff-8b45-0f11b72c9227
+1,Harmonized Crescendo,,,,en,1,0,scan_batch_verify:33_IMG_6256-adec6557-f2d8-4c10-878e-d08351133126
+2,Harnesser of Storms,BLB,137,b56beeb6-88ca-475e-8654-1d4e8b4aa3c0,en,0,2,manabox_full
+1,Harsh Sustenance,,,,en,1,0,scan_batch_verify:63_IMG_6292-fb79d373-3ed4-47e3-9a84-9800816cab62
+1,Harvest Hand // Scrounged Scythe,,,,en,1,0,scan_batch_verify:48_IMG_6276-592ee27c-93ae-454a-90b1-83638b75086d
+2,Haste Magic,FIN,140,3af9d100-70ee-4c6c-a762-11a0c4f3ef6f,en,0,2,manabox_fin;manabox_full;moxfield_main
+1,Haunt of the Dead Marshes,LTR,90,673c6c12-2513-4d1b-acf0-6a1f741d49dd,en,0,1,manabox_full
+1,Hazard of the Dunes,,,,en,1,0,scan_batch_new:36_IMG_6216-56d8d611-6cb7-446e-a581-23fe53fe83e4
+1,Hazardroot Herbalist,,,,en,1,0,scan_batch_new:40_IMG_6220-842c5ac9-507a-4709-be54-1941df198536
+1,Headless Specter,MH1,95,888b4b76-6af9-4479-8cfd-cde3b8694fe5,en,0,1,manabox_full
+1,Heartfire Hero,BLB,138,48ace959-66b2-40c8-9bff-fd7ed9c99a82,en,0,1,manabox_full
+1,Hearthborn Battler,BLB,139,bef1cf5c-9738-4062-8cb1-87a372d36687,en,0,1,manabox_full
+1,Heated Argument,SOS,118,0038d212-3d95-4f98-8c2e-7b2404d0ced7,en,0,1,manabox_full
+2,Hecteyes,FIN,103,8680d052-c07b-4d9b-bda9-b5f69f44f424,en,1,2,manabox_fin;moxfield_main;scan_batch_new:21_IMG_6201-1750c780-235d-4dc0-a7e6-075920794b93
+1,Heirloom Auntie,,,,en,1,0,scan_batch_new:25_IMG_6205-ab56973a-5db8-4b26-8996-5988faefcc4d
+1,Hellkite Punisher,M21,151,,de,1,1,moxfield_main;scan_batch_verify:52_IMG_6281-1f3a884d-1d86-4901-86d1-f57d7d1a8e75
+1,Heritage Reclamation,TDM,145,4f8fee37-a050-4329-8b10-46d150e7a95e,en,0,1,manabox_full;moxfield_main
+1,Hermit Druid,INR,202,39c66895-9c2d-49db-8261-e300a69b6cd5,en,0,1,manabox_full
+1,Heroic Reinforcements,FDN,241,,de,1,1,moxfield_main;scan_batch_verify:63_IMG_6292-fb79d373-3ed4-47e3-9a84-9800816cab62
+1,Hidden Blade,,,,en,1,0,scan_batch_verify:45_IMG_6272-f8e30397-7287-4938-be79-787f2a543249
+1,Highspire Bell-Ringer,TDM,,,de,1,1,moxfield_main;scan_batch_verify:21_IMG_6243-fb5fe512-3b51-4087-aef2-9c95f5a33225
+1,Hill Gigas,,,,en,1,0,scan_batch_new:07_IMG_6187-cdda7eb9-4da2-402e-b1a7-10938c1460f3
+1,Hinterland Logger // Timber Shredder,,,,en,1,0,scan_batch_new:39_IMG_6219-1f79c5e6-f833-477a-a5c1-4ef042311f8a
+1,Hitchclaw Recluse,GRN,133,fe349432-8726-49cf-ad07-6f8add8f78c8,en,0,1,manabox_grn_sealed_2026-09-11
+1,Hithlain Knots,LTR,54,bbcc27e7-cbe4-45c2-b157-7251a10e7ba4,en,0,1,manabox_full
+1,Hoarder's Overflow,,,,en,1,0,scan_batch_new:08_IMG_6188-cbdb97f9-1f19-4d81-b280-55d59390eedb
+2,Hobbit's Sting,LTR,20,019eab42-9e0c-4958-ac97-74d3db5580f3,en,0,2,manabox_full
+1,Honeymoon Hearse,,,,en,1,0,scan_batch_new:11_IMG_6191-ff86ab3f-bd67-4188-8215-96dc6178f9c1
+1,Honorbound Page // Forum's Favor,SOS,19,79a70863-860f-4a7b-9cb2-d3546b689d44,en,0,1,manabox_full
+1,Honored Dreyleader,,,,en,1,0,scan_batch_new:40_IMG_6220-842c5ac9-507a-4709-be54-1941df198536
+1,Hooded Assassin,,,,en,1,0,scan_batch_new:23_IMG_6203-374f2f39-9c6f-43af-80c8-ebda5171a44b
+1,Hornet Queen,,,,en,1,0,scan_batch_new:33_IMG_6213-b86acb01-446a-49bf-90b7-00c9d619c9f9
+1,Howler's Heavy,,,,en,1,0,scan_batch_verify:24_IMG_6247-7f3afa84-ca45-4d8a-b4be-868198a33022
+1,Hullcarver,,,,en,1,0,scan_batch_new:22_IMG_6202-a1770e44-0189-4daf-a3aa-604fd5d07b43
+1,Hulldrifter,,,,en,1,0,scan_batch_verify:24_IMG_6247-7f3afa84-ca45-4d8a-b4be-868198a33022
+1,Humble Defector,,,,en,1,0,scan_batch_new:15_IMG_6195-33c42953-e002-4500-8c11-6bb49b35fff8
+1,Humbling Elder,TDM,,,de,1,1,moxfield_main;scan_batch_verify:21_IMG_6243-fb5fe512-3b51-4087-aef2-9c95f5a33225
+1,Hungering Yeti,,,,en,1,0,scan_batch_new:12_IMG_6192-d32f1f4d-7253-4b8a-b176-b33dc70b57d9
+1,Hungry Ghoul,,,,en,1,0,scan_batch_new:19_IMG_6199-7c7b5fcb-a151-435e-8e51-8679738b0502
+1,Hungry Graffalon,SOS,151,030b1272-5990-4bc9-8fc1-82cc05602060,en,0,1,manabox_full
+1,Hunt the Weak,,,,en,1,0,scan_batch_new:35_IMG_6215-9e0108e8-e960-41ca-aa6d-a5667630b68b
+2,Hydro-Channeler,SOS,54,099f8400-d70a-48ef-8ff6-645eae97e072,en,0,2,manabox_full
+1,Ice Flan,FIN,55,ad304c9c-943f-442f-bb82-ff378ad7d7ba,en,1,1,manabox_fin;manabox_full;moxfield_main;scan_batch_verify:29_IMG_6252-3b85773c-1ce2-4c19-9a6b-74cac1bfc8ef
+1,Ice Magic,FIN,56,9dabd626-7ec3-4913-babb-d5d3fd5e32d5,en,1,1,manabox_full;scan_batch_verify:23_IMG_6245-8e617f07-1540-479a-b5b3-fcaf0a05bdad
+1,Icecave Crasher,,,,en,1,0,scan_batch_new:37_IMG_6217-ee1fbfb6-48e8-48ff-8b45-0f11b72c9227
+1,Iceridge Serpent,TDM,,,de,1,1,moxfield_main;scan_batch_verify:21_IMG_6243-fb5fe512-3b51-4087-aef2-9c95f5a33225
+2,Icetill Explorer,EOE,192,d9482aab-6ddf-48e1-84fa-b13d5ff81e69,en,0,2,manabox_full
+1,Identity Thief,,,,en,1,0,scan_batch_verify:53_IMG_6282-0a6ca069-1a51-455a-adfe-2ee756e1bf9b
+1,Igneous Elemental,MH1,133,974bf524-5322-4287-ac49-face12655874,en,0,1,manabox_full
+1,Ignis Scientia,FIN,227,ab4f9721-5b2c-4371-98a5-3f6714265e57,en,0,1,manabox_full
+1,Il Mheg Pixie,FIN,57,ae612312-3a8e-495f-8730-deaaf7505ca1,en,0,1,manabox_full
+1,Illuminate History,STX,108,98739789-80b5-4224-a2e4-09e00654aa9d,en,0,1,manabox_full
+2,Incendiary Flow,,,,en,2,0,scan_batch_new:02_IMG_6182-b851c886-39af-4e6f-a97b-cbb0c4947b4e;scan_batch_new:16_IMG_6196-9a65f2bf-edfa-49f3-bf0a-528a9a2ec49a
+2,Incinerating Blast,FDN,90,,de,1,2,moxfield_main;scan_batch_new:04_IMG_6184-e08f1971-4128-495b-96b0-0f6342285a51
+1,Incorrigible Youths,,,,en,1,0,scan_batch_verify:52_IMG_6281-1f3a884d-1d86-4901-86d1-f57d7d1a8e75
+1,Inescapable Blaze,GRN,107,46651efd-0906-4350-a1b8-52e3f8aff45d,en,0,1,manabox_grn_sealed_2026-09-11
+1,Inherited Envelope,LTR,242,b590d028-ea6a-4550-b5e2-ba328a81bbc0,en,0,1,manabox_full
+1,Inkling Mascot,SOS,196,6d4a2f39-0e1e-4076-815a-2676a09a1aab,en,0,1,manabox_full
+1,"Insomnia, Crown City",FIN,282,07fca511-a65c-4779-82c0-9215b0dcd068,en,0,1,manabox_fin;moxfield_main
+1,Inspiration from Beyond,FDN,43,,de,1,1,moxfield_main;scan_batch_verify:22_IMG_6244-c165a09a-cd2e-422a-818d-ccd5fd9a0c16
+1,Inspiring Call,FDN,226,,de,1,1,moxfield_main;scan_batch_new:33_IMG_6213-b86acb01-446a-49bf-90b7-00c9d619c9f9
+3,Inspiring Paladin,FDN,18,,de,1,3,moxfield_main;scan_batch_verify:10_IMG_6230-872b5d31-6471-4bda-b181-670ad4bfbd83
+1,Instant Ramen,FIN,259,ef7011f4-fc08-4b15-973d-d15357cbe744,en,1,1,manabox_fin;manabox_full;moxfield_main;scan_batch_verify:47_IMG_6274-cae39d65-cdb4-4ac3-bc7f-5613e1afc0f9
+1,Interceptor Mechan,,,,en,1,0,scan_batch_verify:38_IMG_6263-55d184c2-30ed-4fff-9a0b-32720cc31272
+1,Interface Ace,,,,en,1,0,scan_batch_verify:13_IMG_6233-ff7c62ac-84e6-4766-b69e-095a13ba3535
+1,Into the Fae Court,,,,en,1,0,scan_batch_new:26_IMG_6206-b2d96958-3956-4933-835f-e81ef1042d5f
+1,Into the Roil,FDN,509,25edefa9-9fff-4b71-83ae-696c196a795c,en,1,1,manabox_full;scan_batch_new:01_IMG_6181-9283dbc4-e689-448b-a464-a09ce79b59a9
+1,Intrepid Provisioner,,,,en,1,0,scan_batch_new:39_IMG_6219-1f79c5e6-f833-477a-a5c1-4ef042311f8a
+1,Intrepid Rabbit,,,,en,1,0,scan_batch_verify:15_IMG_6237-614140eb-1167-49c5-bafa-6f612fa2727c
+1,Intrepid Tenderfoot,,,,en,1,0,scan_batch_new:37_IMG_6217-ee1fbfb6-48e8-48ff-8b45-0f11b72c9227
+1,Intrusive Packbeast,GRN,17,49266f3c-4b43-4175-8bac-16789ba6f4b9,en,0,1,manabox_grn_sealed_2026-09-11
+1,Ioreth of the Healing House,LTR,56,03ab74cd-978a-49eb-9d38-bc8b472b3cef,en,0,1,manabox_full
+2,Iron Hills Stalwart,HOB,102,46daa9ac-0ac7-4df9-b9d2-e03ab5b56c72,en,0,2,manabox_hob_2026-08-14
+11,Island,MIR,336,347e00db-abcf-4053-aa27-4a5b42e1da55,en,1,11,manabox_fin;moxfield_main;scan_batch_verify:53_IMG_6282-0a6ca069-1a51-455a-adfe-2ee756e1bf9b
+1,Isolation at Orthanc,LTR,57,54b9c323-ac9b-4864-bd57-81b557f44114,en,0,1,manabox_full
+1,Item Shopkeep,FIN,142,bd2db3f5-fd0d-4817-af90-6bea1f07e16b,en,0,1,manabox_full
+1,Ithilien Kingfisher,LTR,58,68c29762-6859-4564-9e1d-a87fa63b951a,en,0,1,manabox_full
+1,Izzet Guildgate,,,,en,1,0,scan_batch_verify:60_IMG_6289-3f0f8434-f590-4df3-a9bd-b4fb78dc89d0
+1,Izzet Signet,TDC,320,2c747a97-9070-4c1e-b7b7-52637fbb30e1,en,0,1,manabox_full
+1,Jackdaw Savior,,,,en,1,0,scan_batch_verify:12_IMG_6232-37988df5-605b-4f54-b71d-604ed0defce6
+1,Jade-Cast Sentinel,TDM,,,de,1,1,moxfield_main;scan_batch_verify:45_IMG_6272-f8e30397-7287-4938-be79-787f2a543249
+1,"Jaxis, the Troublemaker",SNC,461,,de,0,1,moxfield_main
+1,Jeskai Monument,TDM,,,de,1,1,moxfield_main;scan_batch_verify:45_IMG_6272-f8e30397-7287-4938-be79-787f2a543249
+1,Jibbirik Omnivore,,,,en,1,0,scan_batch_new:36_IMG_6216-56d8d611-6cb7-446e-a581-23fe53fe83e4
+1,"Jidoor, Aristocratic Capital // Overture",FIN,284,98b2d5b5-f85b-4c42-a0f5-a76f6af304ba,en,0,1,manabox_fin;moxfield_main
+1,Join Shields,GRN,181,91898d8a-589d-43db-8dc4-0ec6a3bd6d49,en,0,1,manabox_grn_sealed_2026-09-11
+1,"Jolrael, Voice of Zhalfir",,,,en,1,0,scan_batch_new:34_IMG_6214-c3c575e2-f7ab-4e34-8965-75f865ec67a8
+1,Joust Through,FDN,19,,de,1,1,moxfield_main;scan_batch_verify:09_IMG_6229-828683ca-23bb-49ba-9e0a-a6d15348d81b
+1,Jumbo Cactuar,FIN,191,db01c222-8795-47e9-a789-e7f749a3ee7d,en,1,1,manabox_fin;moxfield_main;scan_batch_new:35_IMG_6215-9e0108e8-e960-41ca-aa6d-a5667630b68b
+2,Jungle Hollow,FDN,263,dc758e14-d370-45e4-bbc5-938fb4d21127,en,1,2,manabox_full;scan_batch_verify:61_IMG_6290-53519a68-befd-4445-8205-2ab59a906767
+1,Justice Strike,GRN,182,27619ce9-59df-4f0e-a5db-2d32a530e547,en,0,1,manabox_grn_sealed_2026-09-11
+1,"Kalamax, the Stormsire",C20,9,f990cd78-2165-446f-a116-ae55d7a0f00d,en,0,1,manabox_full
+2,Karakyk Guardian,TDM,198,a4c77b08-c3f6-4458-8636-f226f9843b6d,en,0,2,manabox_full;moxfield_main
+1,Karlov Watchdog,,,,en,1,0,scan_batch_verify:19_IMG_6241-b763c53d-d83b-4d03-9127-1176cb5b4c98
+1,Kasmina's Transmutation,,,,en,1,0,scan_batch_verify:28_IMG_6251-8cc612a1-49fc-416b-897b-01ef6698258e
+1,"Kaust, Eyes of the Glade",MKC,1,648c15d1-a2a2-4f59-9b0a-5448be3e990f,en,0,1,manabox_full
+1,Kavaron Harrier,EOE,139,1da2a740-e4ff-4661-ba57-39b15c58e26e,en,1,1,manabox_full;scan_batch_new:10_IMG_6190-21827863-22f2-452b-8b6a-f685ff37350e
+1,Keening Apparition,,,,en,1,0,scan_batch_verify:16_IMG_6238-4af0f02d-b57c-4563-9dc6-cfe57206c857
+1,Key to the Side-Door,HOB,175,898c14a2-d897-4341-83ed-eee666df9648,en,0,1,manabox_hob_2026-08-14
+1,Keymaster Rogue,,,,en,1,0,scan_batch_verify:27_IMG_6250-8b3336f5-f00b-4be6-90d4-7a1fc0766b5e
+1,Kin-Tree Nurturer,TDM,,,de,1,1,moxfield_main;scan_batch_new:18_IMG_6198-5ba79bca-45b1-4687-981e-428d37d4d6f7
+2,Kindlespark Duo,BLB,142,a839fba3-1b66-4dd1-bf43-9b015b44fc81,en,0,2,manabox_full
+1,Kiora's Dambreaker,,,,en,1,0,scan_batch_verify:28_IMG_6251-8cc612a1-49fc-416b-897b-01ef6698258e
+1,Knightfisher,,,,en,1,0,scan_batch_verify:27_IMG_6250-8b3336f5-f00b-4be6-90d4-7a1fc0766b5e
+2,Knights of Dol Amroth,LTR,59,661338ff-a192-4007-a144-63d00f2e9ecb,en,0,2,manabox_full
+1,Knockout Maneuver,SOA,54,42d90959-b88c-4321-b2af-78ac7aab9909,en,0,1,manabox_full
+1,Krotiq Nestguard,TDM,,,de,1,1,moxfield_main;scan_batch_new:32_IMG_6212-71b631fc-6504-4a4a-8d9a-1c9cc152d36f
+1,Kruin Outlaw // Terror of Kruin Pass,,,,en,1,0,scan_batch_new:11_IMG_6191-ff86ab3f-bd67-4188-8215-96dc6178f9c1
+1,Krumar Initiate,,,,en,1,0,scan_batch_new:18_IMG_6198-5ba79bca-45b1-4687-981e-428d37d4d6f7
+1,Kulrath Mystic,,,,en,1,0,scan_batch_verify:29_IMG_6252-3b85773c-1ce2-4c19-9a6b-74cac1bfc8ef
+1,"Kykar, Zephyr Awakener",FDN,122,,de,0,1,moxfield_main
+2,Laboratory Maniac,INR,71,7a5be94c-08b8-4964-a79d-e22ea6e94be8,en,0,2,manabox_full
+1,Lake-town,HOB,186,2fbd0584-81a7-4c47-8af1-1c8635899a97,en,0,1,manabox_hob_2026-08-14
+1,Lake-town Lookout,HOB,18,178c4cf6-6b11-40e4-9673-c560d6818a6b,en,0,1,manabox_hob_2026-08-14
+1,Lake-town Mariners // Gone Fishing,HOB,44,4202a678-a5f4-47f9-9c18-e88ab9ad20a4,en,0,1,manabox_hob_2026-08-14
+1,Lake-town Toymaker,HOB,19,67304269-c595-4cf0-8dbf-fcb2e9e01fe2,en,0,1,manabox_hob_2026-08-14
+1,Lakeshore Apothecary,HOB,43,abfbb255-a39b-4df5-bfb6-5298584e89f0,en,0,1,manabox_hob_2026-08-14
+1,Lakeside Shack,DSK,262,a9367acd-393a-4966-ba60-af2ecd4e7596,en,0,1,manabox_full
+1,Lamplight Phoenix,,,,en,1,0,scan_batch_new:07_IMG_6187-cdda7eb9-4da2-402e-b1a7-10938c1460f3
+1,Large Bear,HOB,159,50202288-f433-4b56-8f60-349bda7b4f6b,en,0,1,manabox_hob_2026-08-14
+1,Lashwhip Predator,,,,en,1,0,scan_batch_new:37_IMG_6217-ee1fbfb6-48e8-48ff-8b45-0f11b72c9227
+1,Last Gasp,SOS,86,da5f3729-6ec7-4482-90cb-83b973edeae4,en,1,1,manabox_full;scan_batch_new:28_IMG_6208-f035ade7-1840-4fed-808c-0881696e83cb
+1,Lasting Tarfire,,,,en,1,0,scan_batch_new:14_IMG_6194-7c723314-c4d4-4ef8-a193-46592baba740
+2,Lasyd Prowler,TDM,149,c7f5c8ef-8e9e-4264-a7d2-126a30a5d341,en,0,2,manabox_full;moxfield_main
+1,Laughing Mad,FIN,143,cd5b9daf-6325-4eb4-a069-4a8cc7807884,en,0,1,manabox_full
+3,Lava Dart,MH1,134,b16dd041-451d-4914-8c46-aa315a90d802,en,0,3,manabox_full
+1,League Guildmage,GRN,241,07478486-b065-4173-837e-cd3335a0567d,en,0,1,manabox_grn_sealed_2026-09-11
+1,Leapfrog,GRN,89,0eefa088-cc53-41a4-b5ad-88483915cd8f,en,1,1,manabox_grn_sealed_2026-09-11;scan_batch_verify:28_IMG_6251-8cc612a1-49fc-416b-897b-01ef6698258e
+1,"Legolas, Master Archer",LTR,435,c9ddc39b-9bc9-4106-86aa-a086b5f5c301,en,0,1,manabox_full
+1,Leonin Surveyor,,,,en,1,0,scan_batch_verify:13_IMG_6233-ff7c62ac-84e6-4766-b69e-095a13ba3535
+1,Leyline of Resonance,DSK,143,92c5f0e3-345a-40a8-9cda-565a62156692,en,0,1,manabox_full
+1,Leyline of the Void,DSK,106,aeaa3aff-608d-4723-bb7c-8daedebe9f36,en,0,1,manabox_full
+1,Lie in Wait,TDM,203,96fff22c-282b-4849-82ce-890013b53262,en,0,1,manabox_full;moxfield_main
+1,Life Insurance,,,,en,1,0,scan_batch_verify:42_IMG_6267-e47a3f56-3a08-49a8-a806-d2864eaae98a
+1,Light of Judgment,FIN,144,98bb716d-ca66-445f-9cb3-0fc656c8ebff,en,0,1,manabox_full
+2,Light Up the Stage,DSC,166,912b94c9-7200-452d-940f-df0a7cceb377,en,0,2,manabox_full
+2,Lightning Bolt,GN3,40,e89794ab-6070-4916-936f-2b42fe41d31b,en,0,2,manabox_fin;manabox_full;moxfield_main
+4,Lightning Strike,DFT,136,30077b49-b825-4dbb-a0c7-f3992f647df0,en,0,4,manabox_full
+2,Lightshell Duo,,,,en,2,0,scan_batch_verify:33_IMG_6256-adec6557-f2d8-4c10-878e-d08351133126
+2,Little Bear,HOB,128,8a50858a-33b5-4c45-9c31-5956ae5a33a6,en,0,2,manabox_hob_2026-08-14
+4,Llanowar Elves,FDN,227,6a0b230b-d391-4998-a3f7-7b158a0ec2cd,en,0,4,manabox_full;moxfield_main
+1,Llanowar Loamspeaker,DMU,428,5d0a1c0d-23cf-472e-a6b3-fd0c3905b4e4,en,0,1,manabox_full
+1,Llanowar Tribe,,,,en,1,0,scan_batch_verify:07_IMG_6227-a3759781-ab36-4bf9-9347-7a77a96b8b60
+1,Llanowar Visionary,,,,en,1,0,scan_batch_verify:06_IMG_6226-e5abc442-2a29-457a-8634-89e1c41c8116
+1,Locke Cole,FIN,234,572feb8c-6976-40a8-8a34-b4db836cca56,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:38_IMG_6263-55d184c2-30ed-4fff-9a0b-32720cc31272
+1,Long Lake Nuisance,HOB,45,cd5af94d-6321-4834-8e5f-e5d0261b3ef3,en,0,1,manabox_hob_2026-08-14
+2,Long River Lurker,,,,en,2,0,scan_batch_verify:25_IMG_6248-a3cfe378-01e6-487d-adcb-9d0a58abc194;scan_batch_verify:26_IMG_6249-7ed5f34a-6890-4445-9691-a1681a35c27a
+1,Longstalk Brawl,,,,en,1,0,scan_batch_verify:01_IMG_6221-73835ff0-57da-4138-a93e-c455aa9422c7
+1,"Loot, Exuberant Explorer",FDN,106,09980ce6-425b-4e03-94d0-0f02043cb361,en,0,1,manabox_full
+1,Lotus Path Djinn,,,,en,1,0,scan_batch_verify:32_IMG_6255-f7599c07-2d48-4394-bd01-dd489d9b40f6
+1,Lotusguard Disciple,,,,en,1,0,scan_batch_verify:13_IMG_6233-ff7c62ac-84e6-4766-b69e-095a13ba3535
+1,Loxodon Eavesdropper,,,,en,1,0,scan_batch_verify:04_IMG_6224-8dd1ffb5-0c2e-4d49-b2e1-00db237fe563
+1,Loyal Inventor,ACR,21,be1e598a-840c-4166-88a6-92a8b9958536,en,0,1,manabox_full
+1,Luminous Rebuke,,,,en,1,0,scan_batch_verify:09_IMG_6229-828683ca-23bb-49ba-9e0a-a6d15348d81b
+1,Lunarch Mantle,,,,en,1,0,scan_batch_verify:14_IMG_6236-cff53d5e-0179-41ca-bee7-dc4eb076d2d8
+1,Lunatic Pandora,FIN,262,d6e1e3e7-20d4-42cb-ad22-60356b9e8fdc,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:46_IMG_6273-b332dc1f-9110-44bf-94b6-957997f77b39
+1,Lydia Frye,ACR,149,910570c8-c868-4513-8b27-22268d0cff68,en,0,1,manabox_full
+1,Lys Alana Dignitary,,,,en,1,0,scan_batch_verify:03_IMG_6223-343934b7-6073-4aa3-89fe-bcc430b907ec
+1,Lys Alana Informant,,,,en,1,0,scan_batch_verify:02_IMG_6222-135748dc-d131-455f-aa30-6315b944318d
+1,Lórien Revealed,LTR,60,0ce44270-a684-4489-9077-521456e6dfaa,en,0,1,manabox_full
+1,Macabre Reconstruction,,,,en,1,0,scan_batch_new:30_IMG_6210-e5661c8c-75d3-44f7-8e54-53d174d015fc
+2,Macabre Waltz,FDN,177,4d1f3c84-89ba-4426-a80b-d524f172c912,en,0,2,manabox_full;moxfield_main
+1,"Magda, the Hoardmaster",OTJ,374,,de,1,1,moxfield_main;scan_batch_verify:52_IMG_6281-1f3a884d-1d86-4901-86d1-f57d7d1a8e75
+1,Magic Damper,FIN,61,44921b2e-5938-4f63-92b9-0b719a2f8c68,en,0,1,manabox_full
+1,Magic Pot,FIN,263,57d07ca0-5618-4a90-a605-ca14a193ce3b,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:47_IMG_6274-cae39d65-cdb4-4ac3-bc7f-5613e1afc0f9
+1,Magitek Armor,FIN,24,59c4a1a2-623c-43b2-8005-ecb5c6436c10,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:11_IMG_6231-da8c0a0e-0fbd-4118-92c6-2bf59341a6bd
+1,Magitek Infantry,FIN,25,b64dc6d7-dd01-4e66-9099-4c90865448df,en,1,1,manabox_fin;manabox_full;moxfield_main;scan_batch_verify:11_IMG_6231-da8c0a0e-0fbd-4118-92c6-2bf59341a6bd
+1,Magmakin Artillerist,,,,en,1,0,scan_batch_new:08_IMG_6188-cbdb97f9-1f19-4d81-b280-55d59390eedb
+1,Magmatic Sinkhole,MH1,135,94db1674-d72b-4c1f-b436-490e5363bee7,en,0,1,manabox_full
+1,Magnetic Snuffler,,,,en,1,0,scan_batch_verify:48_IMG_6276-592ee27c-93ae-454a-90b1-83638b75086d
+1,Makeshift Battalion,,,,en,1,0,scan_batch_verify:16_IMG_6238-4af0f02d-b57c-4563-9dc6-cfe57206c857
+1,Malevolent Chandelier,DSK,252,ef09d296-4493-47f7-ad76-ad76c747df78,en,0,1,manabox_full
+1,Mammoth Bellow,TDM,,,de,0,1,moxfield_main
+1,Mana Sculpt,SOS,57,200c8e3d-c53b-40c7-a29a-fccc1281bfc6,en,0,1,manabox_full
+1,Map the Wastes,,,,en,1,0,scan_batch_new:39_IMG_6219-1f79c5e6-f833-477a-a5c1-4ef042311f8a
+1,Marauding Blight-Priest,FDN,178,5f70dafc-c638-4ec0-ab5b-62998f752720,en,0,1,manabox_full
+1,Mardu Runemark,,,,en,1,0,scan_batch_new:15_IMG_6195-33c42953-e002-4500-8c11-6bb49b35fff8
+1,Mardu Scout,,,,en,1,0,scan_batch_new:15_IMG_6195-33c42953-e002-4500-8c11-6bb49b35fff8
+1,Mardu Strike Leader,,,,en,1,0,scan_batch_verify:63_IMG_6292-fb79d373-3ed4-47e3-9a84-9800816cab62
+1,Mardu Woe-Reaper,,,,en,1,0,scan_batch_verify:13_IMG_6233-ff7c62ac-84e6-4766-b69e-095a13ba3535
+1,Marina Vendrell,DSK,221,6428cddc-2fb6-41af-a643-e83c81dc04f5,en,0,1,manabox_full
+1,Markov Waltzer,,,,en,1,0,scan_batch_verify:39_IMG_6264-ae737c6e-f416-4cf0-91e2-d4cb68421f49
+1,Martyr's Soul,,,,en,1,0,scan_batch_verify:20_IMG_6242-b6055471-0d05-4dfe-ba33-29b36abef028
+1,"Mauhúr, Uruk-hai Captain",LTR,214,65e9a757-7ed4-4cc0-bb6f-a59fa69b32a5,en,0,1,manabox_full
+1,Mausoleum Secrets,GRN,75,26f7cf38-78cc-4139-9f2a-4dd0be7d9da8,en,0,1,manabox_grn_sealed_2026-09-11
+1,Maximize Altitude,GRN,43,3b5a08a0-b002-4bfe-9cac-d2bf96175f8e,en,0,1,manabox_grn_sealed_2026-09-11
+1,Mechan Shieldmate,,,,en,1,0,scan_batch_verify:24_IMG_6247-7f3afa84-ca45-4d8a-b4be-868198a33022
+1,Meltstrider's Resolve,,,,en,1,0,scan_batch_new:37_IMG_6217-ee1fbfb6-48e8-48ff-8b45-0f11b72c9227
+1,Mephitic Vapors,,,,en,1,0,scan_batch_new:28_IMG_6208-f035ade7-1840-4fed-808c-0881696e83cb
+1,Merfolk of the Depths,,,,en,1,0,scan_batch_verify:41_IMG_6266-e8f9dd56-201b-4e7d-a48c-3b25c77123ce
+1,Merfolk Surveyor,,,,en,1,0,scan_batch_verify:54_IMG_6283-ed93fb0b-1255-479f-aab1-4bdb59b731d9
+1,Merrow Skyswimmer,,,,en,1,0,scan_batch_verify:42_IMG_6267-e47a3f56-3a08-49a8-a806-d2864eaae98a
+1,Metallic Mimic,,,,en,1,0,scan_batch_verify:65_IMG_6294-0b5641cf-4577-4164-a143-00262b667705
+1,Micromancer,FDN,158,e6af54ea-b57a-4e50-8e46-1747cca14430,en,0,1,manabox_full
+1,Might of the Meek,BLB,144,509bf254-8a2b-4dfa-9ae5-386321b35e8b,en,0,1,manabox_full
+1,Migrating Ketradon,,,,en,1,0,scan_batch_new:36_IMG_6216-56d8d611-6cb7-446e-a581-23fe53fe83e4
+1,Militia Bugler,,,,en,1,0,scan_batch_verify:19_IMG_6241-b763c53d-d83b-4d03-9127-1176cb5b4c98
+1,Mind Rake,,,,en,1,0,scan_batch_new:31_IMG_6211-ce0a5906-12e4-4dba-a98e-081b8786fb9b
+1,Mind Spiral,,,,en,1,0,scan_batch_verify:27_IMG_6250-8b3336f5-f00b-4be6-90d4-7a1fc0766b5e
+1,Mind Stone,TDM,,,de,1,1,moxfield_main;scan_batch_verify:54_IMG_6283-ed93fb0b-1255-479f-aab1-4bdb59b731d9
+1,Mindful Biomancer,SOS,154,2c3a6eb8-ce0c-4dc8-9ed6-d2a9223eef53,en,0,1,manabox_full
+1,Ministrant of Obligation,,,,en,1,0,scan_batch_verify:17_IMG_6239-ec1d80af-fb12-4c58-b852-61a1a4e108b5
+1,"Minwu, White Mage",FIN,26,6822144f-f0eb-4e10-a217-52cad36d2973,en,0,1,manabox_full
+1,Mirkwood,,,,en,0,1,user_confirmed
+1,Mirkwood Meditator,HOB,48,ad7ed4e6-3fe2-40f1-909b-a03b2a3c941a,en,0,1,manabox_hob_2026-08-14
+1,Mirkwood Nurturer,HOB,160,704b45e4-566e-40f6-a33a-9151018b44e5,en,0,1,manabox_hob_2026-08-14
+1,Mirkwood Pathmaker,HOB,129,50fbedc0-bc66-4ffb-87f6-a2df69995091,en,0,1,manabox_hob_2026-08-14
+1,Mirrormere Guardian,LTR,179,8315d7cc-fc2c-45b1-8340-11ff2af3beb5,en,0,1,manabox_full
+1,Mischievous Mystic,TDM,,,de,1,1,moxfield_main;scan_batch_verify:22_IMG_6244-c165a09a-cd2e-422a-818d-ccd5fd9a0c16
+1,Mishra's Foundry,TDM,,,de,0,1,moxfield_main
+1,Mistmeadow Council,,,,en,1,0,scan_batch_verify:02_IMG_6222-135748dc-d131-455f-aa30-6315b944318d
+1,Mistrise Village,TDM,261,d44bccbf-6fab-46e4-8ddb-6577e27ec6e8,en,0,1,manabox_full
+1,Mizzium Meddler,,,,en,1,0,scan_batch_verify:53_IMG_6282-0a6ca069-1a51-455a-adfe-2ee756e1bf9b
+1,"Mm'menon, Uthros Exile",,,,en,1,0,scan_batch_verify:38_IMG_6263-55d184c2-30ed-4fff-9a0b-32720cc31272
+1,Mob,,,,en,1,0,scan_batch_new:31_IMG_6211-ce0a5906-12e4-4dba-a98e-081b8786fb9b
+1,Mob Rule,VOC,147,8b04c928-9ee5-4e39-962e-4686e25b5c33,en,0,1,manabox_full
+1,Moldgraf Millipede,INR,208,3a163ec7-4c9a-4d45-965c-e5ddeb07a3e0,en,0,1,manabox_full
+1,Molecular Modifier,,,,en,1,0,scan_batch_new:10_IMG_6190-21827863-22f2-452b-8b6a-f685ff37350e
+2,Molten Exhale,TDM,113,0ab95aab-a4bf-4131-83a0-2c138b6f20c3,en,0,2,manabox_full;moxfield_main
+1,Moment of Glory,HOB,21,0a6a6ff0-b1cd-4b06-bd31-612690094e0e,en,0,1,manabox_hob_2026-08-14
+1,Moment of Reckoning,SOS,205,577d9dc8-7720-4dc9-b650-64b4729b309b,en,0,1,manabox_full
+1,Monastery Messenger,TDM,,,de,0,1,moxfield_main
+1,Monstrous Emergence,,,,en,1,0,scan_batch_verify:02_IMG_6222-135748dc-d131-455f-aa30-6315b944318d
+1,Moonrise Cleric,,,,en,1,0,scan_batch_verify:39_IMG_6264-ae737c6e-f416-4cf0-91e2-d4cb68421f49
+1,Mordor Muster,LTR,96,aae2f15a-0629-453e-992c-a199af194a3c,en,0,1,manabox_full
+1,Mordor Trebuchet,LTR,97,648bc8ae-1798-4c2f-a372-0487a90ba4d3,en,0,1,manabox_full
+1,Morgul-Knife Wound,LTR,98,5ae08177-48ee-4404-834d-d3cd7482ae81,en,0,1,manabox_full
+2,Morkrut Banshee,,,,en,2,0,scan_batch_new:03_IMG_6183-e6de9672-7af7-4784-980f-6c4138f19ddb;scan_batch_new:26_IMG_6206-b2d96958-3956-4933-835f-e81ef1042d5f
+1,Moroii,,,,en,1,0,scan_batch_verify:41_IMG_6266-e8f9dd56-201b-4e7d-a48c-3b25c77123ce
+1,Mortus Strider,,,,en,1,0,scan_batch_verify:40_IMG_6265-7e00a747-f650-4061-802c-7fd3490c8854
+1,"Moseo, Vein's New Dean",SOS,91,6877180c-22a1-4c4d-9178-316f4c34661b,en,0,1,manabox_full
+7,Mountain,TDM,345,681b9c8a-6140-4086-bc72-37f0058a8e9f,en,0,7,manabox_full;moxfield_main
+1,Mourning Thrull,,,,en,1,0,scan_batch_verify:42_IMG_6267-e47a3f56-3a08-49a8-a806-d2864eaae98a
+1,Muraganda Raceway,DFT,257,5041ae16-29ff-4ad5-8a37-4736e9409294,en,0,1,manabox_full
+1,Murder,TDM,,,de,1,1,moxfield_main;scan_batch_verify:62_IMG_6291-b03872e5-03b1-4b01-96d7-7059437b7cd6
+1,Muse Drake,GRN,46,c5df7a96-6548-41c0-85a6-e0c4566e0fe6,en,0,1,manabox_grn_sealed_2026-09-11
+1,Museum Nightwatch,,,,en,1,0,scan_batch_verify:19_IMG_6241-b763c53d-d83b-4d03-9127-1176cb5b4c98
+2,Mushroom Watchdogs,LTR,180,d15fd66d-fa7e-411d-9014-a56caa879d93,en,0,2,manabox_full
+1,My Precious // Allure of Power,HOB,176,15ae4d50-be2f-412c-bb6b-b0a06b60474a,en,0,1,manabox_hob_2026-08-14
+1,Mysidian Elder,FIN,145,6bc39af4-be19-4889-b930-df7ebf7b9481,en,1,1,manabox_fin;manabox_full;moxfield_main;scan_batch_new:17_IMG_6197-65f5c3a4-dd32-451f-a384-4ccfe3f221d3
+2,Namazu Trader,FIN,107,f9d25b34-990d-416c-aef7-1b5a73f19dd4,en,0,2,manabox_full
+1,Nameless Inversion,,,,en,1,0,scan_batch_new:27_IMG_6207-8b165030-3e7c-445b-86dc-d7035e1d3305
+2,Nanoform Sentinel,,,,en,2,0,scan_batch_verify:22_IMG_6244-c165a09a-cd2e-422a-818d-ccd5fd9a0c16;scan_batch_verify:24_IMG_6247-7f3afa84-ca45-4d8a-b4be-868198a33022
+1,Narset's Rebuke,TDM,,,de,1,1,moxfield_main;scan_batch_new:06_IMG_6186-0ba58fba-c7e2-4967-bd41-69c4b6c59dc4
+2,Nasty End,LTR,99,c34f88d7-15a1-434f-88d7-3d4fcf406d54,en,0,2,manabox_full
+1,Nebula Dragon,,,,en,1,0,scan_batch_new:10_IMG_6190-21827863-22f2-452b-8b6a-f685ff37350e
+1,Necrotic Wound,GRN,79,9ab636af-5b30-4138-8e68-81f567f10417,en,1,1,manabox_grn_sealed_2026-09-11;scan_batch_verify:51_IMG_6280-a1f72b4a-8cc9-402f-a40d-f8cc61dfd927
+1,Nemesis Phoenix,,,,en,1,0,scan_batch_verify:07_IMG_6227-a3759781-ab36-4bf9-9347-7a77a96b8b60
+1,Never Happened,GRN,80,289d3746-9e54-4983-9daa-f1a7afbdedad,en,0,1,manabox_grn_sealed_2026-09-11
+1,Night Market,,,,en,1,0,scan_batch_verify:60_IMG_6289-3f0f8434-f590-4df3-a9bd-b4fb78dc89d0
+1,Nightblade Brigade,TDM,,,de,1,1,moxfield_main;scan_batch_verify:63_IMG_6292-fb79d373-3ed4-47e3-9a84-9800816cab62
+1,Nightdrinker Moroii,,,,en,1,0,scan_batch_new:30_IMG_6210-e5661c8c-75d3-44f7-8e54-53d174d015fc
+1,Nightveil Predator,,,,en,1,0,scan_batch_verify:41_IMG_6266-e8f9dd56-201b-4e7d-a48c-3b25c77123ce
+1,Nightwhorl Hermit,,,,en,1,0,scan_batch_verify:25_IMG_6248-a3cfe378-01e6-487d-adcb-9d0a58abc194
+1,"Niv-Mizzet, Parun",OTC,235,86c5c337-d25f-4c3e-9762-09ed0c2d36d7,en,0,1,manabox_full
+2,"Niv-Mizzet, the Firemind",GK1,26,71d33e53-74e4-4d6e-9236-0b6c25101902,en,0,2,manabox_full
+1,Nocturnal Hunger,,,,en,1,0,scan_batch_new:27_IMG_6207-8b165030-3e7c-445b-86dc-d7035e1d3305
+1,Noggle the Mind,,,,en,1,0,scan_batch_verify:30_IMG_6253-939c1dfe-e6a4-471d-a94a-c4bbb3218a0c
+1,Nomad Outpost,TDM,,,de,0,1,moxfield_main
+1,"Nori, Teller of Tales",HOB,161,b05adb48-980c-49a0-9ce6-7c7f3f20715d,en,0,1,manabox_hob_2026-08-14
+1,Noxious Dragon,,,,en,1,0,scan_batch_new:01_IMG_6181-9283dbc4-e689-448b-a464-a09ce79b59a9
+1,Noxious Newt,SOS,155,3a028306-c5d7-4f8f-b6f4-0d103fd47000,en,0,1,manabox_full
+2,Nutrient Block,,,,en,2,0,scan_batch_verify:47_IMG_6274-cae39d65-cdb4-4ac3-bc7f-5613e1afc0f9
+1,"Oko, Lorwyn Liege // Oko, Shadowmoor Scion",ECL,61,1dab370a-1067-4d94-be1f-10362d4abf5a,en,0,1,manabox_full
+1,Old Fat Spider,HOB,132,e0c0f842-40fe-4776-a988-a35216bcfd47,en,0,1,manabox_hob_2026-08-14
+1,Old Fat Spider Can't See Me,HOB,50,4a865cea-f947-4736-8ace-ba478fceeb22,en,0,1,manabox_hob_2026-08-14
+1,Old Thrush,HOB,2,3ad02b56-13ec-46ef-92bd-ae078b8bb517,en,0,1,manabox_hob_2026-08-14
+1,Old-Growth Educator,SOS,207,eb7e858a-9b85-49b2-a379-ee656b64935a,en,0,1,manabox_full
+1,Oliphaunt,LTR,139,6989018c-37b1-4282-a4af-9cc97f160b4d,en,0,1,manabox_full
+1,Olog-hai Crusher,LTR,140,c33bf593-62e0-491a-a31a-328bce6d8735,en,0,1,manabox_full
+1,Oltec Matterweaver,PW24,12,,de,1,1,moxfield_main;scan_batch_verify:49_IMG_6278-627251f1-2752-4138-b6c9-167a6925d12d
+1,"Omnath, Locus of All",,,,en,1,0,scan_batch_verify:54_IMG_6283-ed93fb0b-1255-479f-aab1-4bdb59b731d9
+1,On the Job,,,,en,1,0,scan_batch_verify:18_IMG_6240-48edf433-7e53-418b-bb0e-ec5a821a950e
+2,Oneirophage,MH1,60,caefbac6-b2a0-4a70-a912-25173eafd7b3,en,0,2,manabox_full
+1,Open the Gates,,,,en,1,0,scan_batch_verify:02_IMG_6222-135748dc-d131-455f-aa30-6315b944318d
+1,Oracle's Restoration,SOS,156,0863a19d-4511-4a78-98dd-d194afd1c39b,en,0,1,manabox_full
+1,Oracle's Vault,PAKH,234,027e3eef-d121-4a72-9395-043f57b023c7,en,0,1,manabox_full
+1,"Orah, Skyclave Hierophant",,,,en,1,0,scan_batch_verify:54_IMG_6283-ed93fb0b-1255-479f-aab1-4bdb59b731d9
+1,Orator of Ojutai,,,,en,1,0,scan_batch_verify:57_IMG_6286-21f3329d-9682-433b-853e-04971b747279
+1,Orbital Plunge,,,,en,1,0,scan_batch_new:10_IMG_6190-21827863-22f2-452b-8b6a-f685ff37350e
+1,Ordinary Bear,HOB,133,0feb9817-56e1-465a-851c-b2fe202aa8ae,en,0,1,manabox_hob_2026-08-14
+1,Oreplate Pangolin,,,,en,1,0,scan_batch_new:10_IMG_6190-21827863-22f2-452b-8b6a-f685ff37350e
+1,Orzhov Guildmage,,,,en,1,0,scan_batch_verify:42_IMG_6267-e47a3f56-3a08-49a8-a806-d2864eaae98a
+1,Osseous Exhale,TDM,,,de,0,1,moxfield_main
+1,Out Cold,MKM,66,aabfada0-3c1b-4237-b06c-573071ccd68d,en,0,1,manabox_full
+1,Overcharged Amalgam,,,,en,1,0,scan_batch_verify:26_IMG_6249-7ed5f34a-6890-4445-9691-a1681a35c27a
+2,Overrun,FDN,230,,de,1,2,moxfield_main;scan_batch_new:33_IMG_6213-b86acb01-446a-49bf-90b7-00c9d619c9f9
+1,Pack's Favor,GRN,139,0f88c3aa-63e1-4617-bf1f-48f44988e7d6,en,0,1,manabox_grn_sealed_2026-09-11
+1,"Page, Loose Leaf",SOS,250,8c6fecfd-8241-4cf0-b1eb-19472b99e0ed,en,0,1,manabox_full
+1,Pain for All,EOE,151,d2948913-817b-4715-92d5-ed3cde347be7,en,0,1,manabox_full
+1,Paradox Surveyor,SOS,208,d7cb1af2-0302-46ff-8303-ae9d07541a01,en,0,1,manabox_full
+1,Past in Flames,WHO,565,ba2b828e-eaf6-4599-925a-64e59201de6e,en,0,1,manabox_full
+1,Patient Instructor,HOB,162,e4800508-8bb9-41bb-8712-b55fba7a80a5,en,0,1,manabox_hob_2026-08-14
+3,Pearl of Wisdom,BLB,64,13cb9575-1138-4f99-8e90-0eaf00bdf4a1,en,0,3,manabox_full
+1,Pelargir Survivor,LTR,64,aa59141a-4645-4316-b714-bbf2c139786e,en,0,1,manabox_full
+1,Perfect Intimidation,,,,en,1,0,scan_batch_new:25_IMG_6205-ab56973a-5db8-4b26-8996-5988faefcc4d
+1,Perigee Beckoner,,,,en,1,0,scan_batch_new:22_IMG_6202-a1770e44-0189-4daf-a3aa-604fd5d07b43
+1,Person of Interest,,,,en,1,0,scan_batch_new:17_IMG_6197-65f5c3a4-dd32-451f-a384-4ccfe3f221d3
+1,Pest Mascot,SOS,209,d882beb9-6766-4818-afbb-f6fd7a2d5b70,en,0,1,manabox_full
+1,Pestbrood Sloth,SOS,157,c1251ae6-2f19-4f84-ab02-6a6cc7ce6056,en,0,1,manabox_full
+1,Pestered Wellguard,,,,en,1,0,scan_batch_verify:30_IMG_6253-939c1dfe-e6a4-471d-a94a-c4bbb3218a0c
+1,Petrahydrox,,,,en,1,0,scan_batch_verify:42_IMG_6267-e47a3f56-3a08-49a8-a806-d2864eaae98a
+1,Phantom Blade,ACR,210,,de,1,1,moxfield_main;scan_batch_verify:51_IMG_6280-a1f72b4a-8cc9-402f-a40d-f8cc61dfd927
+1,Phantom Train,FIN,110,7a50d2ac-101d-41e1-b400-18fa7d2d7125,en,1,1,manabox_fin;manabox_full;moxfield_main;scan_batch_new:21_IMG_6201-1750c780-235d-4dc0-a7e6-075920794b93
+1,"Phylath, World Sculptor",ZNR,234,e7af88c9-70ca-484c-bddf-b705e0ea7bc7,en,0,1,manabox_full
+1,Piggy Bank,,,,en,1,0,scan_batch_new:09_IMG_6189-1864ee91-25bd-4824-abf5-fffa505a5fa7
+1,Pilgrim of the Fires,,,,en,1,0,scan_batch_verify:46_IMG_6273-b332dc1f-9110-44bf-94b6-957997f77b39
+2,Pin Trading,,,,en,2,0,scan_batch_verify:16_IMG_6238-4af0f02d-b57c-4563-9dc6-cfe57206c857;scan_batch_verify:42_IMG_6267-e47a3f56-3a08-49a8-a806-d2864eaae98a
+1,Pinecone Strike,HOB,107,ea174cea-40e5-424e-9734-e39aae6c6b17,en,0,1,manabox_hob_2026-08-14
+10,Plains,MIR,334,,de,0,10,moxfield_main
+1,Planar Engineering,SOS,158,c83b96a3-ddfd-4d11-8a85-5bf62087cbb9,en,0,1,manabox_full
+1,Plant a Sapling // Fully-Grown Treefolk,MB2,582,062bb64d-b256-48c9-8159-8146bc0549ef,en,0,1,manabox_full
+2,Plasma Bolt,,,,en,2,0,scan_batch_new:02_IMG_6182-b851c886-39af-4e6f-a97b-cbb0c4947b4e;scan_batch_new:16_IMG_6196-9a65f2bf-edfa-49f3-bf0a-528a9a2ec49a
+1,Plow Through,,,,en,1,0,scan_batch_new:36_IMG_6216-56d8d611-6cb7-446e-a581-23fe53fe83e4
+1,Plumecreed Mentor,,,,en,1,0,scan_batch_verify:40_IMG_6265-7e00a747-f650-4061-802c-7fd3490c8854
+1,Point the Way,,,,en,1,0,scan_batch_new:36_IMG_6216-56d8d611-6cb7-446e-a581-23fe53fe83e4
+1,Poised Practitioner,TDM,,,de,1,1,moxfield_main;scan_batch_verify:08_IMG_6228-00285551-40d4-4e59-8dd4-cac2458ba14d
+1,Poison the Waters,FIN,111,ff2bafe7-4d0f-464d-b7ba-55a54366fc68,en,1,1,manabox_fin;manabox_full;moxfield_main;scan_batch_new:21_IMG_6201-1750c780-235d-4dc0-a7e6-075920794b93
+1,Poisoner's Apprentice,SOS,92,3755a2e9-af55-4625-a006-2a86c7893a96,en,0,1,manabox_full
+1,Polliwallop,BLB,189,6bc4963c-d90b-4588-bdb7-85956e42a623,en,1,1,manabox_full;scan_batch_new:40_IMG_6220-842c5ac9-507a-4709-be54-1941df198536
+1,Pond Prophet,,,,en,1,0,scan_batch_verify:40_IMG_6265-7e00a747-f650-4061-802c-7fd3490c8854
+1,Ponder,,,,en,0,1,user_confirmed
+1,Pondering Mage,,,,en,1,0,scan_batch_verify:35_IMG_6259-284672fb-70ed-4836-9fe2-acf12b3659ff
+1,Pothole Mole,,,,en,1,0,scan_batch_new:36_IMG_6216-56d8d611-6cb7-446e-a581-23fe53fe83e4
+2,Potioner's Trove,SOS,251,2123b349-4649-4a15-a8b5-b54414d2b1b7,en,0,2,manabox_full
+1,Power Word Kill,,,,en,1,0,scan_batch_verify:62_IMG_6291-b03872e5-03b1-4b01-96d7-7059437b7cd6
+1,Practiced Scrollsmith,SOS,210,40075e3f-58b3-47fd-8fbe-4b301e9ce7a1,en,0,1,manabox_full
+1,Pressure Point,,,,en,1,0,scan_batch_verify:18_IMG_6240-48edf433-7e53-418b-bb0e-ec5a821a950e
+1,Presumed Dead,,,,en,1,0,scan_batch_new:30_IMG_6210-e5661c8c-75d3-44f7-8e54-53d174d015fc
+1,Pride of the Road,,,,en,1,0,scan_batch_verify:13_IMG_6233-ff7c62ac-84e6-4766-b69e-095a13ba3535
+1,Prideful Feastling,,,,en,1,0,scan_batch_verify:43_IMG_6268-108d245d-d986-4b3f-a589-1cdf605cbf0b
+1,Prideful Parent,,,,en,1,0,scan_batch_verify:09_IMG_6229-828683ca-23bb-49ba-9e0a-a6d15348d81b
+1,Primeval Titan,TSR,48,972dfe0d-1f8a-4e18-bcd8-c1ff6266c01a,en,0,1,manabox_fin;manabox_full;moxfield_main
+1,Private Eye,,,,en,1,0,scan_batch_verify:44_IMG_6270-db5a3e7c-d577-45ee-a5a8-d028d34fa4eb
+1,Psychic Whorl,,,,en,1,0,scan_batch_new:27_IMG_6207-8b165030-3e7c-445b-86dc-d7035e1d3305
+2,Pull from the Grave,SOS,95,d73612fe-8992-4650-a7e3-c7b662da6a03,en,0,2,manabox_full
+1,Pull Through the Weft,EOE,202,a70d0877-1a1e-436b-bf8c-0ff6df9efc6a,en,1,1,manabox_full;scan_batch_verify:01_IMG_6221-73835ff0-57da-4138-a93e-c455aa9422c7
+1,Purging Stormbrood // Absorb Essence,TDM,,,de,1,1,moxfield_main;scan_batch_new:18_IMG_6198-5ba79bca-45b1-4687-981e-428d37d4d6f7
+1,Purple Worm,,,,en,1,0,scan_batch_verify:05_IMG_6225-a3dfd386-3a00-449e-8641-aa213d285184
+1,Pyrrhic Strike,,,,en,1,0,scan_batch_verify:17_IMG_6239-ec1d80af-fb12-4c58-b852-61a1a4e108b5
+1,Quakefoot Cyclops,MH1,142,27573ee0-156a-4bf3-95eb-5e7b63c638e7,en,0,1,manabox_full
+1,Quaketusk Boar,BLB,146,2f2b7fd3-a139-49ea-8a89-b64261e868ef,en,0,1,manabox_full
+1,Quarrel,HOB,135,5900a0b4-aa89-4019-94c9-7e9ea3b4792e,en,0,1,manabox_hob_2026-08-14
+1,Quarrel's End,LTR,141,5a7e61a6-c602-4089-ae45-828d8e516a63,en,0,1,manabox_full
+1,Quench,,,,en,1,0,scan_batch_verify:28_IMG_6251-8cc612a1-49fc-416b-897b-01ef6698258e
+1,Quick Study,SOS,65,2d4f0bc7-da7c-4749-a24c-b01f3eb5860c,en,0,1,manabox_full
+1,"Quickbeam, Upstart Ent",LTR,183,b889037f-b95f-4756-80aa-04097d2818c3,en,0,1,manabox_full
+1,Quicken,,,,en,1,0,scan_batch_verify:27_IMG_6250-8b3336f5-f00b-4be6-90d4-7a1fc0766b5e
+1,Quicksmith Rebel,,,,en,1,0,scan_batch_new:08_IMG_6188-cbdb97f9-1f19-4d81-b280-55d59390eedb
+1,Quilled Greatwurm,TDM,,,de,0,1,moxfield_main
+1,"Quina, Qu Gourmet",,,,en,1,0,scan_batch_new:32_IMG_6212-71b631fc-6504-4a4a-8d9a-1c9cc152d36f
+1,Qutrub Forayer,FIN,112,7475ecf6-23f5-45af-9ef0-ac7923bbc9cb,en,1,1,manabox_fin;moxfield_main;scan_batch_new:21_IMG_6201-1750c780-235d-4dc0-a7e6-075920794b93
+1,Rabbit Response,,,,en,1,0,scan_batch_verify:15_IMG_6237-614140eb-1167-49c5-bafa-6f612fa2727c
+1,Rabid Attack,SOS,96,f5e67560-3135-4b27-a344-5859edf8bcd9,en,0,1,manabox_full
+1,Rabid Gnaw,BLB,147,2f815bae-820a-49f6-8eed-46f658e7b6ff,en,0,1,manabox_full
+2,Radical Idea,RVR,58,7c1290ba-dd9d-4cfe-b906-e3f9f89af9e4,en,0,2,manabox_grn_sealed_2026-09-11
+1,Rage into the Valley,HOB,200,349d7464-e778-4a24-a528-d31d36ff4799,en,0,1,manabox_hob_2026-08-14
+1,Ragged Short Spear,HOB,108,7bf81a8b-52ad-49f5-a3d4-22613cad3a3d,en,0,1,manabox_hob_2026-08-14
+3,Rain of Revelation,M21,61,da367981-9d6f-419f-9f58-f969b6183336,en,0,3,manabox_full
+1,Rainveil Rejuvenator,TDM,152,9bc5c316-6a41-48ba-864b-da3030dd3e0e,en,0,1,manabox_full;moxfield_main
+1,Rakshasa's Disdain,,,,en,1,0,scan_batch_verify:32_IMG_6255-f7599c07-2d48-4394-bd01-dd489d9b40f6
+1,Ral Zarek,RVR,445,49f219db-b6e2-48bf-a316-b57736e09ae9,en,0,1,manabox_full
+1,"Ral, Izzet Viceroy",GRN,195,c52066b3-84dc-4198-8090-3336e7df8b5d,en,0,1,manabox_grn_sealed_2026-09-11
+1,Rally at the Hornburg,LTR,142,ee7292f7-1c7e-449c-9c52-7584d6a14c2c,en,0,1,manabox_full
+1,Rampaging Monument,GRN,239,b5fbe445-a788-4624-8ecf-8bc06c3ca8f8,en,0,1,manabox_grn_sealed_2026-09-11
+1,Rampaging Rendhorn,,,,en,1,0,scan_batch_verify:02_IMG_6222-135748dc-d131-455f-aa30-6315b944318d
+1,Rampaging Soulrager,,,,en,1,0,scan_batch_new:09_IMG_6189-1864ee91-25bd-4824-abf5-fffa505a5fa7
+1,Rampant Growth,PW23,9,fd4c1ff9-fbbc-4e72-b695-58876a43ec99,en,0,1,manabox_full
+1,Rancorous Archaic,SOS,2,2565e16a-ed31-4867-adb8-f1633d580397,en,0,1,manabox_full
+1,Random Encounter,FIN,150,3618e283-2df9-4eb9-97b0-96b55ee31cc0,en,0,1,manabox_fin;moxfield_main
+1,Ranger's Firebrand,LTR,143,06541200-fa4c-4b98-bdc4-44708fd2ddf6,en,0,1,manabox_full
+1,Ransack the Lab,MH1,103,b547513d-8b69-41cd-84c9-4b08b6426f1d,en,0,1,manabox_full
+1,"Raubahn, Bull of Ala Mhigo",FIN,151,7035d11b-525f-4120-8dcb-610095196681,en,1,1,manabox_fin;moxfield_main;scan_batch_new:07_IMG_6187-cdda7eb9-4da2-402e-b1a7-10938c1460f3
+1,Raucous Carnival,,,,en,1,0,scan_batch_verify:59_IMG_6288-a8cd3a2d-4cad-40ec-a30d-340ff40d0541
+1,Raucous Theater,MKM,266,b598c93e-dae1-4d71-a9e4-917abf76d2d0,en,0,1,manabox_full
+1,Ravine Raider,,,,en,1,0,scan_batch_new:25_IMG_6205-ab56973a-5db8-4b26-8996-5988faefcc4d
+1,Reach of Shadows,,,,en,1,0,scan_batch_new:24_IMG_6204-88633bc6-6a4c-49fe-8c84-479705f6931e
+1,Reasonable Doubt,,,,en,1,0,scan_batch_verify:34_IMG_6258-6ebcd3e4-874c-497d-a921-ac847c809b20
+3,Reckless Charge,MH1,144,1754a8db-060e-470f-94c0-37f12d82978a,en,0,3,manabox_full
+1,Reckless Detective,,,,en,1,0,scan_batch_new:05_IMG_6185-2737bbe3-3dea-4847-9ccc-01dcbd6baa10
+1,Reckless Ransacking,,,,en,1,0,scan_batch_new:14_IMG_6194-7c723314-c4d4-4ef8-a193-46592baba740
+1,Reckless Scholar,,,,en,1,0,scan_batch_verify:29_IMG_6252-3b85773c-1ce2-4c19-9a6b-74cac1bfc8ef
+1,Recruit the Worthy,,,,en,1,0,scan_batch_verify:20_IMG_6242-b6055471-0d05-4dfe-ba33-29b36abef028
+1,Red Herring,,,,en,1,0,scan_batch_new:07_IMG_6187-cdda7eb9-4da2-402e-b1a7-10938c1460f3
+1,Red Mage's Rapier,FIN,152,e0579955-75f9-47a9-8b03-e287d120826a,en,0,1,manabox_fin;manabox_full;moxfield_main
+1,Red Tiger Mechan,,,,en,1,0,scan_batch_new:10_IMG_6190-21827863-22f2-452b-8b6a-f685ff37350e
+1,Refocus,,,,en,1,0,scan_batch_verify:31_IMG_6254-8a7c6234-1b1c-4fdd-8764-8d52d43eebdf
+1,Reforge the Soul,,,,en,0,1,user_confirmed
+3,Refute,TDM,48,38806934-dd9c-4ad4-a59c-a16dce03a14a,en,0,3,manabox_full;moxfield_main
+1,Reigning Victor,TDM,,,de,0,1,moxfield_main
+1,Relentless Rohirrim,LTR,144,21b7606a-6a4c-4bf0-b311-1883383161d2,en,0,1,manabox_full
+1,Relentless X-ATM092,FIN,268,e09ee4c9-85ef-4d1e-864b-d659b8e8f51d,en,1,1,manabox_fin;manabox_full;moxfield_main;scan_batch_verify:47_IMG_6274-cae39d65-cdb4-4ac3-bc7f-5613e1afc0f9
+1,Relm's Sketching,FIN,67,6aedac12-3714-4a81-bd4d-1d2555c66f78,en,1,1,manabox_full;scan_batch_verify:23_IMG_6245-8e617f07-1540-479a-b5b3-fcaf0a05bdad
+1,Render Speechless,SOS,220,25bbb1c7-14e8-444f-ab98-e95f50927460,en,0,1,manabox_full
+1,Renegade Rallier,TDM,,,de,1,1,moxfield_main;scan_batch_verify:54_IMG_6283-ed93fb0b-1255-479f-aab1-4bdb59b731d9
+1,Repeat Offender,,,,en,1,0,scan_batch_new:30_IMG_6210-e5661c8c-75d3-44f7-8e54-53d174d015fc
+1,Reputable Merchant,TDM,,,de,0,1,moxfield_main
+1,Requisition Raid,SOA,10,6d9efae9-365d-46c8-be92-d4a3038f0414,en,0,1,manabox_full
+1,Rescue Leopard,TDM,,,de,1,1,moxfield_main;scan_batch_new:06_IMG_6186-0ba58fba-c7e2-4967-bd41-69c4b6c59dc4
+2,Resentful Revelation,FIN,114,945006ea-c6a1-4ee5-abb2-387c2b6d3123,en,0,2,manabox_full
+1,Resolute Reinforcements,TDM,,,de,0,1,moxfield_main
+1,Restoration Magic,FIN,30,494e68e9-ecba-4482-82bc-207ad59144c1,en,0,1,manabox_fin;moxfield_main
+1,Retrieve the Esper,FIN,68,ebd733f0-8883-434a-b36c-ef76b091fe8e,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:23_IMG_6245-8e617f07-1540-479a-b5b3-fcaf0a05bdad
+1,Return to the Earth,,,,en,1,0,scan_batch_new:38_IMG_6218-e1cacfd6-66a9-4ea9-a9f5-29b5e0813464
+1,Reverent Howl,HOB,81,16765eb2-d497-4cd6-b683-20eac2f10bbf,en,0,1,manabox_hob_2026-08-14
+1,Reverse Engineer,,,,en,1,0,scan_batch_verify:33_IMG_6256-adec6557-f2d8-4c10-878e-d08351133126
+1,Revive the Shire,LTR,185,46b7f493-1b57-4b07-8510-30703282f879,en,0,1,manabox_full
+1,Rhizome Lurcher,GRN,196,db9ce92b-79cc-4e26-b511-30ae8ea6a2a1,en,0,1,manabox_grn_sealed_2026-09-11
+1,Rhox Veteran,,,,en,1,0,scan_batch_verify:20_IMG_6242-b6055471-0d05-4dfe-ba33-29b36abef028
+1,Riddles in the Dark,HOB,53,a6129286-7437-4ba4-be55-586a22cd67ca,en,0,1,manabox_hob_2026-08-14
+1,Rig for War,,,,en,1,0,scan_batch_new:10_IMG_6190-21827863-22f2-452b-8b6a-f685ff37350e
+1,Rime Tender,,,,en,1,0,scan_batch_verify:07_IMG_6227-a3759781-ab36-4bf9-9347-7a77a96b8b60
+1,Rimefire Torque,,,,en,1,0,scan_batch_verify:30_IMG_6253-939c1dfe-e6a4-471d-a94a-c4bbb3218a0c
+1,Rinoa Heartilly,FIN,237,ba79d293-bf42-48b6-a868-5249f4beeb76,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:38_IMG_6263-55d184c2-30ed-4fff-9a0b-32720cc31272
+1,Rise from the Wreck,,,,en,1,0,scan_batch_new:36_IMG_6216-56d8d611-6cb7-446e-a581-23fe53fe83e4
+1,Risen Necroregent,,,,en,1,0,scan_batch_new:23_IMG_6203-374f2f39-9c6f-43af-80c8-ebda5171a44b
+1,Rising Populace,,,,en,1,0,scan_batch_verify:16_IMG_6238-4af0f02d-b57c-4563-9dc6-cfe57206c857
+1,Risky Shortcut,,,,en,1,0,scan_batch_new:23_IMG_6203-374f2f39-9c6f-43af-80c8-ebda5171a44b
+1,Rite of Undoing,,,,en,1,0,scan_batch_verify:31_IMG_6254-8a7c6234-1b1c-4fdd-8764-8d52d43eebdf
+1,Rivendell,LTR,259,bacd500c-1389-4314-a53e-0ad510d6fb79,en,0,1,manabox_full
+1,Riverwalk Technique,TDM,,,de,1,1,moxfield_main;scan_batch_verify:21_IMG_6243-fb5fe512-3b51-4087-aef2-9c95f5a33225
+1,"Roads Go Ever, Ever On",HOB,25,b3c1ebd6-967f-4b8c-8f1f-442ce8c1da24,en,0,1,manabox_hob_2026-08-14
+1,Roamer's Routine,TDM,154,fb8c2d5c-ba0c-4d50-8898-5c6574b1e974,en,0,1,manabox_full;moxfield_main
+1,Rohirrim Lancer,LTR,146,2f506f9f-4c0d-44e8-9f81-8403d808d0e4,en,0,1,manabox_full
+1,Rooftop Percher,,,,en,1,0,scan_batch_verify:48_IMG_6276-592ee27c-93ae-454a-90b1-83638b75086d
+1,Rosemane Centaur,GRN,197,cee30585-f7b1-4ca4-8171-dc5a837f2b93,en,0,1,manabox_grn_sealed_2026-09-11
+1,"Roshan, Hidden Magister",TDM,,,de,1,1,moxfield_main;scan_batch_new:20_IMG_6200-97cd2180-ab71-42e5-b7b5-a2ef46922d44
+1,Rotwidow Pack,MH1,212,2cda35eb-ae42-43be-9015-3c468c7ebede,en,0,1,manabox_full
+2,Roughshod Duo,BLB,150,78cdcfb9-a247-4c2d-a098-5b57570f8cd5,en,2,2,manabox_full;scan_batch_new:02_IMG_6182-b851c886-39af-4e6f-a97b-cbb0c4947b4e;scan_batch_new:16_IMG_6196-9a65f2bf-edfa-49f3-bf0a-528a9a2ec49a
+1,Rubble Rouser,SOS,128,afe61957-a9bb-42b0-98e8-b5fa418cbaff,en,0,1,manabox_full
+1,Rubblebelt Maaka,,,,en,1,0,scan_batch_new:13_IMG_6193-38ea6484-48b7-425d-b01a-7cf282c80218
+1,Rubblebelt Maverick,,,,en,1,0,scan_batch_verify:04_IMG_6224-8dd1ffb5-0c2e-4d49-b2e1-00db237fe563
+2,Rugged Highlands,TDM,,,de,1,2,moxfield_main;scan_batch_verify:60_IMG_6289-3f0f8434-f590-4df3-a9bd-b4fb78dc89d0
+1,Ruination Rioter,MH1,213,5a00ac82-a884-40c4-9d09-3190a1099726,en,0,1,manabox_full
+1,Run Away Together,,,,en,1,0,scan_batch_verify:27_IMG_6250-8b3336f5-f00b-4be6-90d4-7a1fc0766b5e
+1,Run Behind,SOS,66,40ecc34b-4cd0-4998-bbf4-7faa6fd3d7e0,en,0,1,manabox_full
+1,Rune-Sealed Wall,TDM,,,de,0,1,moxfield_main
+1,Rust-Shield Rampager,,,,en,1,0,scan_batch_new:40_IMG_6220-842c5ac9-507a-4709-be54-1941df198536
+1,Sabotender,FIN,153,12df1295-8b08-4c8e-bac9-55b4f514c0be,en,1,1,manabox_fin;moxfield_main;scan_batch_new:07_IMG_6187-cdda7eb9-4da2-402e-b1a7-10938c1460f3
+1,Sacred Foundry,RVR,285,8076a8c3-7c6c-4636-b5d8-9b09ee95f92c,en,0,1,manabox_full
+1,Sage of the Fang,TDM,,,de,1,1,moxfield_main;scan_batch_new:32_IMG_6212-71b631fc-6504-4a4a-8d9a-1c9cc152d36f
+1,Sage's Nouliths,FIN,70,a12ff7c3-6ae0-4098-9240-ff3fd16a5288,en,1,1,manabox_fin;manabox_full;moxfield_main;scan_batch_verify:23_IMG_6245-8e617f07-1540-479a-b5b3-fcaf0a05bdad
+1,Sagu Pummeler,TDM,,,de,1,1,moxfield_main;scan_batch_new:32_IMG_6212-71b631fc-6504-4a4a-8d9a-1c9cc152d36f
+2,Sagu Wildling // Roost Seek,TDM,157,d8b43b00-f4d1-436c-bf3f-6d414cd4ce38,en,0,2,manabox_full;moxfield_main
+1,Sahagin,FIN,71,516940c7-c271-4f64-af75-c7ba98548382,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:23_IMG_6245-8e617f07-1540-479a-b5b3-fcaf0a05bdad
+1,Saheeli's Artistry,,,,en,1,0,scan_batch_verify:53_IMG_6282-0a6ca069-1a51-455a-adfe-2ee756e1bf9b
+1,"Saheeli, Radiant Creator",DRC,3,5fea0781-e933-47ef-9414-92c8652a7778,en,0,1,manabox_full
+1,"Sanar, Unfinished Genius // Wild Idea",SOS,223,173157aa-712d-44f2-89ba-dd2511a07f26,en,0,1,manabox_full
+1,Sandsteppe Outcast,,,,en,1,0,scan_batch_verify:18_IMG_6240-48edf433-7e53-418b-bb0e-ec5a821a950e
+1,Sanguine Syphoner,TDM,,,de,1,1,moxfield_main;scan_batch_new:19_IMG_6199-7c7b5fcb-a151-435e-8e51-8679738b0502
+1,Sanitation Automaton,,,,en,1,0,scan_batch_verify:48_IMG_6276-592ee27c-93ae-454a-90b1-83638b75086d
+1,Satoru Umezawa,TDM,,,de,1,1,moxfield_main;scan_batch_verify:54_IMG_6283-ed93fb0b-1255-479f-aab1-4bdb59b731d9
+1,Say Its Name,DSK,197,94c58683-b5f2-4863-9562-6f6be1ec21fe,en,0,1,manabox_full
+3,Sazacap's Brew,BLB,151,6d963080-b3ec-467d-82f7-39db6ecd6bbc,en,0,3,manabox_full
+1,Sazh's Chocobo,FIN,200,dda6b4d0-1b60-46b0-b321-b9ffe15afff4,en,0,1,manabox_fin;manabox_full;moxfield_main
+1,Scab-Clan Mauler,,,,en,1,0,scan_batch_verify:42_IMG_6267-e47a3f56-3a08-49a8-a806-d2864eaae98a
+1,Scale Up,,,,en,1,0,scan_batch_verify:06_IMG_6226-e5abc442-2a29-457a-8634-89e1c41c8116
+1,Scales of Shale,,,,en,1,0,scan_batch_new:25_IMG_6205-ab56973a-5db8-4b26-8996-5988faefcc4d
+1,Scavenging Ooze,FDN,232,8c504c23-1e9a-411b-9cfe-4180d0c744f6,en,0,1,manabox_full
+1,Scholar of the Lost Trove,,,,en,1,0,scan_batch_verify:53_IMG_6282-0a6ca069-1a51-455a-adfe-2ee756e1bf9b
+1,Scorched Rusalka,,,,en,1,0,scan_batch_new:13_IMG_6193-38ea6484-48b7-425d-b01a-7cf282c80218
+1,Scorpion Sentinel,FIN,72,08ab5220-e5c1-472e-8217-97fd60e1773c,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:23_IMG_6245-8e617f07-1540-479a-b5b3-fcaf0a05bdad
+1,Scour All Possibilities,,,,en,1,0,scan_batch_verify:36_IMG_6260-033ac85d-b9eb-49b9-b5f5-861dd55cc16a
+1,Scoured Barrens,TDM,,,de,0,1,moxfield_main
+1,Scroll of Isildur,LTR,69,195821f4-ba3d-4412-930f-f3656b319dfd,en,0,1,manabox_full
+1,Scroll of the Masters,FRF,163,d6c7f24e-5ead-4b32-a804-4c89929508f6,en,0,1,manabox_full
+2,Secluded Courtyard,TDM,,,de,0,2,moxfield_main
+1,Secluded Steppe,CMR,491,9c536cbd-3e81-4c6a-a4e1-02fbd2776706,en,0,1,manabox_full
+1,Second Breakfast,LTR,29,002f647a-25f8-461b-8617-52674f5d577c,en,0,1,manabox_full
+1,Seedglaive Mentor,,,,en,1,0,scan_batch_verify:39_IMG_6264-ae737c6e-f416-4cf0-91e2-d4cb68421f49
+2,Seedpod Squire,,,,en,2,0,scan_batch_verify:40_IMG_6265-7e00a747-f650-4061-802c-7fd3490c8854
+1,Seedship Broodtender,EOE,227,1abc176f-2ccf-4371-b4b5-030dd99ff7fc,en,0,1,manabox_full
+1,Seeker's Folly,,,,en,1,0,scan_batch_new:19_IMG_6199-7c7b5fcb-a151-435e-8e51-8679738b0502
+1,Segovian Sword,,,,en,1,0,scan_batch_verify:14_IMG_6236-cff53d5e-0179-41ca-bee7-dc4eb076d2d8
+1,Seize Opportunity,TDM,119,f7818d28-b9a5-4341-9adc-666070b8878d,en,0,1,manabox_full;moxfield_main
+2,Seize the Storm,INR,170,45ec2af6-8397-429f-900f-846a5056f8e0,en,0,2,manabox_full
+4,Selesnya Guildgate,GRN,256,ee1db693-5dd9-48de-8520-014d9ad5b596,en,1,4,manabox_grn_sealed_2026-09-11;scan_batch_verify:59_IMG_6288-a8cd3a2d-4cad-40ec-a30d-340ff40d0541
+1,Selesnya Locket,GRN,240,ea0c04b9-c7fc-4204-9af2-5d1987bdd97e,en,0,1,manabox_grn_sealed_2026-09-11
+1,Send in the Pest,SOS,100,283b508b-89f0-4c23-9686-b049e402b73c,en,0,1,manabox_full
+1,Sengir Connoisseur,,,,en,1,0,scan_batch_verify:56_IMG_6285-a530aa0a-f58f-418f-a9be-98198cd6b0ca
+1,"Sengir, the Dark Baron",,,,en,1,0,scan_batch_new:28_IMG_6208-f035ade7-1840-4fed-808c-0881696e83cb
+1,Seraph of Dawn,TDM,,,de,1,1,moxfield_main;scan_batch_verify:55_IMG_6284-e44f4196-ce7e-414c-8393-375fb3be6cce
+1,Serra Angel,,,,en,1,0,scan_batch_verify:09_IMG_6229-828683ca-23bb-49ba-9e0a-a6d15348d81b
+1,Serra the Benevolent,,,,en,1,0,scan_batch_verify:64_IMG_6293-30484a92-bd22-465d-b353-308984032416
+1,Servo Exhibition,,,,en,1,0,scan_batch_verify:18_IMG_6240-48edf433-7e53-418b-bb0e-ec5a821a950e
+1,"Sevinne, the Chronoclasm",C19,49,2c209efe-b4dc-44a3-bd45-d647f5680cbe,en,0,1,manabox_full
+1,Sewer Shambler,,,,en,1,0,scan_batch_new:28_IMG_6208-f035ade7-1840-4fed-808c-0881696e83cb
+1,"Shadowfax, Lord of Horses",LTR,227,4c7d861d-7832-4c15-8d6c-8c07a9a57891,en,0,1,manabox_full
+1,Shao Jun,TDM,,,de,1,1,moxfield_main;scan_batch_verify:42_IMG_6267-e47a3f56-3a08-49a8-a806-d2864eaae98a
+1,Shattered Sanctum,SOS,303,cfc3f81d-333f-4ac9-8374-082675e07ac1,en,0,1,manabox_full
+1,Shattered Wings,,,,en,1,0,scan_batch_new:38_IMG_6218-e1cacfd6-66a9-4ea9-a9f5-29b5e0813464
+1,Shelob's Ambush,LTR,108,25e69fa8-7339-4bfa-8e35-9cbfe0001d8b,en,0,1,manabox_full
+1,Shenanigans,MH1,146,580c6fe2-ab43-491e-a1b2-d076a5c2a74e,en,0,1,manabox_full
+2,Shinra Reinforcements,FIN,118,7367b257-1a8c-4593-a307-7116e36e0342,en,0,2,manabox_fin;manabox_full;moxfield_main
+1,Shire Terrace,LTR,261,25932483-58cd-4ae5-82bf-ab455177d117,en,0,1,manabox_full
+1,Shock Brigade,TDM,,,de,0,1,moxfield_main
+1,Shocking Sharpshooter,TDM,,,de,1,1,moxfield_main;scan_batch_verify:63_IMG_6292-fb79d373-3ed4-47e3-9a84-9800816cab62
+1,Shoreline Looter,BLB,70,d5bf8cf0-419a-4dc9-9342-aad55c1af05a,en,0,1,manabox_full
+1,Shrill Howler // Howling Chorus,,,,en,1,0,scan_batch_new:39_IMG_6219-1f79c5e6-f833-477a-a5c1-4ef042311f8a
+1,"Shu Yun, the Silent Tempest",FRF,52,bd79e83a-a34b-472c-9317-12af4ed2ca28,en,0,1,manabox_full
+1,Siege Rhino,TDM,,,de,0,1,moxfield_main
+1,Siege Wurm,GRN,155,19c55fc1-11e5-4e67-ba49-604f5b574c2d,en,1,1,manabox_grn_sealed_2026-09-11;scan_batch_new:32_IMG_6212-71b631fc-6504-4a4a-8d9a-1c9cc152d36f
+2,Siege Zombie,,,,en,2,0,scan_batch_new:03_IMG_6183-e6de9672-7af7-4784-980f-6c4138f19ddb;scan_batch_new:26_IMG_6206-b2d96958-3956-4933-835f-e81ef1042d5f
+1,Silvergill Peddler,,,,en,1,0,scan_batch_verify:30_IMG_6253-939c1dfe-e6a4-471d-a94a-c4bbb3218a0c
+1,Singularity Rupture,EOE,398,422d7bc1-e2a2-4cfc-a29d-9d67354cdafd,en,0,1,manabox_full
+2,Sinister Cryologist,,,,en,2,0,scan_batch_verify:22_IMG_6244-c165a09a-cd2e-422a-818d-ccd5fd9a0c16;scan_batch_verify:24_IMG_6247-7f3afa84-ca45-4d8a-b4be-868198a33022
+1,Sinister Sabotage,TDM,,,de,0,1,moxfield_main
+1,Sizzling Changeling,,,,en,1,0,scan_batch_new:14_IMG_6194-7c723314-c4d4-4ef8-a193-46592baba740
+1,Skewer the Critics,RVR,124,43ca8f80-e9ed-483f-a8a7-ad6149811df9,en,0,1,manabox_full
+1,Sky Hussar,,,,en,1,0,scan_batch_verify:41_IMG_6266-e8f9dd56-201b-4e7d-a48c-3b25c77123ce
+1,Skyknight Legionnaire,GRN,198,3c27f2ce-702a-4ec2-a470-982171a9ec73,en,1,1,manabox_grn_sealed_2026-09-11;scan_batch_verify:63_IMG_6292-fb79d373-3ed4-47e3-9a84-9800816cab62
+1,Skyserpent Seeker,,,,en,1,0,scan_batch_verify:44_IMG_6270-db5a3e7c-d577-45ee-a5a8-d028d34fa4eb
+1,Skyskipper Duo,,,,en,1,0,scan_batch_verify:25_IMG_6248-a3cfe378-01e6-487d-adcb-9d0a58abc194
+1,Slayer of the Wicked,,,,en,1,0,scan_batch_verify:15_IMG_6237-614140eb-1167-49c5-bafa-6f612fa2727c
+1,Slitherhead,,,,en,1,0,scan_batch_verify:42_IMG_6267-e47a3f56-3a08-49a8-a806-d2864eaae98a
+1,Slumbering Cerberus,TDM,,,de,1,1,moxfield_main;scan_batch_new:05_IMG_6185-2737bbe3-3dea-4847-9ccc-01dcbd6baa10
+1,Smaug's Fury,HOB,111,a16f203a-785e-4c78-9410-fb9f8a0ffa01,en,0,1,manabox_hob_2026-08-14
+1,"Smaug, the Great Calamity // Spew Flame",HOB,109,419ca9e5-8413-4378-a4ef-eda5a1024218,en,0,1,manabox_hob_2026-08-14
+2,Smite the Deathless,LTR,148,8b716fcc-c4cc-4987-be82-2897a9888d23,en,0,2,manabox_full
+1,Smiting Helix,,,,en,1,0,scan_batch_new:31_IMG_6211-ce0a5906-12e4-4dba-a98e-081b8786fb9b
+1,Smoldering Efreet,,,,en,1,0,scan_batch_new:12_IMG_6192-d32f1f4d-7253-4b8a-b176-b33dc70b57d9
+1,Snakeskin Veil,TDM,,,de,1,1,moxfield_main;scan_batch_new:34_IMG_6214-c3c575e2-f7ab-4e34-8965-75f865ec67a8
+1,Snarl Song,SOS,161,fc4c7fa2-aebb-4636-9afd-f1010c923316,en,0,1,manabox_full
+1,Snarling Gorehound,,,,en,1,0,scan_batch_new:30_IMG_6210-e5661c8c-75d3-44f7-8e54-53d174d015fc
+1,Snarling Warg,LTR,109,a1ad561c-ccb4-480a-88a4-0555d0ef245e,en,0,1,manabox_full
+1,Sneering Shadewriter,SOS,101,4b4c120e-abe9-4f11-a7e4-bc3f723da4b2,en,0,1,manabox_full
+2,Snow Villiers,FIN,33,399bb699-e61d-4b41-b6e9-e594cbad6194,en,1,2,manabox_fin;manabox_full;moxfield_main;scan_batch_verify:11_IMG_6231-da8c0a0e-0fbd-4118-92c6-2bf59341a6bd
+1,Snow-Covered Island,,,,en,1,0,scan_batch_verify:61_IMG_6290-53519a68-befd-4445-8205-2ab59a906767
+1,Snow-Covered Mountain,,,,en,1,0,scan_batch_verify:61_IMG_6290-53519a68-befd-4445-8205-2ab59a906767
+1,Snow-Covered Plains,,,,en,1,0,scan_batch_verify:61_IMG_6290-53519a68-befd-4445-8205-2ab59a906767
+1,Snow-Covered Swamp,,,,en,1,0,scan_batch_verify:61_IMG_6290-53519a68-befd-4445-8205-2ab59a906767
+2,Snowslope Hunter,HOB,112,47666099-ffb2-4d07-a801-70524dba0837,en,0,2,manabox_hob_2026-08-14
+1,Soul of Mirrodin,,,,en,1,0,scan_batch_verify:62_IMG_6291-b03872e5-03b1-4b01-96d7-7059437b7cd6
+1,Soul Summons,,,,en,1,0,scan_batch_verify:08_IMG_6228-00285551-40d4-4e59-8dd4-cac2458ba14d
+1,Soul-Guide Gryff,,,,en,1,0,scan_batch_verify:14_IMG_6236-cff53d5e-0179-41ca-bee7-dc4eb076d2d8
+4,Soul-Shackled Zombie,TDM,70,deea5690-6eb2-4353-b917-cbbf840e4e71,en,1,4,manabox_full;moxfield_main;scan_batch_new:19_IMG_6199-7c7b5fcb-a151-435e-8e51-8679738b0502
+1,Soul-Strike Technique,,,,en,1,0,scan_batch_verify:20_IMG_6242-b6055471-0d05-4dfe-ba33-29b36abef028
+1,Sound the Trumpets,HOB,55,dd32a1dd-3541-4572-a717-1deabc14b827,en,0,1,manabox_hob_2026-08-14
+1,Spark Double,,,,en,1,0,scan_batch_verify:28_IMG_6251-8cc612a1-49fc-416b-897b-01ef6698258e
+2,Spectacle Summit,SOS,262,a0a66f7b-eab4-45da-8895-c2c2c7eb05f8,en,0,2,manabox_full
+1,Spectral Snatcher,,,,en,1,0,scan_batch_new:24_IMG_6204-88633bc6-6a4c-49fe-8c84-479705f6931e
+1,Spell Snuff,MH1,70,efadce19-07f4-47af-abc0-a436bafcdd65,en,0,1,manabox_full
+1,Spellbook Seeker // Careful Study,SOS,68,cc44eaa4-59a4-419e-b1d1-d92f354ff588,en,0,1,manabox_full
+1,Spider Spawning,INR,216,c229cbde-f370-4fef-8765-9773d516324a,en,0,1,manabox_full
+1,Spikeshell Harrier,,,,en,1,0,scan_batch_verify:24_IMG_6247-7f3afa84-ca45-4d8a-b4be-868198a33022
+1,Spinehorn Minotaur,MH1,147,86b9479d-7b6a-40c8-94ea-fdf0ec980b42,en,0,1,manabox_full
+1,Spinner of Souls,TDM,112,f50a8dec-b079-4192-9098-6cdc1026c693,en,0,1,manabox_full;moxfield_main
+1,Spiral into Solitude,,,,en,1,0,scan_batch_verify:17_IMG_6239-ec1d80af-fb12-4c58-b852-61a1a4e108b5
+1,Spiteful Sliver,,,,en,1,0,scan_batch_verify:65_IMG_6294-0b5641cf-4577-4164-a143-00262b667705
+1,Spore Cloud,TDM,,,de,0,1,moxfield_main
+1,Spore Crawler,,,,en,1,0,scan_batch_new:36_IMG_6216-56d8d611-6cb7-446e-a581-23fe53fe83e4
+1,Spore Frog,,,,en,1,0,scan_batch_verify:06_IMG_6226-e5abc442-2a29-457a-8634-89e1c41c8116
+1,Springbloom Druid,,,,en,1,0,scan_batch_verify:07_IMG_6227-a3759781-ab36-4bf9-9347-7a77a96b8b60
+1,Sprouting Renewal,,,,en,1,0,scan_batch_verify:01_IMG_6221-73835ff0-57da-4138-a93e-c455aa9422c7
+1,Squad Rallier,,,,en,1,0,scan_batch_verify:09_IMG_6229-828683ca-23bb-49ba-9e0a-a6d15348d81b
+1,Squawkroaster,,,,en,1,0,scan_batch_new:14_IMG_6194-7c723314-c4d4-4ef8-a193-46592baba740
+1,Squirrel Nest,,,,en,1,0,scan_batch_verify:07_IMG_6227-a3759781-ab36-4bf9-9347-7a77a96b8b60
+1,Stab,,,,en,1,0,scan_batch_new:19_IMG_6199-7c7b5fcb-a151-435e-8e51-8679738b0502
+1,Stalking Vengeance,,,,en,1,0,scan_batch_new:13_IMG_6193-38ea6484-48b7-425d-b01a-7cf282c80218
+2,Stalwarts of Osgiliath,LTR,33,2acb8240-8e0e-4adf-a884-4986c116e704,en,0,2,manabox_full
+1,Starfield Shepherd,,,,en,1,0,scan_batch_verify:19_IMG_6241-b763c53d-d83b-4d03-9127-1176cb5b4c98
+1,Stargaze,,,,en,1,0,scan_batch_new:27_IMG_6207-8b165030-3e7c-445b-86dc-d7035e1d3305
+1,Starlit Soothsayer,,,,en,1,0,scan_batch_new:27_IMG_6207-8b165030-3e7c-445b-86dc-d7035e1d3305
+1,Starseer Mentor,,,,en,1,0,scan_batch_verify:40_IMG_6265-7e00a747-f650-4061-802c-7fd3490c8854
+1,Stasis Snare,,,,en,1,0,scan_batch_verify:49_IMG_6278-627251f1-2752-4138-b6c9-167a6925d12d
+1,Static Snare,TDM,,,de,1,1,moxfield_main;scan_batch_verify:08_IMG_6228-00285551-40d4-4e59-8dd4-cac2458ba14d
+1,Steam Vents,GRN,257,b8ebe3cf-7143-453a-b0ef-2f5bdaac3185,en,0,1,manabox_grn_sealed_2026-09-11
+1,Steampath Charger,,,,en,1,0,scan_batch_new:12_IMG_6192-d32f1f4d-7253-4b8a-b176-b33dc70b57d9
+1,Stew the Coneys,LTR,189,bcc7c41c-f416-457e-91ba-1f338f45eeac,en,0,1,manabox_full
+1,Stickytongue Sentinel,,,,en,1,0,scan_batch_new:40_IMG_6220-842c5ac9-507a-4709-be54-1941df198536
+1,Stillness in Motion,TDM,,,de,1,1,moxfield_main;scan_batch_verify:21_IMG_6243-fb5fe512-3b51-4087-aef2-9c95f5a33225
+1,"Sting, the Glinting Dagger",LTR,250,afbec7e7-f5b9-407e-bf96-2e088710e791,en,0,1,manabox_full
+1,Stir Up Trouble,HOB,84,fd145e3a-c889-4390-accb-863dbcc845ce,en,0,1,manabox_hob_2026-08-14
+1,Stirring Address,,,,en,1,0,scan_batch_verify:20_IMG_6242-b6055471-0d05-4dfe-ba33-29b36abef028
+1,Stitched Mangler,,,,en,1,0,scan_batch_verify:26_IMG_6249-7ed5f34a-6890-4445-9691-a1681a35c27a
+3,Stock Up,SOA,24,ad048b7c-588f-4c34-906f-4224f1aaaeb6,en,0,3,manabox_full
+1,Stomping Ground,EOE,258,69be21b4-c613-47c6-ba57-f4785861af3e,en,0,1,manabox_full
+1,Stone Docent,SOS,36,c2abfffb-bf36-44af-9a27-6e109e4d77dd,en,0,1,manabox_full
+4,Stormcatch Mentor,SOC,331,f1bbb5ad-a293-48f3-a3d0-7ac85a7b8467,en,0,4,manabox_full
+1,Strangle,,,,en,1,0,scan_batch_new:17_IMG_6197-65f5c3a4-dd32-451f-a384-4ccfe3f221d3
+1,Stratosoarer,,,,en,1,0,scan_batch_verify:31_IMG_6254-8a7c6234-1b1c-4fdd-8764-8d52d43eebdf
+1,Streaking Oilgorger,DFT,107,6ff120a2-e2bb-42a2-bcb7-a48eb7a6d9b2,en,0,1,manabox_full
+1,Stream of Thought,,,,en,1,0,scan_batch_verify:35_IMG_6259-284672fb-70ed-4836-9fe2-acf12b3659ff
+1,Strength of Arms,,,,en,1,0,scan_batch_verify:15_IMG_6237-614140eb-1167-49c5-bafa-6f612fa2727c
+1,Stress Dream,SOS,235,1ec40a1b-51e7-4a35-966c-ab2a10f21a80,en,0,1,manabox_full
+1,Strife Scholar // Awaken the Ages,SOS,131,8de79312-2046-425e-9919-49afe19be81b,en,0,1,manabox_full
+1,String of Disappearances,,,,en,1,0,scan_batch_verify:35_IMG_6259-284672fb-70ed-4836-9fe2-acf12b3659ff
+1,Strixhaven Skycoach,SOS,252,87741fbb-b426-4f83-a358-587b0907f081,en,0,1,manabox_full
+1,Stroke of Midnight,TDM,,,de,0,1,moxfield_main
+1,Strongbox Raider,TDM,,,de,1,1,moxfield_main;scan_batch_new:04_IMG_6184-e08f1971-4128-495b-96b0-0f6342285a51
+1,Studious First-Year // Rampant Growth,SOS,162,24f888dd-785c-4089-a89c-03f9080130ed,en,0,1,manabox_full
+1,Subjugator Angel,,,,en,1,0,scan_batch_verify:14_IMG_6236-cff53d5e-0179-41ca-bee7-dc4eb076d2d8
+1,Sultai Devotee,TDM,160,c32487e9-f3ac-472e-b6ea-81bd9254770c,en,0,1,manabox_full;moxfield_main
+1,Sultai Emissary,,,,en,1,0,scan_batch_new:22_IMG_6202-a1770e44-0189-4daf-a3aa-604fd5d07b43
+1,Sultai Skullkeeper,,,,en,1,0,scan_batch_verify:32_IMG_6255-f7599c07-2d48-4394-bd01-dd489d9b40f6
+1,Sumala Woodshaper,GRN,200,8c4e427e-c061-43c5-9e8e-34bf5b447ab1,en,0,1,manabox_grn_sealed_2026-09-11
+2,Summit Intimidator,TDM,,,de,1,2,moxfield_main;scan_batch_new:06_IMG_6186-0ba58fba-c7e2-4967-bd41-69c4b6c59dc4
+1,Summit Sentinel,,,,en,1,0,scan_batch_verify:30_IMG_6253-939c1dfe-e6a4-471d-a94a-c4bbb3218a0c
+1,Summon: Choco/Mog,FIN,35,00546117-018a-4286-bc20-b5446c5be56f,en,1,1,manabox_fin;manabox_full;moxfield_main;scan_batch_verify:11_IMG_6231-da8c0a0e-0fbd-4118-92c6-2bf59341a6bd
+1,Summon: Esper Ramuh,FIN,367,a6edb808-9753-4029-81ed-60a91ebc1d77,en,1,1,manabox_fin;manabox_full;moxfield_main;scan_batch_new:07_IMG_6187-cdda7eb9-4da2-402e-b1a7-10938c1460f3
+1,Summon: Fat Chocobo,FIN,202,32eb192b-de6b-4814-8077-628d343d014e,en,1,1,manabox_fin;moxfield_main;scan_batch_new:35_IMG_6215-9e0108e8-e960-41ca-aa6d-a5667630b68b
+2,Summon: Primal Odin,FIN,121,8b1b5f06-e34d-44a3-976e-5157c4b7a0f4,en,0,2,manabox_full
+1,Summon: Titan,FIN,204,5ce6ea96-7293-496d-b9c8-8ed6d6109a4d,en,0,1,manabox_full
+1,Summoner's Grimoire,FIN,205,d9fda3fc-569d-49f8-a2ed-e0b1d6668426,en,0,1,manabox_full
+1,Sunbathing Rootwalla,,,,en,1,0,scan_batch_verify:56_IMG_6285-a530aa0a-f58f-418f-a9be-98198cd6b0ca
+1,Sundown Pass,,,,en,1,0,scan_batch_verify:59_IMG_6288-a8cd3a2d-4cad-40ec-a30d-340ff40d0541
+1,Sunhome Stalwart,CLU,73,3eb6a3ab-29eb-4c9a-995b-04de1c0dd4c9,en,0,1,manabox_full
+1,Sunstar Expansionist,,,,en,1,0,scan_batch_verify:13_IMG_6233-ff7c62ac-84e6-4766-b69e-095a13ba3535
+1,Sure Strike,FDN,209,5de6a1e4-5c66-43e6-9f2a-2635bdab03f6,en,0,1,manabox_full
+1,Surly Farrier,,,,en,1,0,scan_batch_verify:03_IMG_6223-343934b7-6073-4aa3-89fe-bcc430b907ec
+1,Suspension Field,TDM,,,de,1,1,moxfield_main;scan_batch_verify:57_IMG_6286-21f3329d-9682-433b-853e-04971b747279
+1,Suspicious Detonation,,,,en,1,0,scan_batch_new:09_IMG_6189-1864ee91-25bd-4824-abf5-fffa505a5fa7
+1,Susurian Dirgecraft,,,,en,1,0,scan_batch_new:22_IMG_6202-a1770e44-0189-4daf-a3aa-604fd5d07b43
+8,Swamp,TDM,,,de,0,8,moxfield_main
+1,Swarm Culler,,,,en,1,0,scan_batch_new:20_IMG_6200-97cd2180-ab71-42e5-b7b5-a2ef46922d44
+1,Swat Away,,,,en,1,0,scan_batch_verify:29_IMG_6252-3b85773c-1ce2-4c19-9a6b-74cac1bfc8ef
+3,Swiftwater Cliffs,TDM,268,ca53fb19-b8ca-485b-af1a-5117ae54bfe3,en,1,3,manabox_full;moxfield_main;scan_batch_verify:60_IMG_6289-3f0f8434-f590-4df3-a9bd-b4fb78dc89d0
+1,"Sygg, Wanderwine Wisdom // Sygg, Wanderbrine Shield",,,,en,1,0,scan_batch_verify:30_IMG_6253-939c1dfe-e6a4-471d-a94a-c4bbb3218a0c
+2,Syncopate,FIN,80,83e1cd8d-5b97-427a-be75-2a1947f9c59b,en,0,2,manabox_fin;manabox_full;moxfield_main
+1,Syndicate Messenger,,,,en,1,0,scan_batch_verify:16_IMG_6238-4af0f02d-b57c-4563-9dc6-cfe57206c857
+1,Syphon Fuel,,,,en,1,0,scan_batch_new:23_IMG_6203-374f2f39-9c6f-43af-80c8-ebda5171a44b
+1,"Syr Konrad, the Grim",,,,en,1,0,scan_batch_verify:51_IMG_6280-a1f72b4a-8cc9-402f-a40d-f8cc61dfd927
+1,Tackle Artist,SOS,133,b87e2474-98c1-4c1a-91ed-340b72d31653,en,0,1,manabox_full
+1,Tail Swipe,,,,en,1,0,scan_batch_verify:50_IMG_6279-0f435247-4092-460a-8854-020c2cfa349d
+1,Take Heart,GRN,28,b26f10d5-b826-45b0-abed-80d86e1335c9,en,0,1,manabox_grn_sealed_2026-09-11
+1,Talisman of Creativity,SOC,357,101e47ed-4afe-4d15-b6c3-4ab495965fde,en,0,1,manabox_full
+1,Talisman of Resilience,DSC,255,eff598b0-0b32-41d0-b980-584576e58626,en,0,1,manabox_full
+1,Tanufel Rimespeaker,,,,en,1,0,scan_batch_verify:30_IMG_6253-939c1dfe-e6a4-471d-a94a-c4bbb3218a0c
+1,Tarnation,,,,en,1,0,scan_batch_new:03_IMG_6183-e6de9672-7af7-4784-980f-6c4138f19ddb
+1,Tasigur's Cruelty,,,,en,1,0,scan_batch_new:21_IMG_6201-1750c780-235d-4dc0-a7e6-075920794b93
+1,Teacher's Pest,SOS,238,eaa358ac-761d-4507-aa15-3d4684027207,en,0,1,manabox_full
+1,Tempered Sliver,,,,en,1,0,scan_batch_verify:65_IMG_6294-0b5641cf-4577-4164-a143-00262b667705
+4,Tempest Angler,BLB,235,850daae4-f0b7-4604-95e7-ad044ec165c3,en,0,4,manabox_full
+1,Tempest Hawk,TDM,,,de,1,1,moxfield_main;scan_batch_verify:08_IMG_6228-00285551-40d4-4e59-8dd4-cac2458ba14d
+1,Temporal Intervention,,,,en,1,0,scan_batch_new:20_IMG_6200-97cd2180-ab71-42e5-b7b5-a2ef46922d44
+2,Temur Battle Rage,CMM,264,375bc646-942e-4bf5-9c71-2c5471828e35,en,0,2,manabox_full
+1,Temur Devotee,TDM,,,de,1,1,moxfield_main;scan_batch_verify:21_IMG_6243-fb5fe512-3b51-4087-aef2-9c95f5a33225
+1,Temur Monument,TDM,,,de,1,1,moxfield_main;scan_batch_verify:45_IMG_6272-f8e30397-7287-4938-be79-787f2a543249
+1,Temur Runemark,,,,en,1,0,scan_batch_new:33_IMG_6213-b86acb01-446a-49bf-90b7-00c9d619c9f9
+2,Temur Tawnyback,TDM,,,de,0,2,moxfield_main
+1,Tend the Sprigs,,,,en,1,0,scan_batch_verify:03_IMG_6223-343934b7-6073-4aa3-89fe-bcc430b907ec
+2,Tenth District Guard,GRN,29,829f959e-91cd-42ea-8644-ce828a304d01,en,0,2,manabox_grn_sealed_2026-09-11
+1,Terastodon,,,,en,1,0,scan_batch_new:34_IMG_6214-c3c575e2-f7ab-4e34-8965-75f865ec67a8
+1,Terramorphic Expanse,SOS,265,9a4c5629-fadd-42b9-850f-9f8586a2ca50,en,0,1,manabox_full
+1,Textbook Tabulator,SOS,70,56f54fee-b48d-4582-8982-ca4c7b8ef553,en,0,1,manabox_full
+1,The Bath Song,LTR,40,fb11c04f-6f17-4da4-bbf6-0bd09de6e544,en,0,1,manabox_full
+2,The Black Breath,LTR,78,1e63983d-c36b-4440-b9e1-baaa6c7c0ba9,en,0,2,manabox_full
+1,The Chase Is On,,,,en,1,0,scan_batch_new:06_IMG_6186-0ba58fba-c7e2-4967-bd41-69c4b6c59dc4
+1,The Great Goblin,HOB,158,78d8f53e-537d-4eaa-99e3-cac57fa53d22,en,0,1,manabox_hob_2026-08-14
+1,The Grey Havens,LTR,255,dd698f10-b0fc-42fc-84ec-f5a0d96bfa1d,en,0,1,manabox_full
+1,The Masamune,FIN,264,fc408575-8ef7-4043-b6b7-b38cef7c97d1,en,0,1,manabox_full
+1,The Mountain-king's Return,HOB,22,68f4893d-e9a5-4f89-ade3-9ab78a834ad5,en,0,1,manabox_hob_2026-08-14
+1,The Mouth of Sauron,LTR,216,76a88814-aa30-4297-b338-3d851bfe7256,en,0,1,manabox_full
+1,The Prima Vista,FIN,64,e3998132-5746-4dde-9529-97d3ad7d7361,en,0,1,manabox_full
+1,The Sackville-Bagginses,HOB,83,ed87b471-79f9-45ec-9188-69e970f6121e,en,0,1,manabox_hob_2026-08-14
+1,The Torment of Gollum,LTR,110,ba2c8c25-1fa9-4cc4-a378-5eccc25bacf0,en,0,1,manabox_full
+1,The Water Crystal,,,,en,1,0,scan_batch_verify:23_IMG_6245-8e617f07-1540-479a-b5b3-fcaf0a05bdad
+1,The Weatherseed Treaty,DMU,188,e2a54461-1f75-4304-b6d7-635171419456,en,0,1,manabox_full
+1,Thermo-Alchemist,INR,174,78b194b3-108a-4152-bd37-52c302e25ad6,en,0,1,manabox_full
+1,Think Twice,TDM,,,de,0,1,moxfield_main
+1,Thinking Cap,,,,en,1,0,scan_batch_verify:48_IMG_6276-592ee27c-93ae-454a-90b1-83638b75086d
+1,Thorin's Last Stand,HOB,209,089e8e4b-c367-4d86-a69a-951f7d779aaf,en,0,1,manabox_hob_2026-08-14
+1,Thornfist Striker,SOS,164,f6cb838e-a06a-46ae-a30f-e5192178c1cc,en,0,1,manabox_full
+1,Thornplate Intimidator,,,,en,1,0,scan_batch_new:27_IMG_6207-8b165030-3e7c-445b-86dc-d7035e1d3305
+3,Thornwood Falls,TDM,269,42799f51-0f8c-444b-974e-dae281a5c697,en,1,3,manabox_full;moxfield_main;scan_batch_verify:60_IMG_6289-3f0f8434-f590-4df3-a9bd-b4fb78dc89d0
+1,Thought Erasure,GRN,206,7ce226ad-cb1d-47f5-90fc-27704e181884,en,0,1,manabox_grn_sealed_2026-09-11
+1,Thought Shucker,,,,en,1,0,scan_batch_verify:25_IMG_6248-a3cfe378-01e6-487d-adcb-9d0a58abc194
+1,"Thranduil, Sindarin Liege // Silvan Rally",HOB,166,481870ee-d1f7-421b-86e1-570ea933bbbc,en,0,1,manabox_hob_2026-08-14
+1,Three Tree Rootweaver,,,,en,1,0,scan_batch_verify:05_IMG_6225-a3dfd386-3a00-449e-8641-aa213d285184
+1,Three Tree Scribe,,,,en,1,0,scan_batch_new:40_IMG_6220-842c5ac9-507a-4709-be54-1941df198536
+1,Thrill of Possibility,TDM,,,de,0,1,moxfield_main
+1,Thrill-Kill Assassin,,,,en,1,0,scan_batch_new:28_IMG_6208-f035ade7-1840-4fed-808c-0881696e83cb
+1,Through the Forest Gate,HOB,137,880adfc8-69cf-4062-a804-e65b6cb6056d,en,0,1,manabox_hob_2026-08-14
+1,Thrumming Hivepool,,,,en,1,0,scan_batch_verify:65_IMG_6294-0b5641cf-4577-4164-a143-00262b667705
+1,Thrór's Map,HOB,179,ad0dba36-d056-4bc1-987a-391da26ad267,en,0,1,manabox_hob_2026-08-14
+1,Thunder Magic,FIN,165,9f2b202c-91da-40ec-8324-6b6be7cb3bc8,en,0,1,manabox_fin;moxfield_main
+2,Thunderdrum Soloist,SOS,134,590d1d95-ed13-4121-899f-f5a2d8a6617a,en,0,2,manabox_full
+1,Thunderhead Gunner,,,,en,1,0,scan_batch_new:08_IMG_6188-cbdb97f9-1f19-4d81-b280-55d59390eedb
+2,Thundering Broodwagon,DFT,225,2d1576d4-15a3-4e91-84ef-e71e258185e7,en,0,2,manabox_full
+1,Thundering Falls,MKM,331,da1792e4-2170-42ae-a335-fde6f5ef8932,en,0,1,manabox_full
+1,Ticket Booth // Tunnel of Hate,,,,en,1,0,scan_batch_new:09_IMG_6189-1864ee91-25bd-4824-abf5-fffa505a5fa7
+1,Tidecaller Mentor,,,,en,1,0,scan_batch_verify:40_IMG_6265-7e00a747-f650-4061-802c-7fd3490c8854
+1,"Tidus, Blitzball Star",FIN,246,aa851d68-a7a4-48c0-9cd7-d3d2e079f3a1,en,0,1,manabox_full
+1,Tin Street Dodger,,,,en,1,0,scan_batch_new:13_IMG_6193-38ea6484-48b7-425d-b01a-7cf282c80218
+2,Titan's Grave,SOS,266,a9ab41c8-3ee2-4676-9b8b-20c34d9f5f21,en,0,2,manabox_full
+1,Titanic Brawl,,,,en,1,0,scan_batch_verify:01_IMG_6221-73835ff0-57da-4138-a93e-c455aa9422c7
+1,To Arms!,,,,en,1,0,scan_batch_verify:16_IMG_6238-4af0f02d-b57c-4563-9dc6-cfe57206c857
+4,Tolarian Terror,FDN,167,2569d4f3-55ed-4f99-9592-34c7df0aab72,en,0,4,manabox_full
+1,Tolsimir Wolfblood,,,,en,1,0,scan_batch_verify:41_IMG_6266-e8f9dd56-201b-4e7d-a48c-3b25c77123ce
+1,"Tomik, Distinguished Advokist",,,,en,1,0,scan_batch_verify:16_IMG_6238-4af0f02d-b57c-4563-9dc6-cfe57206c857
+1,Took Reaper,LTR,35,1da7fc15-f894-496e-ba18-a02d42e9bedc,en,0,1,manabox_full
+1,Topiary Panther,,,,en,1,0,scan_batch_verify:04_IMG_6224-8dd1ffb5-0c2e-4d49-b2e1-00db237fe563
+1,Totally Lost,,,,en,1,0,scan_batch_verify:28_IMG_6251-8cc612a1-49fc-416b-897b-01ef6698258e
+1,Tower Geist,,,,en,1,0,scan_batch_verify:26_IMG_6249-7ed5f34a-6890-4445-9691-a1681a35c27a
+1,Town Greeter,FIN,209,49cd4efa-4df4-4257-9a42-60330f7781e2,en,0,1,manabox_fin;manabox_full;moxfield_main
+1,Tragic Trajectory,,,,en,1,0,scan_batch_new:22_IMG_6202-a1770e44-0189-4daf-a3aa-604fd5d07b43
+1,Tranquil Cove,TDM,,,de,1,1,moxfield_main;scan_batch_verify:61_IMG_6290-53519a68-befd-4445-8205-2ab59a906767
+1,Tranquil Thicket,PF23,2,d23aa765-4fc6-402f-9b49-5e55a90eec11,en,0,1,manabox_full
+1,Travel Preparations,,,,en,1,0,scan_batch_new:39_IMG_6219-1f79c5e6-f833-477a-a5c1-4ef042311f8a
+1,Travel the Overworld,FIN,82,aa5086e0-e2f2-498f-9035-1b31e1d21e0a,en,0,1,manabox_full
+1,Traveling Botanist,TDM,,,de,1,1,moxfield_main;scan_batch_new:32_IMG_6212-71b631fc-6504-4a4a-8d9a-1c9cc152d36f
+1,Treason of Isengard,LTR,74,71f97505-c961-4890-acd0-32a63919ac2a,en,0,1,manabox_full
+1,Treefolk Umbra,,,,en,1,0,scan_batch_verify:06_IMG_6226-e5abc442-2a29-457a-8634-89e1c41c8116
+1,Treetop Ambusher,,,,en,1,0,scan_batch_verify:06_IMG_6226-e5abc442-2a29-457a-8634-89e1c41c8116
+1,Troll of Khazad-dûm,LTR,111,a6539e26-b63b-4725-9407-caaf451de084,en,0,1,manabox_full
+1,Trophy Mage,,,,en,1,0,scan_batch_verify:53_IMG_6282-0a6ca069-1a51-455a-adfe-2ee756e1bf9b
+1,Trueheart Duelist,,,,en,1,0,scan_batch_verify:19_IMG_6241-b763c53d-d83b-4d03-9127-1176cb5b4c98
+1,Tune Up,,,,en,1,0,scan_batch_verify:19_IMG_6241-b763c53d-d83b-4d03-9127-1176cb5b4c98
+1,Tunnel Tipster,,,,en,1,0,scan_batch_verify:04_IMG_6224-8dd1ffb5-0c2e-4d49-b2e1-00db237fe563
+1,"Tura Kennerüd, Skyknight",TDM,,,de,0,1,moxfield_main
+1,Turn the Tables,,,,en,1,0,scan_batch_new:13_IMG_6193-38ea6484-48b7-425d-b01a-7cf282c80218
+1,Tweeze,,,,en,1,0,scan_batch_new:14_IMG_6194-7c723314-c4d4-4ef8-a193-46592baba740
+2,Twin Bolt,TDM,,,de,2,1,moxfield_main;scan_batch_new:02_IMG_6182-b851c886-39af-4e6f-a97b-cbb0c4947b4e;scan_batch_new:16_IMG_6196-9a65f2bf-edfa-49f3-bf0a-528a9a2ec49a
+1,Twinblade Geist // Twinblade Invocation,,,,en,1,0,scan_batch_verify:14_IMG_6236-cff53d5e-0179-41ca-bee7-dc4eb076d2d8
+1,Twinflame Travelers,,,,en,1,0,scan_batch_verify:43_IMG_6268-108d245d-d986-4b3f-a589-1cdf605cbf0b
+1,Typhoid Rats,,,,en,1,0,scan_batch_new:21_IMG_6201-1750c780-235d-4dc0-a7e6-075920794b93
+1,Ulna Alley Shopkeep,SOS,103,c25e1ae5-f17c-4eee-98f1-5681981af31c,en,0,1,manabox_full
+1,Ultimate Price,,,,en,1,0,scan_batch_new:28_IMG_6208-f035ade7-1840-4fed-808c-0881696e83cb
+1,"Ultimecia, Time Sorceress // Ultimecia, Omnipotent",FIN,247,2d6a2b68-5407-464e-a335-7866fd969c30,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:38_IMG_6263-55d184c2-30ed-4fff-9a0b-32720cc31272
+1,"Ultros, Obnoxious Octopus",FIN,83,14379198-9a0a-4853-9d51-fb074a24b1c0,en,0,1,manabox_full
+1,Umbral Collar Zealot,,,,en,1,0,scan_batch_new:23_IMG_6203-374f2f39-9c6f-43af-80c8-ebda5171a44b
+1,Unable to Scream,,,,en,1,0,scan_batch_verify:25_IMG_6248-a3cfe378-01e6-487d-adcb-9d0a58abc194
+1,Uncaged Fury,INR,177,de8f4d5b-ea3c-4d01-b163-2fcfb1bcca8e,en,0,1,manabox_full
+1,Uncharted Haven,FDN,564,172cd5b7-98fc-4add-b858-a0b3dfb75c19,en,0,1,manabox_full
+1,Uncharted Voyage,TDM,,,de,1,1,moxfield_main;scan_batch_verify:22_IMG_6244-c165a09a-cd2e-422a-818d-ccd5fd9a0c16
+1,Unclaimed Territory,,,,en,1,0,scan_batch_verify:58_IMG_6287-30523439-01cc-4e03-9b32-e3a93bdca4ea
+1,Undercity Dire Rat,FIN,123,274788f4-fbf3-4a15-bdc0-f513a2fde30d,en,1,1,manabox_fin;moxfield_main;scan_batch_new:21_IMG_6201-1750c780-235d-4dc0-a7e6-075920794b93
+1,Undercity Reaches,,,,en,1,0,scan_batch_verify:39_IMG_6264-ae737c6e-f416-4cf0-91e2-d4cb68421f49
+1,Undercity's Embrace,RVR,96,fd88d48b-0de4-410a-984b-11d49a00c4c6,en,0,1,manabox_full
+1,Underworld Connections,,,,en,1,0,scan_batch_verify:62_IMG_6291-b03872e5-03b1-4b01-96d7-7059437b7cd6
+2,Uneasy Partings,HOB,58,e49866d4-966a-40f9-b08d-18e5af6d726b,en,0,2,manabox_hob_2026-08-14
+1,Unending Whisper,TDM,,,de,1,1,moxfield_main;scan_batch_verify:29_IMG_6252-3b85773c-1ce2-4c19-9a6b-74cac1bfc8ef
+1,Unlicensed Disintegration,,,,en,1,0,scan_batch_verify:54_IMG_6283-ed93fb0b-1255-479f-aab1-4bdb59b731d9
+1,Unscrupulous Agent,,,,en,1,0,scan_batch_new:31_IMG_6211-ce0a5906-12e4-4dba-a98e-081b8786fb9b
+1,Unsubtle Mockery,SOS,136,2b7cb1a3-761e-470e-a164-6e29dd9448cd,en,0,1,manabox_full
+1,"Ureni, the Song Unending",TDM,321,a683c32f-325a-42f5-826f-5cc978b8333c,en,0,1,manabox_full;moxfield_main
+1,Uthros Psionicist,,,,en,1,0,scan_batch_verify:33_IMG_6256-adec6557-f2d8-4c10-878e-d08351133126
+1,"Vaan, Street Thief",FIN,168,50e1ec29-9de3-4f1b-b818-057e030d475b,en,0,1,manabox_full
+1,Valgavoth's Faithful,,,,en,0,1,user_confirmed
+1,Valley Floodcaller,BLB,79,90b12da0-f666-471d-95f5-15d8c9b31c92,en,0,1,manabox_full
+1,Valley Rally,BLB,159,b6178258-1ad6-4122-a56f-6eb7d0611e84,en,0,1,manabox_full
+1,Vampire Soulcaller,TDM,,,de,1,1,moxfield_main;scan_batch_new:19_IMG_6199-7c7b5fcb-a151-435e-8e51-8679738b0502
+1,Vanguard Seraph,TDM,,,de,1,1,moxfield_main;scan_batch_verify:10_IMG_6230-872b5d31-6471-4bda-b181-670ad4bfbd83
+2,Vanish from Sight,,,,en,2,0,scan_batch_verify:25_IMG_6248-a3cfe378-01e6-487d-adcb-9d0a58abc194
+2,"Vector, Imperial Capital",FIN,291,10e5648e-4884-41e3-95f8-c76f6bca01e2,en,1,2,manabox_fin;moxfield_main;scan_batch_verify:59_IMG_6288-a8cd3a2d-4cad-40ec-a30d-340ff40d0541
+1,Veloheart Bike,DFT,184,85edde1a-f05c-4ce8-bedd-88359647aa0d,en,0,1,manabox_full
+1,Velvetwing Butterflies // Gaze in Wonder,HOB,30,5cc0f994-5048-4898-926e-b56cbc97e0ca,en,0,1,manabox_hob_2026-08-14
+1,Venerated Stormsinger,TDM,,,de,1,1,moxfield_main;scan_batch_verify:63_IMG_6292-fb79d373-3ed4-47e3-9a84-9800816cab62
+1,Vernadi Shieldmate,,,,en,1,0,scan_batch_verify:41_IMG_6266-e8f9dd56-201b-4e7d-a48c-3b25c77123ce
+1,Veteran Guardmouse,,,,en,1,0,scan_batch_verify:39_IMG_6264-ae737c6e-f416-4cf0-91e2-d4cb68421f49
+1,Viashino Sandsprinter,MH1,153,f7d1def0-1450-44ec-b7c4-0fa50fe12c15,en,0,1,manabox_full
+2,Vicious Rivalry,SOS,241,6fa9cd18-3181-4373-ab65-49bf9de9487f,en,0,2,manabox_full
+1,"Victor, Valgavoth's Seneschal",,,,en,1,0,scan_batch_verify:39_IMG_6264-ae737c6e-f416-4cf0-91e2-d4cb68421f49
+1,Vile Mutilator,DSK,122,383fe040-98bb-40f3-b809-48c429b83f47,en,0,1,manabox_full
+2,Village Rites,,,,en,2,0,scan_batch_new:03_IMG_6183-e6de9672-7af7-4784-980f-6c4138f19ddb;scan_batch_new:26_IMG_6206-b2d96958-3956-4933-835f-e81ef1042d5f
+1,Villagers of Estwald // Howlpack of Estwald,,,,en,1,0,scan_batch_new:39_IMG_6219-1f79c5e6-f833-477a-a5c1-4ef042311f8a
+1,Vincent's Limit Break,FIN,126,0502c426-5271-4989-8598-5bc159afe79c,en,1,1,manabox_fin;moxfield_main;scan_batch_new:21_IMG_6201-1750c780-235d-4dc0-a7e6-075920794b93
+1,Visionary's Dance,SOS,242,846a0e79-a530-429e-8f7f-4b87f1b0156e,en,0,1,manabox_full
+1,Vivi Ornitier,FIN,248,ecc1027a-8c07-44a0-bdde-fa2844cff694,en,0,1,manabox_fin;manabox_full;moxfield_main
+1,Voldaren Duelist,,,,en,1,0,scan_batch_new:11_IMG_6191-ff86ab3f-bd67-4188-8215-96dc6178f9c1
+1,Voldaren Epicure,,,,en,1,0,scan_batch_new:11_IMG_6191-ff86ab3f-bd67-4188-8215-96dc6178f9c1
+1,Vorpal Sword,,,,en,1,0,scan_batch_verify:51_IMG_6280-a1f72b4a-8cc9-402f-a40d-f8cc61dfd927
+1,Vow to Erebor,HOB,31,8d4f3eb5-fedf-45d6-8bd8-aacbe0ce33b2,en,0,1,manabox_hob_2026-08-14
+1,Voyager Staff,,,,en,1,0,scan_batch_verify:48_IMG_6276-592ee27c-93ae-454a-90b1-83638b75086d
+1,"Vraska, Golgari Queen",GRN,213,a36d3ea7-0f18-4865-b47b-755673db065e,en,0,1,manabox_grn_sealed_2026-09-11
+1,Wail of War,TDM,98,7e9430dd-f583-400d-808a-64e2b5fa54f1,en,0,1,manabox_full;moxfield_main
+1,Walk the Plank,,,,en,1,0,scan_batch_new:23_IMG_6203-374f2f39-9c6f-43af-80c8-ebda5171a44b
+1,Wander Off,SOS,104,3d409512-50b9-4a38-91b0-19ba25227992,en,0,1,manabox_full
+1,Wanderbrine Preacher,,,,en,1,0,scan_batch_verify:10_IMG_6230-872b5d31-6471-4bda-b181-670ad4bfbd83
+1,Wandering Fumarole,EOS,45,89d53010-d85f-48e4-bf75-c02e8942f508,en,0,1,manabox_full
+1,Wandering Mind,,,,en,1,0,scan_batch_verify:43_IMG_6268-108d245d-d986-4b3f-a589-1cdf605cbf0b
+1,War Squeak,BLB,160,105964a7-88b7-4340-aa66-e908189a3638,en,0,1,manabox_full
+1,Warbeast of Gorgoroth,LTR,152,5eeecb9e-fbde-429b-b3da-18a4dbadf6de,en,0,1,manabox_full
+1,Warg Tactics,HOB,139,b06d9cee-bb0f-4fe7-ab2a-b55d36461aec,en,0,1,manabox_hob_2026-08-14
+1,Wargling,HOB,140,1ccbf823-846f-4f09-9c67-1deebb5d1d92,en,0,1,manabox_hob_2026-08-14
+1,Warleader's Call,,,,en,1,0,scan_batch_verify:63_IMG_6292-fb79d373-3ed4-47e3-9a84-9800816cab62
+1,Warm Welcome,TDM,,,de,1,1,moxfield_main;scan_batch_verify:55_IMG_6284-e44f4196-ce7e-414c-8393-375fb3be6cce
+1,Wary Farmer,,,,en,1,0,scan_batch_verify:38_IMG_6263-55d184c2-30ed-4fff-9a0b-32720cc31272
+1,Wary Thespian,TDM,,,de,1,1,moxfield_main;scan_batch_new:33_IMG_6213-b86acb01-446a-49bf-90b7-00c9d619c9f9
+1,Waterspout Warden,,,,en,1,0,scan_batch_verify:27_IMG_6250-8b3336f5-f00b-4be6-90d4-7a1fc0766b5e
+1,Watery Grave,GRN,259,7d4595f2-9297-40dc-b2dd-7144bbb401f7,en,0,1,manabox_grn_sealed_2026-09-11
+1,Wax-Wane Witness,,,,en,1,0,scan_batch_verify:12_IMG_6232-37988df5-605b-4f54-b71d-604ed0defce6
+1,Wayspeaker Bodyguard,TDM,,,de,1,1,moxfield_main;scan_batch_verify:08_IMG_6228-00285551-40d4-4e59-8dd4-cac2458ba14d
+1,Weftstalker Ardent,,,,en,1,0,scan_batch_new:10_IMG_6190-21827863-22f2-452b-8b6a-f685ff37350e
+2,Well-Worn Spatula,HOB,180,659b687f-4068-496f-81b2-7b606bf07ec1,en,0,2,manabox_hob_2026-08-14
+1,Westfold Rider,LTR,37,71ed2e4b-c732-472a-a589-f1f53086d9ee,en,0,1,manabox_full
+1,Whirlwing Stormbrood // Dynamic Soar,TDM,,,de,1,1,moxfield_main;scan_batch_verify:21_IMG_6243-fb5fe512-3b51-4087-aef2-9c95f5a33225
+1,Whisk Away,,,,en,1,0,scan_batch_verify:31_IMG_6254-8a7c6234-1b1c-4fdd-8764-8d52d43eebdf
+1,Whisper Agent,,,,en,1,0,scan_batch_verify:40_IMG_6265-7e00a747-f650-4061-802c-7fd3490c8854
+1,Whisperer of the Wilds,,,,en,1,0,scan_batch_new:35_IMG_6215-9e0108e8-e960-41ca-aa6d-a5667630b68b
+1,White Auracite,FIN,41,2df6f515-9d21-4769-b1c4-c219611bccbb,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:12_IMG_6232-37988df5-605b-4f54-b71d-604ed0defce6
+1,White Mage's Staff,FIN,42,30db372e-0b4c-4e16-9667-bf3fda666f72,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:11_IMG_6231-da8c0a0e-0fbd-4118-92c6-2bf59341a6bd
+1,Who's That Praetor?,,,,en,1,0,scan_batch_verify:53_IMG_6282-0a6ca069-1a51-455a-adfe-2ee756e1bf9b
+1,Wild Hypothesis,SOS,167,04fdfabc-c247-4384-a5bb-f49035f8aae0,en,0,1,manabox_full
+1,Wild Ride,TDM,132,abc8c6f5-6135-428e-8476-1751f82623f9,en,0,1,manabox_full
+1,Wild Unraveling,,,,en,1,0,scan_batch_verify:29_IMG_6252-3b85773c-1ce2-4c19-9a6b-74cac1bfc8ef
+1,Wildfire Eternal,PHOU,109,b7976387-8bb4-4ab4-8f15-862b5d2da4ba,en,0,1,manabox_full
+1,Wildvine Pummeler,,,,en,1,0,scan_batch_verify:03_IMG_6223-343934b7-6073-4aa3-89fe-bcc430b907ec
+1,Wildwood Scourge,TDM,,,de,0,1,moxfield_main
+1,Will of the Naga,,,,en,1,0,scan_batch_verify:32_IMG_6255-f7599c07-2d48-4394-bd01-dd489d9b40f6
+1,Willowrush Verge,DFT,375,38218d0f-4b70-45eb-a753-cdb44f94271c,en,0,1,manabox_full
+2,Wind-Scarred Crag,TDM,,,de,1,2,moxfield_main;scan_batch_verify:60_IMG_6289-3f0f8434-f590-4df3-a9bd-b4fb78dc89d0
+1,Winding Way,,,,en,1,0,scan_batch_verify:06_IMG_6226-e5abc442-2a29-457a-8634-89e1c41c8116
+1,Winds of Qal Sisma,,,,en,1,0,scan_batch_new:37_IMG_6217-ee1fbfb6-48e8-48ff-8b45-0f11b72c9227
+1,Windswept Heath,KTK,248,e7b28650-cddc-4878-b1d1-b5a764f4df49,en,0,1,manabox_full
+1,Wingspan Stride,TDM,,,de,1,1,moxfield_main;scan_batch_verify:21_IMG_6243-fb5fe512-3b51-4087-aef2-9c95f5a33225
+1,Winter's Rest,,,,en,1,0,scan_batch_verify:35_IMG_6259-284672fb-70ed-4836-9fe2-acf12b3659ff
+1,Wisdom of Ages,SOS,71,b227ef04-33e4-44e8-a357-0ea3dfe5d49b,en,0,1,manabox_full
+1,Witherbloom Charm,SOS,244,254437f7-7a8a-4b11-9cea-e8e7ea23c59e,en,0,1,manabox_full
+1,Wizard's Rockets,LTR,252,1c6ed742-dfb1-41e2-8f19-184555109e34,en,0,1,manabox_full
+1,Wojek Bodyguard,GRN,154,08e3015b-9c76-484e-9d28-0fbdeb982605,en,0,1,manabox_grn_sealed_2026-09-11
+1,Wojek Investigator,,,,en,1,0,scan_batch_verify:49_IMG_6278-627251f1-2752-4138-b6c9-167a6925d12d
+1,Wood Elves,,,,en,1,0,scan_batch_new:34_IMG_6214-c3c575e2-f7ab-4e34-8965-75f865ec67a8
+1,Workshop Warchief,,,,en,1,0,scan_batch_verify:50_IMG_6279-0f435247-4092-460a-8854-020c2cfa349d
+1,World Map,FIN,270,70d9ab99-ec8a-402e-ba1d-ffa6c4c84a3f,en,0,1,manabox_full
+2,Wose Pathfinder,LTR,190,6589b339-9067-4e9b-bfdb-c49f8b3ef2d4,en,0,2,manabox_full
+1,Wrench,,,,en,1,0,scan_batch_verify:18_IMG_6240-48edf433-7e53-418b-bb0e-ec5a821a950e
+1,Wrenn and Seven,INR,226,302f0dc1-88ab-4961-b78c-fbe7980dca18,en,0,1,manabox_full
+1,Wretched Gryff,,,,en,1,0,scan_batch_verify:48_IMG_6276-592ee27c-93ae-454a-90b1-83638b75086d
+1,Wretched Throng,,,,en,1,0,scan_batch_verify:26_IMG_6249-7ed5f34a-6890-4445-9691-a1681a35c27a
+1,Write into Being,,,,en,1,0,scan_batch_verify:31_IMG_6254-8a7c6234-1b1c-4fdd-8764-8d52d43eebdf
+1,Wurmwall Sweeper,,,,en,1,0,scan_batch_verify:47_IMG_6274-cae39d65-cdb4-4ac3-bc7f-5613e1afc0f9
+1,Wurmweaver Coil,,,,en,1,0,scan_batch_verify:01_IMG_6221-73835ff0-57da-4138-a93e-c455aa9422c7
+1,"Yennett, Cryptic Sovereign",CMM,363,28ee11c9-fa23-4863-8a18-25a008f18da5,en,0,1,manabox_full
+1,"Yeva, Nature's Herald",,,,en,1,0,scan_batch_verify:05_IMG_6225-a3dfd386-3a00-449e-8641-aa213d285184
+1,You're Not Alone,FIN,44,1867b5cb-2bb0-4f49-b302-036fdffa2344,en,1,1,manabox_fin;moxfield_main;scan_batch_verify:11_IMG_6231-da8c0a0e-0fbd-4118-92c6-2bf59341a6bd
+1,"Zahid, Djinn of the Lamp",,,,en,1,0,scan_batch_verify:34_IMG_6258-6ebcd3e4-874c-497d-a921-ac847c809b20
+1,Zero Point Ballad,EOE,128,59cf9f4d-54cd-4cda-9726-65e16100ab46,en,0,1,manabox_full
+1,"Zimone, All-Questioning",DSK,366,c8af5a2b-b87e-4ee2-88bd-f80670559875,en,0,1,manabox_full
+2,"Zurgo, Thunder's Decree",TDM,,,de,1,2,moxfield_main;scan_batch_verify:63_IMG_6292-fb79d373-3ed4-47e3-9a84-9800816cab62
+1,"Éomer, Marshal of Rohan",LTR,120,0bd31ce9-9551-4efe-8bd2-b97d8efbf75e,en,0,1,manabox_full
+1,"Éowyn, Lady of Rohan",LTR,10,e59710c4-24de-419e-a8a0-e8392d450c23,en,0,1,manabox_full
+1,Óin the Brave,HOB,106,9984b9ef-e81c-48f4-aa33-0504171a2d3c,en,0,1,manabox_hob_2026-08-14

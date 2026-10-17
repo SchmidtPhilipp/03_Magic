@@ -71,3 +71,6 @@ yolo11n.pt
 
 # Local Forge paths
 config/forge.env
+
+# Real binder scan photos for eval scripts (55MB) — not in Git
+tests/fixtures/scan/real/

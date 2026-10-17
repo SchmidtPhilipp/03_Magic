@@ -29,14 +29,31 @@ class League:
     def top(self, k: int) -> list[LeagueDeck]:
         return sorted(self._decks.values(), key=lambda d: (-d.elo, d.id))[: max(0, k)]
 
+    def remove(self, deck_id: str) -> None:
+        self._decks.pop(deck_id, None)
+
+    def remove_by_provenance_prefix(self, prefix: str) -> int:
+        """Drop decks whose provenance starts with prefix. Returns removed count."""
+        doomed = [d.id for d in self._decks.values() if d.provenance.startswith(prefix)]
+        for deck_id in doomed:
+            del self._decks[deck_id]
+        return len(doomed)
+
     def sample_opponent(
         self,
         *,
         exclude_id: str | None = None,
         rng: random.Random | None = None,
+        provenance_prefix: str | None = None,
     ) -> LeagueDeck:
         rng = rng or random.Random()
         candidates = [d for d in self._decks.values() if d.id != exclude_id]
+        if provenance_prefix is not None:
+            preferred = [
+                d for d in candidates if d.provenance.startswith(provenance_prefix)
+            ]
+            if preferred:
+                candidates = preferred
         if not candidates:
             raise ValueError("no opponent available")
         ranked = sorted(candidates, key=lambda d: (-d.elo, d.id))

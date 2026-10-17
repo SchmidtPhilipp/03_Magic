@@ -31,6 +31,8 @@ class OptimizationJob:
         self.rng = random.Random(seed)
         self.top_k = top_k
         self.state = JobState()
+        # When set, challenge() prefers opponents with this provenance prefix.
+        self.opponent_provenance_prefix: str | None = None
 
     def challenge(
         self,
@@ -52,7 +54,9 @@ class OptimizationJob:
             self.league.add(challenger)
 
         opponent = self.league.sample_opponent(
-            exclude_id=deck_id, rng=self.rng
+            exclude_id=deck_id,
+            rng=self.rng,
+            provenance_prefix=getattr(self, "opponent_provenance_prefix", None),
         )
         deck_a = [CardRef(n) for n in challenger.cards]
         deck_b = [CardRef(n) for n in opponent.cards]

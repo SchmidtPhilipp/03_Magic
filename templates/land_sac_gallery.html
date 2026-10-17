@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Land-Opfer &amp; Landfall — Collection</title>
+    <link href="{{ config.LINKS.bootstrap_css }}" rel="stylesheet">
+    <link href="{{ config.LINKS.fontawesome_css }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <style>
+        body {
+            background: #1a1a2e;
+            color: #eee;
+            min-height: 100vh;
+        }
+        .page-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1.5rem 1rem 3rem;
+        }
+        .section-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin: 1.75rem 0 0.75rem;
+            padding-bottom: 0.35rem;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
+        }
+        .card-tile {
+            background: #12121f;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .card-tile img {
+            width: 100%;
+            aspect-ratio: 5 / 7;
+            object-fit: cover;
+            display: block;
+            background: #0d0d16;
+        }
+        .card-meta {
+            padding: 0.55rem 0.65rem 0.7rem;
+        }
+        .card-meta .name {
+            font-size: 0.82rem;
+            font-weight: 600;
+            line-height: 1.25;
+            margin: 0 0 0.25rem;
+        }
+        .card-meta .blurb {
+            font-size: 0.72rem;
+            color: #9aa0b0;
+            margin: 0;
+            line-height: 1.3;
+        }
+        .qty-pill {
+            display: inline-block;
+            font-size: 0.7rem;
+            background: rgba(88, 166, 255, 0.2);
+            color: #8ec7ff;
+            border-radius: 999px;
+            padding: 0.1rem 0.45rem;
+            margin-bottom: 0.3rem;
+        }
+        .qty-pill.buy {
+            background: rgba(255, 180, 60, 0.22);
+            color: #ffc86b;
+        }
+        .missing {
+            opacity: 0.55;
+        }
+        .missing .qty-pill:not(.buy) {
+            background: rgba(255, 100, 100, 0.2);
+            color: #ff9a9a;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark"
+        style="background: linear-gradient(90deg, {{ config.COLORS.primary_gradient_start }} 0%, {{ config.COLORS.primary_gradient_end }} 100%);">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="{{ config.WEB_TEXTS.header_icon }}"></i>
+                Land-Opfer
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link text-white" href="{{ url_for('index') }}">Optimizer</a>
+                <a class="nav-link text-white" href="{{ url_for('collection.collections_page') }}">Collections</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-wrap">
+        <h1 class="h3 mb-2">Land-Opfer &amp; Landfall</h1>
+        <p class="text-secondary mb-0" style="font-size: 0.9rem;">
+            {{ owned_copies }} Own-Kopien in {{ owned_names }} Karten · Quelle: union_collection.csv · Bilder: Scryfall
+        </p>
+
+        {% for section in sections %}
+        <h2 class="section-title">{{ section.title }}
+            <span class="text-secondary fw-normal" style="font-size: 0.85rem;">({{ section.cards|length }})</span>
+        </h2>
+        <div class="card-grid">
+            {% for card in section.cards %}
+            <div class="card-tile {% if card.qty < 1 %}missing{% endif %}">
+                <img
+                    src="{{ card.image_url }}"
+                    alt="{{ card.name }}"
+                    loading="lazy"
+                    onerror="this.style.opacity='0.25'">
+                <div class="card-meta">
+                    {% if card.qty > 0 %}
+                    <span class="qty-pill">×{{ card.qty }} own</span>
+                    {% elif card.status == 'buy' %}
+                    <span class="qty-pill buy">buy</span>
+                    {% else %}
+                    <span class="qty-pill">nicht im CSV</span>
+                    {% endif %}
+                    <p class="name">{{ card.name }}</p>
+                    <p class="blurb">{{ card.blurb }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

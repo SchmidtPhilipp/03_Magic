@@ -1,0 +1,84 @@
+# Confirmed by Philipp 2026-08-02 — sealed / draft product history for pool simulation.
+
+format_label: accreted_sealed_constructed
+
+confirmed_sets:
+  - code: TDM
+    name: "Tarkir: Dragonstorm"
+    confidence: high
+    role: sealed_wave
+  - code: FIN
+    name: "Final Fantasy"
+    confidence: high
+    role: sealed_wave
+  - code: LTR
+    name: "Lord of the Rings — Tales of Middle-earth"
+    confidence: high
+    role: sealed_wave
+  - code: SOS
+    name: "Secrets of Strixhaven"
+    confidence: high
+    role: sealed_wave
+  - code: FDN
+    name: "Foundations"
+    confidence: high
+    role: sealed_wave
+  - code: BLB
+    name: "Bloomburrow"
+    confidence: high
+    role: sealed_wave
+  - code: DSK
+    name: "Duskmourn: House of Horror"
+    confidence: high
+    role: sealed_wave
+    notes: "Under-represented in Manabox tags; treat as full wave anyway."
+  - code: DFT
+    name: "Aetherdrift"
+    confidence: high
+    role: sealed_wave
+  - code: INR
+    name: "Innistrad Remastered"
+    confidence: high
+    role: sealed_wave
+
+excluded_as_sealed_waves:
+  - MH1
+  - EOE
+  - MKM
+  - ACR
+  - RVR
+  - M21
+
+also:
+  prize_promos: true
+  notes: "Tournament-win promos exist; model as sparse injection layer, not pack slots."
+
+draft_events:
+  - kind: mixed_draft
+    description: "Once: 3x2 different sets — default model 3 packs set A + 3 packs set B."
+    status: assumed_ok
+    pack_math: three_plus_three
+
+generator_defaults:
+  players: 5
+  packs_per_player_sealed_event: 6
+  mixed_draft_packs: [3, 3]
+  prize_promos_per_player_mean: 0.3
+
+selfplay:
+  # Train: N agents share WorldModel/Synergy; each gets a fresh sealed pool per epoch.
+  # Verify: only then lock agent 0 to the real union pool (hold-out evaluation).
+  # Continuous + resume after agent restart:
+  mode: multi_agent_sealed
+  n_agents: 3
+  refresh_games: 100
+  checkpoint: runs/sealed_multi_agent/checkpoint.json
+  continuous_cli: >
+    PYTHONPATH=src python3 scripts/run_sealed_train_continuous.py
+    --checkpoint runs/sealed_multi_agent/checkpoint.json
+    --backend forge --chunk-games 50 --chunks 0 --max-colors 3
+  # max_colors: hard WUBRG identity cap (0 = unlimited). allowed_colors optional lock.
+  # backend forge = real Magarena/Forge games (slow); stub = hash noise only.
+  verify_cli: >
+    PYTHONPATH=src python3 scripts/run_selfplay_loop.py
+    --multi-agent-sealed --train-games 0 --verify-games 100

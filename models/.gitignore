@@ -2,3 +2,6 @@
 
 *.pt
 *.onnx
+
+# mtg_id embedding model artifacts + HF cache (84MB) — not in Git
+mtg_id/

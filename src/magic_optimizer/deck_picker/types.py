@@ -23,6 +23,9 @@ class DeckConstraints:
     banned: frozenset[str] = field(default_factory=frozenset)
     pinned: tuple[str, ...] = ()
     non_basic_target: int = 40
+    # Hard color limits (WUBRG letters). None = unrestricted.
+    max_colors: int | None = None
+    allowed_colors: frozenset[str] | None = None
 
 
 @dataclass

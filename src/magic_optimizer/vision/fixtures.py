@@ -116,3 +116,77 @@ def download_scryfall_normals(
             continue
         time.sleep(pause_s)
     return paths
+
+
+def apply_scan_transform(
+    image_path: Path,
+    kind: str,
+    out_path: Path,
+) -> Path:
+    """
+    Write a transformed copy of a scan photo for robustness tests.
+
+    Supported kinds: identity, mirror_h, mirror_v, rotate_15, rotate_m20,
+    rotate_25, skew, perspective, perspective_strong.
+    """
+    try:
+        import cv2
+        import numpy as np
+    except ImportError as exc:  # pragma: no cover
+        raise RuntimeError("opencv required for scan transforms") from exc
+
+    img = cv2.imread(str(image_path))
+    if img is None:
+        raise FileNotFoundError(image_path)
+    h, w = img.shape[:2]
+    border = (24, 28, 32)
+
+    if kind == "identity":
+        out = img
+    elif kind == "mirror_h":
+        out = cv2.flip(img, 1)
+    elif kind == "mirror_v":
+        out = cv2.flip(img, 0)
+    elif kind == "rotate_15":
+        m = cv2.getRotationMatrix2D((w / 2, h / 2), 15, 1.0)
+        out = cv2.warpAffine(img, m, (w, h), borderValue=border)
+    elif kind == "rotate_m20":
+        m = cv2.getRotationMatrix2D((w / 2, h / 2), -20, 1.0)
+        out = cv2.warpAffine(img, m, (w, h), borderValue=border)
+    elif kind == "rotate_25":
+        m = cv2.getRotationMatrix2D((w / 2, h / 2), 25, 1.0)
+        out = cv2.warpAffine(img, m, (w, h), borderValue=border)
+    elif kind == "skew":
+        src = np.float32([[0, 0], [w - 1, 0], [0, h - 1]])
+        dst = np.float32([[0, 0], [w - 1, int(0.08 * h)], [int(0.06 * w), h - 1]])
+        m = cv2.getAffineTransform(src, dst)
+        out = cv2.warpAffine(img, m, (w, h), borderValue=border)
+    elif kind in ("perspective", "perspective_strong"):
+        src = np.float32([[0, 0], [w - 1, 0], [w - 1, h - 1], [0, h - 1]])
+        if kind == "perspective":
+            dst = np.float32(
+                [
+                    [int(0.08 * w), int(0.05 * h)],
+                    [int(0.95 * w), int(0.02 * h)],
+                    [int(0.98 * w), int(0.92 * h)],
+                    [int(0.05 * w), int(0.95 * h)],
+                ]
+            )
+        else:
+            dst = np.float32(
+                [
+                    [int(0.15 * w), int(0.1 * h)],
+                    [int(0.9 * w), int(0.05 * h)],
+                    [int(0.98 * w), int(0.88 * h)],
+                    [int(0.02 * w), int(0.95 * h)],
+                ]
+            )
+        m = cv2.getPerspectiveTransform(src, dst)
+        out = cv2.warpPerspective(img, m, (w, h), borderValue=border)
+    else:
+        raise ValueError(f"unknown transform kind: {kind}")
+
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    if not cv2.imwrite(str(out_path), out):
+        raise OSError(f"failed to write {out_path}")
+    return out_path

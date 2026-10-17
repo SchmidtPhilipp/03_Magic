@@ -1,4 +1,4 @@
-"""Card region detection — YOLO primary, OpenCV fallback, optional OCR."""
+"""Card region detection — binder grid-first, YOLO, OpenCV fallback, S3 identify."""
 
 from __future__ import annotations
 
@@ -9,25 +9,28 @@ try:
 except ImportError:  # pragma: no cover
     cv2 = None
 
-from magic_optimizer.vision.ocr import enrich_detections_with_ocr
+from magic_optimizer.vision.binder_grid import detect_binder_slots
+from magic_optimizer.vision.identify import enrich_detections_with_identify
 from magic_optimizer.vision.yolo import detect_with_yolo, model_available
 
 
 def detect_card_regions(image_path: str) -> list[dict[str, Any]]:
     """
-    Find card bounding boxes in a table photo.
+    Find card bounding boxes in a table / binder photo.
 
-    Order: YOLO (if weights on disk) → OpenCV contours → OCR name enrichment.
+    Order: binder grid-first (YOLO seeds + lattice) → YOLO → OpenCV → S3 identify.
     """
-    detections = detect_with_yolo(image_path)
+    detections = detect_binder_slots(image_path)
+    if not detections:
+        detections = detect_with_yolo(image_path)
     if not detections:
         detections = _detect_opencv_contours(image_path)
     else:
         for det in detections:
-            det.setdefault("source", "yolo")
+            det.setdefault("source", det.get("source") or "yolo")
 
     if detections:
-        detections = enrich_detections_with_ocr(image_path, detections)
+        detections = enrich_detections_with_identify(image_path, detections)
     return detections
 
 

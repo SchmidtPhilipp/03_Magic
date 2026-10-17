@@ -8,6 +8,11 @@ from magic_optimizer.deck_picker.checkpoint import (
     state_to_dict,
     steps_to_dicts,
 )
+from magic_optimizer.deck_picker.colors import (
+    card_fits_color_constraints,
+    color_identity_of_name,
+    deck_color_identity,
+)
 from magic_optimizer.deck_picker.complete import (
     complete_deck,
     complete_deck_with_trajectory,
@@ -15,6 +20,7 @@ from magic_optimizer.deck_picker.complete import (
     fill_basics,
     refill_basics,
 )
+from magic_optimizer.deck_picker.card_info import make_card_info
 from magic_optimizer.deck_picker.heuristic import HeuristicNextCardPolicy, NextCardPolicy
 from magic_optimizer.deck_picker.mana import (
     estimate_deck_color_pips,
@@ -53,6 +59,10 @@ __all__ = [
     "fill_basics",
     "legal_candidates",
     "load_checkpoint",
+    "card_fits_color_constraints",
+    "color_identity_of_name",
+    "deck_color_identity",
+    "make_card_info",
     "missing_cards",
     "pips_from_mana_cost",
     "pool_from_card_rows",

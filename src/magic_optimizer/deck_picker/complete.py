@@ -11,6 +11,7 @@ from magic_optimizer.deck_picker.types import (
     DeckConstraints,
     DeckStep,
 )
+from magic_optimizer.deck_picker.colors import card_fits_color_constraints
 
 _WUBRG_ORDER: tuple[str, ...] = ("W", "U", "B", "R", "G")
 _WUBRG_LANDS: tuple[str, ...] = ("Plains", "Island", "Swamp", "Mountain", "Forest")
@@ -131,10 +132,21 @@ def complete_deck_with_trajectory(
             )
 
     while count_non_basics(deck) < constraints.non_basic_target:
-        picks = policy.next_card(pool, deck, constraints, k=50)
+        # Wide k so color filtering still has legal picks after WUBRG prune.
+        picks = policy.next_card(pool, deck, constraints, k=200)
         if not picks:
             break
-        non_basic_picks = [s for s in picks if s.card.name not in BASIC_LANDS]
+        non_basic_picks = [
+            s
+            for s in picks
+            if s.card.name not in BASIC_LANDS
+            and card_fits_color_constraints(
+                s.card.name,
+                deck,
+                constraints,
+                card_info=card_info,
+            )
+        ]
         if not non_basic_picks:
             break
         chosen = non_basic_picks[0]

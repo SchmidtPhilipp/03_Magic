@@ -700,6 +700,124 @@ def load_default_csv():
         return jsonify({"error": f"Error loading default CSV: {str(e)}"}), 500
 
 
+@app.route("/land-sac")
+def land_sac_gallery():
+    """Gallery of owned land-sacrifice cards (self-sac lands + outlets)."""
+    import csv
+    from pathlib import Path
+    from urllib.parse import quote
+
+    union_path = Path("data/collections/union/union_collection.csv")
+    owned = {}
+    if union_path.exists():
+        with union_path.open(newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                name = (row.get("card_name") or "").strip()
+                if not name:
+                    continue
+                try:
+                    qty = max(
+                        int(row.get("amount") or 0),
+                        int(row.get("csv_amount") or 0),
+                        int(row.get("scan_hits") or 0),
+                    )
+                except ValueError:
+                    qty = 0
+                owned[name] = owned.get(name, 0) + qty
+
+    catalog = [
+        (
+            "Self-Sac Lands",
+            [
+                ("Evolving Wilds", "Sac → Basic suchen", "own"),
+                ("Terramorphic Expanse", "Sac → Basic suchen", "own"),
+                ("Escape Tunnel", "Sac → Basic oder unblockable", "own"),
+                ("Shire Terrace", "Sac (+1) → Basic suchen", "own"),
+                ("Windswept Heath", "Sac + 1 Leben → Forest/Plains", "own"),
+                ("Mirkwood", "BG-Tapland; Sac für +1/+1", "own"),
+                ("Eden, Seat of the Sanctum", "Sac → Permanent aus GY", "own"),
+                ("Lake-town", "WU — Sac für +1/+1 auf Human", "own"),
+            ],
+        ),
+        (
+            "Outlets (opfern ein Land / Permanent)",
+            [
+                ("Springbloom Druid", "ETB: Land sac → 2 Basics", "own"),
+                ("Excavating Anurid", "ETB: Land sac → ziehen", "own"),
+                ("Vraska, Golgari Queen", "+2: Permanent sac → Leben + ziehen", "own"),
+                ("Witherbloom Charm", "Mode: Permanent sac → 2 ziehen", "own"),
+            ],
+        ),
+        (
+            "Beste Landfall (owned, BG-Loop)",
+            [
+                ("Icetill Explorer", "Extra Drop + Lands aus GY + Mill", "own"),
+                ("Primeval Titan", "ETB/Attack: 2 Lands aufs Feld → Doppel-Landfall", "own"),
+                ("Elfsworn Giant", "Landfall → Elf-Token (Vraska-Futter)", "own"),
+                ("Dragonback Assault", "Landfall → 4/4 Drache (GUR-Splash)", "own"),
+                ("Wrenn and Seven", "Lands in Hand / Land-Kreatur", "own"),
+                ("Phylath, World Sculptor", "ETB Plants + Landfall +4/+4 auf Plants", "own"),
+                ("Sazh's Chocobo", "Billig: Landfall → +1/+1", "own"),
+                ("Chocobo Racetrack", "Landfall → Bird-Token mit Landfall-Pump", "own"),
+                ("Eumidian Terrabotanist", "Landfall → 1 Leben", "own"),
+                ("Eusocial Engineering", "Landfall → 2/2 Robot", "own"),
+                ("Thranduil, Sindarin Liege // Silvan Rally", "Landfall → Elf-Token (G/U)", "own"),
+                ("Gysahl Greens", "Bird-Token; Flashback", "own"),
+            ],
+        ),
+        (
+            "Landfall Buy-Ziele (Deck-Upgrade)",
+            [
+                ("Lotus Cobra", "Landfall → Mana (Titan-Fuel)", "buy"),
+                ("Tireless Tracker", "Landfall → Clue / Karten", "buy"),
+                ("Retreat to Hagra", "Landfall → Drain oder Deathtouch", "buy"),
+                ("Fabled Passage", "Self-Sac Fetch (Dichte)", "buy"),
+                ("Harrow", "Instant: Land sac → 2 Basics", "buy"),
+                ("Scute Swarm", "Explosiv: Landfall → Kopie", "buy"),
+                ("Ob Nixilis, the Fallen", "Landfall → Drain + Grow", "buy"),
+                ("Tireless Provisioner", "Landfall → Food/Treasure", "buy"),
+            ],
+        ),
+    ]
+
+    sections = []
+    owned_copies = 0
+    owned_names = 0
+    for title, cards in catalog:
+        rendered = []
+        for name, blurb, kind in cards:
+            qty = int(owned.get(name, 0))
+            # dual-face: also try front face only
+            if qty == 0 and "//" in name:
+                qty = int(owned.get(name.split("//")[0].strip(), 0))
+            if qty > 0:
+                owned_copies += qty
+                owned_names += 1
+            status = "own" if qty > 0 else kind
+            img = (
+                "https://api.scryfall.com/cards/named"
+                f"?exact={quote(name)}&format=image&version=normal"
+            )
+            rendered.append(
+                {
+                    "name": name,
+                    "blurb": blurb,
+                    "qty": qty,
+                    "image_url": img,
+                    "status": status,
+                }
+            )
+        sections.append({"title": title, "cards": rendered})
+
+    return render_template(
+        "land_sac_gallery.html",
+        config=config,
+        sections=sections,
+        owned_copies=owned_copies,
+        owned_names=owned_names,
+    )
+
+
 @app.route("/cache_card_image/<card_name>")
 def cache_card_image(card_name):
     """Cache a single card image"""

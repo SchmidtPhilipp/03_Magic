@@ -1,0 +1,27 @@
+card_name,priority,for_deck,want_qty,reason,have,status
+Reanimate,high,BR Reanimator,4,Best reanimate for Griselbrand,0,watching
+Entomb,high,BR Reanimator,4,Yard Griselbrand T1,0,watching
+Exhume,high,BR Reanimator,4,Budget reanimate,0,watching
+Animate Dead,high,BR Reanimator,4,Enchantment reanimate,0,watching
+Buried Alive,med,BR Reanimator,2,Tutor into yard,0,watching
+Archon of Cruelty,med,BR Reanimator,2,2nd reanimation target,0,watching
+Terror of the Peaks,high,Temur Ureni,2,Dragon ETB payoff,0,watching
+Dragon Tempest,high,Temur Ureni,2,Haste + ping,0,watching
+Sarkhan's Triumph,high,Temur Ureni,2,Tutor Ureni/Niv,0,watching
+Dragonspeaker Shaman,med,Temur Ureni,2,Cost reduction,0,watching
+Utvara Hellkite,med,Temur Ureni,1,Token engine,0,watching
+Dragonlord's Servant,med,Temur Ureni,2,Cost reduction,0,watching
+Brainstorm,high,UR Stock Up,4,Best cantrip,0,watching
+Ponder,high,UR Stock Up,4,Cantrip,0,watching
+Preordain,med,UR Stock Up,4,Cantrip,0,watching
+Expressive Iteration,high,UR Stock Up,4,UR staple,0,watching
+Cori-Steel Cutter,high,UR Otter path,4,Unlocks otter plan,0,watching
+Stormchaser's Talent,high,UR Otter path,4,Otter engine,0,watching
+Spirebluff Canal,med,UR manabase,4,Fast land,0,watching
+Steam Vents,med,UR manabase,2,Shock,0,watching
+Force of Will,high,UR / blue,4,Free counter — power spike,0,watching
+Through the Breach,high,Shared cheat,2,Titan/Griselbrand/Ureni,0,watching
+Show and Tell,high,Shared cheat,2,With Griselbrand,0,watching
+Demonic Tutor,high,BR / black,1,Find any piece,0,watching
+Sol Ring,med,Any powered,1,If you play multiplayer,0,watching
+Skullclamp,med,Sideplan Elves,1,Broken draw engine,0,watching
