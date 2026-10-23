@@ -1,0 +1,34 @@
+# Proxy print pipeline — paths relative to this directory (data/proxy/)
+reference_width: 488
+reference_height: 680
+card_width_mm: 63.5
+card_height_mm: 88.9
+
+# A4 portrait defaults (ISO 216)
+page:
+  size: A4
+  orientation: portrait
+  width_mm: 210.0
+  height_mm: 297.0
+
+# Tuned for 3×3 = 9 cards/page at 63.5×88.9 mm on A4 (no card downscale)
+margins_mm:
+  top: 8.0
+  bottom: 8.0
+  left: 5.0
+  right: 5.0
+
+# Cards abut (no gutter); easier cut / denser sheet
+gap_mm: 0.0
+
+# Center the card grid in the printable area (both axes)
+center_grid: true
+
+# Physical MTG-style corner radius when drawing into the PDF
+corner_radius_mm: 2.5
+
+paths:
+  originals: originals
+  normalized: normalized
+  prints: prints
+  manifest: manifest.yaml
